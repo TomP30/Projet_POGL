@@ -31,7 +31,7 @@ public class Joueur {
         this.coord = c;
     }
 
-    public void addArtifact(Artifact A){
+    public void addArtifact(Artifact A){//break ?
         if(this.getTresors()[3] != null){
             return;
         }
@@ -50,7 +50,7 @@ public class Joueur {
         }
     }
 
-    public void addKey(Type K){
+    public void addKey(Type K){//break ?
         if(this.getKeys()[this.getKeys().length -1] !=null){
             return;
         }
