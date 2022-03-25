@@ -57,4 +57,8 @@ public class Case {
         return innondation;
     }
 
+    public boolean hasArtifact(){return tresor != null;}
+
+    public void removeArtifact(){ tresor = null;}
+
 }

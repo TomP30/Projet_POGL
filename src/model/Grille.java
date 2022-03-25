@@ -67,6 +67,13 @@ public class Grille {
         }
         return tab;
     }
+    public Case getCase(int i,int j) throws Exception {
+        if (!isValidCoord(new Coord(i,j))){
+            throw new Exception("Coordonnées invalides");
+        }else{
+            return cases[i][j];
+        }
+    }
     public ArrayList<Case> getRandomCases(int n) throws Exception {
         //get a random ArrayList of Cases from Grille
         Random rand = new Random();
