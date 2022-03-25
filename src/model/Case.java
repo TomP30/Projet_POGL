@@ -9,7 +9,7 @@ public class Case {
 
     public Case(Coord c, Artifact a ) throws Exception {
         //Constructor if the cell contains an artifact.
-        if (tresor.get_pos() != c){
+        if (tresor.get_pos().get_x() != c.get_x() && tresor.get_pos().get_y() != c.get_y() ){
             throw new Exception("No match between the artifact position and the given coordinates !");
         }
         tresor = a;
@@ -26,7 +26,7 @@ public class Case {
 
     public void add_Artifact(Artifact a) throws Exception {
         //puts the artificat in the case
-        if (a.get_pos() != coord){
+        if (a.get_pos().get_x() != coord.get_x() && a.get_pos().get_y() != coord.get_y()){
             throw new Exception("No match between the artifact position and the given coordinates !");
         }else {
             tresor = a;

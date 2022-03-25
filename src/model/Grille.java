@@ -9,12 +9,12 @@ public class Grille {
     private Artifact[] tresors;
 
     public boolean isValidCoord(Coord c) throws Exception {
-        return c.get_y()>=0 && c.get_y()<=6
-                && c.get_x()>=0 && c.get_x()<=6
+        return c.get_y()>=0 && c.get_y()<6
+                && c.get_x()>=0 && c.get_x()<6
                 && c.dist(new Coord(0,0)) >=2
-                && c.dist(new Coord(0,6)) >=2
-                && c.dist(new Coord(6,0)) >=2
-                && c.dist(new Coord(6,6)) >=2;
+                && c.dist(new Coord(0,5)) >=2
+                && c.dist(new Coord(5,0)) >=2
+                && c.dist(new Coord(5,5)) >=2;
     }
     public Grille(Coord heliPos,Coord[] artifactPos ) throws Exception{
         // Basic constructor for grille, given the position of heliport and the artifacts.
@@ -28,6 +28,7 @@ public class Grille {
         }
 
         cases = new Case[6][];
+        tresors = new Artifact[4];
         for (int i = 0; i<6;i++){
             cases[i] = new Case[6];
             for (int j =0;j<6;j++){
@@ -42,7 +43,8 @@ public class Grille {
                          cases[i][j] = new Case(casCoord);
                          for (int k = 0; k<4;k++){
                                 if (i == artifactPos[k].get_x() && j == artifactPos[k].get_y()){
-                                    cases[i][j].add_Artifact(new Artifact(artifactPos[k],Type.from(k)));
+                                    tresors[k] = new Artifact(artifactPos[k],Type.from(k));
+                                    cases[i][j].add_Artifact(tresors[k]);
                                 }
                          }
                      }
@@ -53,13 +55,13 @@ public class Grille {
         }
     }
     public ArrayList<Case> neighbours(Case c, int dist) throws Exception {
-        // Gets all the neighbours from c with a maximum distance of dist.
+        // Gets all the neighbours of c with a maximum distance of dist.
         ArrayList<Case> tab = new ArrayList<Case>();
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 6; j++) {
                 if (isValidCoord(new Coord(i,j))) {
                     int distance = c.getCoord().dist(cases[i][j].getCoord());
-                    if (distance > 0 && distance < dist) {
+                    if (distance > 0 && distance <= dist) {
                         tab.add(cases[i][j]);
                     }
                 }
@@ -93,6 +95,7 @@ public class Grille {
         }
         return tab;
     }
+    public Case getHeliport(){ return heliport;}
     public void innondation(int amount) throws Exception {
         //Innonde aléatoirement un nombre donné de cases
         ArrayList<Case> tab = getRandomCases(amount);
@@ -100,4 +103,5 @@ public class Grille {
             aCase.innonde();
         }
     }
+
 }
