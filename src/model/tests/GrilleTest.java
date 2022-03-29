@@ -57,8 +57,29 @@ public class GrilleTest  {
     }
     @Test
     public void Test_neighbours() throws Exception {
-        ArrayList<Case> neighb1 = g.neighbours(g.getCase(3,3),1);
+        final ArrayList<Case> neighb1 = g.neighbours(g.getCase(3,3),1);
+        assertFalse(neighb1.contains(g.getCase(3,3)));
         assertTrue(neighb1.contains(g.getCase(2,3)));
+        assertTrue(neighb1.contains(g.getCase(4,3)));
+        assertTrue(neighb1.contains(g.getCase(3,2)));
+        assertTrue(neighb1.contains(g.getCase(3,4)));
+
+        final ArrayList<Case> neighb2 = g.neighbours(g.getCase(1,1),1);
+        assertFalse(neighb2.contains(g.getCase(1,1)));
+        assertTrue(neighb2.contains(g.getCase(1,2)));
+        assertTrue(neighb2.contains(g.getCase(2,1)));
+
+        final ArrayList<Case>  neighb3 = g.neighbours(g.getCase(3,3),2);
+        assertFalse(neighb3.contains(g.getCase(3,3)));
+        assertTrue(neighb1.contains(g.getCase(2,3)));
+        assertTrue(neighb1.contains(g.getCase(4,3)));
+        assertTrue(neighb1.contains(g.getCase(3,2)));
+        assertTrue(neighb1.contains(g.getCase(3,4)));
+        assertTrue(neighb3.contains(g.getCase(5,3)));
+        assertTrue(neighb3.contains(g.getCase(1,3)));
+        assertTrue(neighb3.contains(g.getCase(3,5)));
+        assertTrue(neighb3.contains(g.getCase(3,1)));
+        assertTrue(neighb3.contains(g.getCase(4,2)));
     }
 }
 

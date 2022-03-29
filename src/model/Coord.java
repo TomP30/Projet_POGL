@@ -3,6 +3,9 @@ package model;
 import static java.lang.Math.abs;
 
 import javax.management.RuntimeErrorException;
+import java.util.ArrayList;
+import java.util.Random;
+
 public class Coord {
     //simple int Coordinates system with d1
     private int x,y;
@@ -48,4 +51,16 @@ public class Coord {
         //Computes the simple distance (d1) between this point and another with the given coordinates.
         return abs(x-c2.get_x()) + abs(y - c2.get_y());
     }
+
+    public boolean equals(Coord c2){ return x == c2.get_x() && y == c2.get_y();}
+
+    public boolean isValidCoord() throws Exception {
+        return get_y()>=0 && get_y()<6
+            && get_x()>=0 && get_x()<6
+            && dist(new Coord(0,0)) >=2
+            && dist(new Coord(0,5)) >=2
+            && dist(new Coord(5,0)) >=2
+            && dist(new Coord(5,5)) >=2;
+    }
 }
+
