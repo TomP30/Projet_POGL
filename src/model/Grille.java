@@ -1,9 +1,13 @@
 package model;
+//import du package view
+import view.GrilleVue;
+import java.awt.Color;
 
+//autres imports
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Grille {
+public class Grille extends GrilleVue {
     private Case[][] cases;
     private Case heliport;
     private Artifact[] tresors;
@@ -17,6 +21,7 @@ public class Grille {
                 && c.dist(new Coord(5,5)) >=2;
     }
     public Grille(Coord heliPos,Coord[] artifactPos ) throws Exception{
+        super(6,6);
         // Basic constructor for grille, given the position of heliport and the artifacts.
         if (!(isValidCoord(heliPos))){
             throw new Exception("Coordonnées d'heliport invalides !");
@@ -38,7 +43,8 @@ public class Grille {
                      if (i == heliPos.get_x() && j == heliPos.get_y()) {
                          cases[i][j] = new Case(casCoord);
                          heliport = cases[i][j];
-
+                         this.ajtElem(heliport);
+                         cases[i][j].setBackground(Color.GREY);
                      }else {
                          cases[i][j] = new Case(casCoord);
                          for (int k = 0; k<4;k++){
@@ -47,9 +53,11 @@ public class Grille {
                                     cases[i][j].add_Artifact(tresors[k]);
                                 }
                          }
+                         this.ajtElem(cases[i][j]);
                      }
                 }else{
                     cases[i][j] = null;
+                    this.ajtElem(cases[i][j]);
                 }
             }
         }
