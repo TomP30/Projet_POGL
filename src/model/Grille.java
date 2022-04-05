@@ -12,6 +12,7 @@ public class Grille extends GrilleVue {
     private Case heliport;
     private Artifact[] tresors;
 
+
     public boolean isValidCoord(Coord c) throws Exception {
         return c.get_y()>=0 && c.get_y()<6
                 && c.get_x()>=0 && c.get_x()<6
@@ -44,7 +45,7 @@ public class Grille extends GrilleVue {
                          cases[i][j] = new Case(casCoord);
                          heliport = cases[i][j];
                          this.ajtElem(heliport);
-                         cases[i][j].setBackground(Color.GREY);
+                         cases[i][j].setBackground(Color.LIGHT_GRAY);
                      }else {
                          cases[i][j] = new Case(casCoord);
                          for (int k = 0; k<4;k++){
@@ -56,7 +57,8 @@ public class Grille extends GrilleVue {
                          this.ajtElem(cases[i][j]);
                      }
                 }else{
-                    cases[i][j] = null;
+                    cases[i][j] = new Case(casCoord);
+                    setBackground(Color.DARK_GRAY);
                     this.ajtElem(cases[i][j]);
                 }
             }

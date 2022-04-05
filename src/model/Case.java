@@ -76,4 +76,13 @@ public class Case extends ClickableSlot {
 
     public void removeArtifact(){ tresor = null;}
 
+    @Override
+    public void clicDroit() {
+
+    }
+
+    @Override
+    public void clicGauche(){
+
+    }
 }

@@ -9,4 +9,14 @@ public class Deplacement extends ClickableSlot{
         super("Deplacer", 80,25);
         this.grille = g;
     }
+
+    @Override
+    public void clicDroit() {
+
+    }
+
+    @Override
+    public void clicGauche(){
+
+    }
 }

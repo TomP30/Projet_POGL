@@ -8,7 +8,7 @@ import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class ClickableSlot extends JPanel implements MouseListener {
+public abstract class ClickableSlot extends JPanel implements MouseListener {
     private Text text;
 
     //Constructors
