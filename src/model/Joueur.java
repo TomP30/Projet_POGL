@@ -4,6 +4,7 @@ public class Joueur {
     private Coord coord; //defines where the player is located on the board
     private Artifact[] tresors; //represents all the artifacts the player owns
     private Type[] keys; //represents all the keys possessed by the player
+    private int actions;
 
     //constructors
     public Joueur(Coord c, int lenght){
@@ -11,6 +12,7 @@ public class Joueur {
         this.coord = c;
         this.tresors = new Artifact[4]; //a player can only own a maximum of 4 artifacts
         this.keys = new Type[lenght]; //we will set the maximum amount of key a player can own in the constructor
+        this.actions = 3; //a player will always have 3 actions per lap
     }
 
     //getters
@@ -26,10 +28,14 @@ public class Joueur {
         return this.keys;
     }
 
+    public int getActions(){ return this.actions; }
+
     //setters
     public void setCoord(Coord c){
         this.coord = c;
     }
+
+    public void setActions(int n){ this.actions = n; }
 
     public void addArtifact(Artifact A){//break ?
         if(this.getTresors()[3] != null){

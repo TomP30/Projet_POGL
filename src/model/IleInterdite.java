@@ -14,7 +14,9 @@ public class IleInterdite {
 
         //initialization of the graphics content
         Fenetre window = new Fenetre("IleInterdite");
+        FinDeTour TurnEnd = new FinDeTour(grille);
 
         window.ajtElem(grille);
+        window.ajtElem(TurnEnd);
     }
 }

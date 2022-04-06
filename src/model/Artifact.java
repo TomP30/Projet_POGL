@@ -73,10 +73,11 @@ public class Artifact {
         return owner;
     }
 
-    public Coord get_pos() throws Exception {
+    public Coord get_pos(){
         //gets initial position of the artifact (null if claimed).
         if (is_claimed()){
-            throw new Exception("Can't get position because it's claimed");
+            System.out.print("Erreur : get_pos -> l'artefact est deja recupere");
+            return position;
         }else {
             return position;
         }

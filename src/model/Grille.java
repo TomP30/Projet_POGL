@@ -11,9 +11,9 @@ public class Grille extends GrilleVue {
     private Case[][] cases;
     private Case heliport;
     private Artifact[] tresors;
+    private Joueur[] joueurs = new Joueur[4];
 
-
-    public boolean isValidCoord(Coord c) throws Exception {
+    public boolean isValidCoord(Coord c){
         return c.get_y()>=0 && c.get_y()<6
                 && c.get_x()>=0 && c.get_x()<6
                 && c.dist(new Coord(0,0)) >=2
@@ -63,6 +63,14 @@ public class Grille extends GrilleVue {
                 }
             }
         }
+        Coord[] coord = new Coord[4];
+        coord[0] = new Coord(2,0);
+        coord[1] = new Coord(5,2);
+        coord[2] = new Coord(3,5);
+        coord[3] = new Coord(0,3);
+        for(int i=0; i<4; i++){
+            this.joueurs[i] = new Joueur(coord[i],4);
+        }
     }
     public ArrayList<Case> neighbours(Case c, int dist) throws Exception {
         // Gets all the neighbours of c with a maximum distance of dist.
@@ -79,14 +87,20 @@ public class Grille extends GrilleVue {
         }
         return tab;
     }
-    public Case getCase(int i,int j) throws Exception {
+
+    public Joueur[] getJoueurs(){
+        return this.joueurs;
+    }
+
+    public Case getCase(int i,int j){
         if (!isValidCoord(new Coord(i,j))){
-            throw new Exception("Coordonnées invalides");
+            System.out.print("Erreur : getCase -> Coordonnées invalides");
+            return cases[i][j];
         }else{
             return cases[i][j];
         }
     }
-    public ArrayList<Case> getRandomCases(int n) throws Exception {
+    public ArrayList<Case> getRandomCases(int n){
         //get a random ArrayList of Cases from Grille
         Random rand = new Random();
         ArrayList<Case> tab = new ArrayList<Case>();
@@ -105,8 +119,9 @@ public class Grille extends GrilleVue {
         }
         return tab;
     }
+    public Case[][] getCases(){ return this.cases; }
     public Case getHeliport(){ return heliport;}
-    public void innondation(int amount) throws Exception {
+    public void innondation(int amount){
         //Innonde aléatoirement un nombre donné de cases
         ArrayList<Case> tab = getRandomCases(amount);
         for (Case aCase : tab) {

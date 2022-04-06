@@ -3,6 +3,7 @@ package model;
 import view.ClickableSlot;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public class FinDeTour extends ClickableSlot {
     private Grille grille;
@@ -19,7 +20,14 @@ public class FinDeTour extends ClickableSlot {
     @Override
     public void clicGauche() {
         setBackground(Color.RED);
-        Case c = this.grille.getRandomCases(1)[0];
-        c.innonde();
+        ArrayList<Case> C = this.grille.getRandomCases(1);
+        C.get(0).innonde();
+        for(int i=0; i<4; i++){
+            Joueur J = this.grille.getJoueurs()[i];
+            J.setActions(3);
+            Coord coord = J.getCoord();
+            Case c = this.grille.getCase(coord.get_x(),coord.get_y());
+            c.setBackground(Color.RED);
+        }
     }
 }

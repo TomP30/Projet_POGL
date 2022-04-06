@@ -9,12 +9,12 @@ public class Case extends ClickableSlot {
     private int innondation; //flowing rate of the cell.
     private Artifact tresor;//
 
-    public Case(Coord c, Artifact a ) throws Exception {
+    public Case(Coord c, Artifact a ) {
         //Initialization of the slot in the graphic window
         super(40,40);
         //Constructor if the cell contains an artifact.
         if (tresor.get_pos().get_x() != c.get_x() && tresor.get_pos().get_y() != c.get_y() ){
-            throw new Exception("No match between the artifact position and the given coordinates !");
+            System.out.print("Erreur : Constructor Case -> les positions des artefacts ne correspondent pas");;
         }
         tresor = a;
         innondation = 0;
@@ -29,15 +29,15 @@ public class Case extends ClickableSlot {
         coord = c;
     }
 
-    public void add_Artifact(Artifact a) throws Exception {
+    public void add_Artifact(Artifact a){
         //puts the artificat in the case
         if (a.get_pos().get_x() != coord.get_x() && a.get_pos().get_y() != coord.get_y()){
-            throw new Exception("No match between the artifact position and the given coordinates !");
+            System.out.print("Erreur : add_Artifact -> les positions ne correspondent pas");
         }else {
             tresor = a;
         }
     }
-    public void innonde() throws Exception{
+    public void innonde(){
         // grows innondation
         if (innondation<2){
             innondation ++;
@@ -47,10 +47,10 @@ public class Case extends ClickableSlot {
                 setBackground(Color.BLUE);
             }
         }else{
-            throw new Exception("La case est déjà innondée");
+            System.out.print("Erreur : innonde -> la case est deja innondée");
         }
     }
-    public void asseche() throws Exception{
+    public void asseche(){
         //reduce innondation
         if (innondation==1){
             innondation --;
@@ -60,7 +60,7 @@ public class Case extends ClickableSlot {
                 setBackground(Color.GREEN);
             }
         }else{
-            throw new Exception("La case ne peut être asséchée");
+            System.out.print("Erreur : asseche -> {0} ne peut pas être assechée" .formatted(this.getCoord()));
         }
     }
     public Coord getCoord(){

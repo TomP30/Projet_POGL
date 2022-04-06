@@ -10,10 +10,10 @@ public class Coord {
     //simple int Coordinates system with d1
     private int x,y;
 
-    public Coord(int abs, int ord) throws Exception {
+    public Coord(int abs, int ord){
         //Constructor of Coord class, with given abscissa and ordinate.
         if (abs <0 || ord<0){
-            throw new Exception("x et y doivent être positifs !");
+            System.out.print("Erreur : Coord Cosntructor -> les coordonnées doivent être positives");
         }
         x = abs;
         y = ord;
@@ -29,19 +29,19 @@ public class Coord {
         return y;
     }
 
-    public void set_x(int abs) throws Exception {
+    public void set_x(int abs){
         //setter of x Coord
         if (abs < 0) {
-            throw new Exception("x doit être positif !");
+            System.out.print("Erreur : set_x -> x doit être positif");
         }else{
             x = abs;
         }
     }
 
-    public void set_y(int ord) throws Exception {
+    public void set_y(int ord){
         //setter of y Coord
         if (ord < 0) {
-            throw new Exception("y doit être positif !");
+            System.out.print("Erreur : set_y -> y doit être positif");
         }else{
             y = ord;
         }
@@ -54,7 +54,7 @@ public class Coord {
 
     public boolean equals(Coord c2){ return x == c2.get_x() && y == c2.get_y();}
 
-    public boolean isValidCoord() throws Exception {
+    public boolean isValidCoord(){
         return get_y()>=0 && get_y()<6
             && get_x()>=0 && get_x()<6
             && dist(new Coord(0,0)) >=2
