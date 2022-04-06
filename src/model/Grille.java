@@ -58,8 +58,8 @@ public class Grille extends GrilleVue {
                      }
                 }else{
                     cases[i][j] = new Case(casCoord);
-                    setBackground(Color.DARK_GRAY);
                     this.ajtElem(cases[i][j]);
+                    cases[i][j].setBackground(Color.DARK_GRAY);
                 }
             }
         }
@@ -70,6 +70,7 @@ public class Grille extends GrilleVue {
         coord[3] = new Coord(0,3);
         for(int i=0; i<4; i++){
             this.joueurs[i] = new Joueur(coord[i],4);
+            this.cases[coord[i].get_x()][coord[i].get_y()].setBackground(Color.RED);
         }
     }
     public ArrayList<Case> neighbours(Case c, int dist) throws Exception {

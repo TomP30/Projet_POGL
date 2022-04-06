@@ -18,5 +18,7 @@ public class IleInterdite {
 
         window.ajtElem(grille);
         window.ajtElem(TurnEnd);
+
+        window.draw();
     }
 }
