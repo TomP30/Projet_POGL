@@ -58,7 +58,7 @@ public class Coord {
 
     public boolean equals(Coord c2){ return x == c2.get_x() && y == c2.get_y();}
 
-    public boolean isValidCoord(){
+    public  boolean isValidCoord(){
         return get_y()>=0 && get_y()<6
             && get_x()>=0 && get_x()<6
             && dist(new Coord(0,0)) >=2

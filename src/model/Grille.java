@@ -7,6 +7,9 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
 
+import static java.lang.Math.min;
+
+
 public class Grille extends GrilleVue {
     private Case[][] cases;
     private Case heliport;
@@ -63,14 +66,10 @@ public class Grille extends GrilleVue {
                 }
             }
         }
-        Coord[] coord = new Coord[4];
-        coord[0] = new Coord(2,0);
-        coord[1] = new Coord(5,2);
-        coord[2] = new Coord(3,5);
-        coord[3] = new Coord(0,3);
-        for(int i=0; i<4; i++){
-            this.joueurs[i] = new Joueur(coord[i],4);
-            this.cases[coord[i].get_x()][coord[i].get_y()].setBackground(Color.RED);
+
+        for(int i=0; i<4; i++){//les joueurs commencent de l'héliport.
+            this.joueurs[i] = new Joueur(getHeliport().getCoord(),4);
+            heliport.setBackground(Color.RED);
         }
     }
     public ArrayList<Case> neighbours(Case c, int dist) throws Exception {
@@ -129,11 +128,30 @@ public class Grille extends GrilleVue {
     }
     public Case[][] getCases(){ return this.cases; }
     public Case getHeliport(){ return heliport;}
+    public int countDryCases(){
+        int cpt = 0;
+        for(int i = 0;i<6;i++){
+            for(int j = 0;j<6;j++){
+                if (isValidCoord(new Coord(i,j)) && cases[i][j].getInnondation()<2){
+                    cpt ++;
+                }
+            }
+        }
+        return cpt;
+    }
     public void innondation(int amount){
         //Innonde aléatoirement un nombre donné de cases
-        ArrayList<Case> tab = getRandomCases(amount,true);
+        int n = min(amount,countDryCases());
+        ArrayList<Case> tab = getRandomCases(min(amount,countDryCases()),true);
         for (Case aCase : tab) {
             aCase.innonde();
+        }
+        while (n<amount && countDryCases()!=0){ // pour remplir 3 fois meme s'il ne reste que 2 cases dont une totalleme t seche et l'autre partiellement innondée.
+            n += min(amount-n,countDryCases());
+            tab = getRandomCases(min(amount-n,countDryCases()),true);
+            for (Case aCase : tab) {
+                aCase.innonde();
+            }
         }
     }
 

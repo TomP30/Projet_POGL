@@ -11,7 +11,13 @@ public class Joueur {
         //at the beginning a player only has its position, he possess no artifact or key neither
         this.coord = c;
         this.tresors = new Artifact[4]; //a player can only own a maximum of 4 artifacts
+        for (int i = 0; i<4; i++){
+            tresors[i] = null;
+        }
         this.keys = new Type[lenght]; //we will set the maximum amount of key a player can own in the constructor
+        for (int i = 0; i<lenght; i++){
+            keys[i] = null;
+        }
         this.actions = 3; //a player will always have 3 actions per lap
     }
 
@@ -30,6 +36,15 @@ public class Joueur {
 
     public int getActions(){ return this.actions; }
 
+    public boolean hasInventoryFull(){
+        for (Type T: keys){
+            if (T == null){
+                return false;
+            }
+        }
+        return true;
+    }
+
     //setters
     public void setCoord(Coord c){
         this.coord = c;
@@ -38,50 +53,34 @@ public class Joueur {
     public void setActions(int n){ this.actions = n; }
 
     public void addArtifact(Artifact A){//break ?
-        if(this.getTresors()[3] != null){
-            return;
-        }
-        for(int i=0; i<4; i++){
-            if(this.getTresors()[i] == null){
-                this.getTresors()[i] = A;
-            }
-        }
+        this.tresors[A.get_element().value] = A;
     }
 
     public void delArtifact(Artifact A){
-        for(int i=0; i<4; i++){
-            if(this.getTresors()[i] == A){
-                this.getTresors()[i] = null;
-            }
-        }
+        this.tresors[A.get_element().value] = null;
     }
 
     public void addKey(Type K){//break ?
-        if(this.getKeys()[this.getKeys().length -1] !=null){
-            return;
-        }
         for(int i=0; i<this.getKeys().length; i++){
             if(this.getKeys()[i]==null){
-                this.getKeys()[i] = K;
+                this.keys[i] = K;
+                return;
             }
         }
     }
 
     public void delKey(Type K){
-        for(int i=0; i<4; i++){
+        for(int i=0; i<this.getKeys().length; i++){
             if(this.getKeys()[i] == K){
-                this.getKeys()[i] = null;
+                this.keys[i] = null;
+                return;
             }
         }
     }
 
     public void delNKey(Type K, int n){
-        int cpt = 0;
-        for(int i=0; i<4; i++){
-            if(this.getKeys()[i] == K && cpt<n){
-                this.getKeys()[i] = null;
-                cpt++;
-            }
+        for (int i = 0;i<n;i++){
+            delKey(K);
         }
     }
 
@@ -90,9 +89,9 @@ public class Joueur {
         this.setCoord(newC);
     }
 
-    public void echangerClef(Joueur J, Type K){
+    public void donnerClef(Joueur J, Type K){
         //the player gives a key of K type to the J player
-        if(J.getKeys()[J.getKeys().length -1] != null){
+        if(J.hasInventoryFull()){
             return;
         }
         this.delKey(K);
