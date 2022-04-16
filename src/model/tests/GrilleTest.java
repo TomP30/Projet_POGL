@@ -56,7 +56,7 @@ public class GrilleTest  {
         }
     }
     @Test
-    public void Test_neighbours() throws Exception {
+    public void Test_neighbours() {
         final ArrayList<Case> neighb1 = g.neighbours(g.getCase(3,3),1);
         assertFalse(neighb1.contains(g.getCase(3,3)));
         assertTrue(neighb1.contains(g.getCase(2,3)));
@@ -80,6 +80,16 @@ public class GrilleTest  {
         assertTrue(neighb3.contains(g.getCase(3,5)));
         assertTrue(neighb3.contains(g.getCase(3,1)));
         assertTrue(neighb3.contains(g.getCase(4,2)));
+    }
+
+    @Test
+    public void Test_getRandomCases(){
+        for (int i = 0;i<50;i++) {
+            ArrayList<Case> A = g.getRandomCases(3, true);
+            for (Case c : A) {
+                assertTrue(c.getInnondation() < 2);
+            }
+        }
     }
 }
 

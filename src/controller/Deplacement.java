@@ -1,6 +1,7 @@
-package model;
+package controller;
 
 import controller.ClickableSlot;
+import model.Grille;
 
 public class Deplacement extends ClickableSlot{
     private Grille grille;

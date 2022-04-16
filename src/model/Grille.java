@@ -72,7 +72,7 @@ public class Grille extends GrilleVue {
             heliport.setBackground(Color.RED);
         }
     }
-    public ArrayList<Case> neighbours(Case c, int dist) throws Exception {
+    public ArrayList<Case> neighbours(Case c, int dist) {
         // Gets all the neighbours of c with a maximum distance of dist.
         ArrayList<Case> tab = new ArrayList<Case>();
         for (int i = 0; i < 6; i++) {
