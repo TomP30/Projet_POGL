@@ -24,15 +24,15 @@ public class Grille extends GrilleVue {
                 && c.dist(new Coord(5,0)) >=2
                 && c.dist(new Coord(5,5)) >=2;
     }
-    public Grille(Coord heliPos,Coord[] artifactPos ) throws Exception{
+    public Grille(Coord heliPos,Coord[] artifactPos ){
         super(6,6);
         // Basic constructor for grille, given the position of heliport and the artifacts.
         if (!(isValidCoord(heliPos))){
-            throw new Exception("Coordonnées d'heliport invalides !");
+            throw new IllegalArgumentException("Coordonnées d'heliport invalides !");
         }
         for (Coord c : artifactPos){
             if (!(isValidCoord(c))){
-                throw new Exception("Coordonnées d'artefact invalides !");
+                throw new IllegalArgumentException("Coordonnées d'artefact invalides !");
             }
         }
 
@@ -94,8 +94,7 @@ public class Grille extends GrilleVue {
 
     public Case getCase(int i,int j){
         if (!isValidCoord(new Coord(i,j))){
-            System.out.print("Erreur : getCase -> Coordonnées invalides");
-            return cases[i][j];
+            throw new IllegalArgumentException("Erreur : getCase -> Coordonnées invalides");
         }else{
             return cases[i][j];
         }

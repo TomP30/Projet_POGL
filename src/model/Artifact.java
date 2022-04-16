@@ -48,10 +48,10 @@ public class Artifact {
         position = null;
     }
 
-    public void claim(Joueur j) throws Exception {
+    public void claim(Joueur j){
         //changes the artifact status from "not claimed" to "claimed by j". Throws exception if already claimed.
         if (is_claimed()){
-            throw new Exception("Artifact is already claimed !");
+            throw new IllegalCallerException("erreur : claim -> Artifact is already claimed !");
         }else{
             set_owner(j);
             null_pos();
@@ -76,8 +76,7 @@ public class Artifact {
     public Coord get_pos(){
         //gets initial position of the artifact (null if claimed).
         if (is_claimed()){
-            System.out.print("Erreur : get_pos -> l'artefact est deja recupere");
-            return position;
+            throw new IllegalCallerException("Erreur : get_pos -> l'artefact est deja recupere");
         }else {
             return position;
         }

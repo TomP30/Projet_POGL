@@ -3,6 +3,7 @@ package model;
 import static java.lang.Math.abs;
 
 import javax.management.RuntimeErrorException;
+import java.nio.channels.FileLockInterruptionException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -13,7 +14,7 @@ public class Coord {
     public Coord(int abs, int ord){
         //Constructor of Coord class, with given abscissa and ordinate.
         if (abs <0 || ord<0){
-            System.out.print("Erreur : Coord Cosntructor -> les coordonnées doivent être positives");
+            throw new IllegalArgumentException("Erreur : Coord Cosntructor -> les coordonnées doivent être positives");
         }
         x = abs;
         y = ord;
@@ -36,7 +37,7 @@ public class Coord {
     public void set_x(int abs){
         //setter of x Coord
         if (abs < 0) {
-            System.out.print("Erreur : set_x -> x doit être positif");
+            throw new IllegalArgumentException("Erreur : set_x -> x doit être positif");
         }else{
             x = abs;
         }
@@ -45,7 +46,7 @@ public class Coord {
     public void set_y(int ord){
         //setter of y Coord
         if (ord < 0) {
-            System.out.print("Erreur : set_y -> y doit être positif");
+            throw new IllegalArgumentException("Erreur : set_y -> y doit être positif");
         }else{
             y = ord;
         }

@@ -5,7 +5,7 @@ import view.*;
 import java.util.Random;
 
 public class IleInterdite {
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args){
         //initialization of the main board
         Random rand = new Random();
         Coord heli = new Coord(rand);

@@ -13,7 +13,7 @@ public class Case extends ClickableSlot {
         super(40,40);
         //Constructor if the cell contains an artifact.
         if (tresor.get_pos().get_x() != c.get_x() && tresor.get_pos().get_y() != c.get_y() ){
-            System.out.print("Erreur : Constructor Case -> les positions des artefacts ne correspondent pas");;
+            throw new IllegalArgumentException("Erreur : Constructor Case -> les positions des artefacts ne correspondent pas");
         }
         tresor = a;
         innondation = 0;
@@ -31,7 +31,7 @@ public class Case extends ClickableSlot {
     public void add_Artifact(Artifact a){
         //puts the artificat in the case
         if (a.get_pos().get_x() != coord.get_x() && a.get_pos().get_y() != coord.get_y()){
-            System.out.print("Erreur : add_Artifact -> les positions ne correspondent pas");
+            throw new IllegalArgumentException("Erreur : add_Artifact -> les positions ne correspondent pas");
         }else {
             tresor = a;
         }
@@ -46,7 +46,7 @@ public class Case extends ClickableSlot {
                 setBackground(Color.BLUE);
             }
         }else{
-            System.out.print("Erreur : innonde -> la case est deja innondée");
+            throw new IllegalCallerException("Erreur : innonde -> la case est deja innondée");
         }
     }
     public void asseche(){
@@ -59,7 +59,7 @@ public class Case extends ClickableSlot {
                 setBackground(Color.GREEN);
             }
         }else{
-            System.out.print("Erreur : asseche -> {0} ne peut pas être assechée" .formatted(this.getCoord()));
+            throw new IllegalCallerException("Erreur : asseche -> {0} ne peut pas être assechée" .formatted(this.getCoord()));
         }
     }
     public Coord getCoord(){
