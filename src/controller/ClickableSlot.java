@@ -1,4 +1,6 @@
-package view;
+package controller;
+
+import view.Text;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;

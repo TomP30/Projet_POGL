@@ -1,9 +1,8 @@
 package model;
 
-import view.ClickableSlot;
+import controller.ClickableSlot;
 
 import java.awt.*;
-import java.util.ArrayList;
 
 public class FinDeTour extends ClickableSlot {
     private Grille grille;
@@ -20,8 +19,7 @@ public class FinDeTour extends ClickableSlot {
     @Override
     public void clicGauche() {
         setBackground(Color.RED);
-        ArrayList<Case> C = this.grille.getRandomCases(1);
-        C.get(0).innonde();
+        this.grille.innondation(3);
         for(int i=0; i<4; i++){
             Joueur J = this.grille.getJoueurs()[i];
             J.setActions(3);

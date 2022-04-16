@@ -1,8 +1,7 @@
 package model;
 
 import java.awt.Color;
-import view.ClickableSlot;
-import java.nio.charset.CoderResult;
+import controller.ClickableSlot;
 
 public class Case extends ClickableSlot {
     private final Coord coord; //coordinates of the cell.

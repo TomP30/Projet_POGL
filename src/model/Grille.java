@@ -101,7 +101,7 @@ public class Grille extends GrilleVue {
             return cases[i][j];
         }
     }
-    public ArrayList<Case> getRandomCases(int n){
+    public ArrayList<Case> getRandomCases(int n, boolean inundate){
         //get a random ArrayList of Cases from Grille
         Random rand = new Random();
         ArrayList<Case> tab = new ArrayList<Case>();
@@ -109,9 +109,16 @@ public class Grille extends GrilleVue {
         int y = 0;
         int count = 0;
         while (count !=n){
-            while (!isValidCoord(new Coord(x,y)) || tab.contains(cases[x][y])){
-                 x = rand.nextInt(6);
-                 y = rand.nextInt(6);
+            if (!(inundate)) {
+                while (!isValidCoord(new Coord(x, y)) || tab.contains(cases[x][y])) {
+                    x = rand.nextInt(6);
+                    y = rand.nextInt(6);
+                }
+            }else{
+                while (!isValidCoord(new Coord(x, y)) || cases[x][y].getInnondation()==2 ||tab.contains(cases[x][y])) {
+                    x = rand.nextInt(6);
+                    y = rand.nextInt(6);
+                }
             }
             tab.add(cases[x][y]);
             count ++;
@@ -124,7 +131,7 @@ public class Grille extends GrilleVue {
     public Case getHeliport(){ return heliport;}
     public void innondation(int amount){
         //Innonde aléatoirement un nombre donné de cases
-        ArrayList<Case> tab = getRandomCases(amount);
+        ArrayList<Case> tab = getRandomCases(amount,true);
         for (Case aCase : tab) {
             aCase.innonde();
         }

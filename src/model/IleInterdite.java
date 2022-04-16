@@ -1,15 +1,39 @@
 package model;
 
 import view.*;
+
+import java.util.Random;
+
 public class IleInterdite {
     public static void main(String[] args) throws Exception{
         //initialization of the main board
-        Coord heli = new Coord(3,4);
+        Random rand = new Random();
+        Coord heli = new Coord(rand);
+        while (!heli.isValidCoord()){
+            heli = new Coord(rand);
+        }
         Coord[] Art = new Coord[4];
-        Art[0] = new Coord(2,3);
-        Art[1] = new Coord(3,2);
-        Art[2] = new Coord(3,4);
-        Art[3] = new Coord(4,3);
+        for (int i =0;i<4;i++){
+            boolean flag = false;
+            Coord c = new Coord(rand);
+            if(i==0){
+                while (!flag){
+                    c = new Coord(rand);
+                    flag = !(c.equals(heli)) && c.isValidCoord();
+                }
+            }else{
+                Coord [] sub_art = new Coord[i];
+                for (int j = 0;j<i;j++){
+                    sub_art[j] = Art[j];
+                }
+                while (!flag){
+                    c = new Coord(rand);
+                    flag = c.isValidCoord() && !(c.equals(heli) || c.is_in_list(sub_art));
+                }
+            }
+            Art[i] = c;
+        }
+
         Grille grille = new Grille(heli,Art);
 
         //initialization of the graphics content

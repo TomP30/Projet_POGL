@@ -18,6 +18,10 @@ public class Coord {
         x = abs;
         y = ord;
     }
+    public Coord(Random rand){
+        x = rand.nextInt(6);
+        y = rand.nextInt(6);
+    }
 
     public int get_x(){
         //getter of x Coord
@@ -62,5 +66,14 @@ public class Coord {
             && dist(new Coord(5,0)) >=2
             && dist(new Coord(5,5)) >=2;
     }
+    public boolean is_in_list(Coord[] list){
+        for (int i =0;i<list.length;i++){
+            if (equals(list[i])){
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
 
