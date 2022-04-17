@@ -86,13 +86,14 @@ public class Joueur {
 
     //methods
     public void deplace(Coord newC){
+        if (!newC.isValidCoord()){throw new IllegalArgumentException("erreur : deplace -> Coordonnées invalides");}
         this.setCoord(newC);
     }
 
     public void donnerClef(Joueur J, Type K){
         //the player gives a key of K type to the J player
         if(J.hasInventoryFull()){
-            return;
+            throw new IllegalArgumentException("erreur : donnerClef -> le joueur cible ne peut pas recevoir la clef !");
         }
         this.delKey(K);
         J.addKey(K);

@@ -53,11 +53,7 @@ public class Case extends ClickableSlot {
         //reduce innondation
         if (innondation==1){
             innondation --;
-            if(innondation == 1){
-                setBackground(Color.CYAN);
-            } else if(innondation == 0){
-                setBackground(Color.GREEN);
-            }
+            setBackground(Color.GREEN);
         }else{
             throw new IllegalCallerException("Erreur : asseche -> {0} ne peut pas être assechée" .formatted(this.getCoord()));
         }
