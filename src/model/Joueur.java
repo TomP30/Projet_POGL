@@ -45,6 +45,14 @@ public class Joueur {
         return true;
     }
 
+    public boolean hasNkeys(Type K,int n){
+        int cpt = 0;
+        for (Type T : keys){
+            if (T == K){cpt ++;}
+        }
+        return cpt == n;
+    }
+
     //setters
     public void setCoord(Coord c){
         this.coord = c;

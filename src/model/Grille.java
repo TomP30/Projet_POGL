@@ -99,6 +99,9 @@ public class Grille extends GrilleVue {
             return cases[i][j];
         }
     }
+
+    public Case getCaseByCoord(Coord C){return getCase(C.get_x(),C.get_y());}
+
     public ArrayList<Case> getRandomCases(int n, boolean inundate){
         //get a random ArrayList of Cases from Grille
         Random rand = new Random();
@@ -145,13 +148,27 @@ public class Grille extends GrilleVue {
         for (Case aCase : tab) {
             aCase.innonde();
         }
-        while (n<amount && countDryCases()!=0){ // pour remplir 3 fois meme s'il ne reste que 2 cases dont une totalleme t seche et l'autre partiellement innondée.
+        while (n<amount && countDryCases()!=0){ // pour remplir 3 fois meme s'il ne reste que 2 cases dont une totallement seche et l'autre partiellement innondée.
             n += min(amount-n,countDryCases());
             tab = getRandomCases(min(amount-n,countDryCases()),true);
             for (Case aCase : tab) {
                 aCase.innonde();
             }
         }
+    }
+    public void claimArtifact(Joueur J,int keyAmount){
+        Coord JCoord = J.getCoord();
+        for (Artifact A: tresors){
+            if (!A.is_claimed() && JCoord.equals(A.get_pos()) && J.hasNkeys(A.get_element(),keyAmount)){
+                J.delNKey(A.get_element(),keyAmount);
+                J.addArtifact(A);
+                A.claim(J);
+                getCaseByCoord(JCoord).removeArtifact();
+                return;
+            }
+        }
+        throw new IllegalCallerException("erreur: claimArtifact -> pas d'Artifact récupérables à la position du joueur.");
+
     }
 
 }
