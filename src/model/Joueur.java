@@ -127,6 +127,7 @@ public class Joueur {
         }
         this.delKey(K);
         J.addKey(K);
+        J.actions -= 1;
     }
 
     public boolean nextPlayer(){

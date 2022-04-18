@@ -217,7 +217,7 @@ public class Grille extends GrilleVue {
                 return;
             }
         }
-        ArrayList<Case> C = getRandomCases(1);
+        ArrayList<Case> C = getRandomCases(1,false);
         innondation(3);
         this.ActivePlayer = this.joueurs[0];
         for(int i=0; i<3; i++){

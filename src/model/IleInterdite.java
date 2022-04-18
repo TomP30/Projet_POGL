@@ -1,11 +1,12 @@
 package model;
 
 import view.*;
+import controller.*;
 
 import java.util.Random;
 
 public class IleInterdite {
-    public static void main(String[] args){
+    public static void main(String[] args) throws Exception {
         //initialization of the main board
         Random rand = new Random();
         Coord heli = new Coord(rand);
@@ -39,10 +40,20 @@ public class IleInterdite {
         //initialization of the graphics content
         Fenetre window = new Fenetre("IleInterdite");
         FinDeTour TurnEnd = new FinDeTour(grille);
+        Search search = new Search(grille);
 
+        Down down = new Down(grille);
+        Up up = new Up(grille);
+        Left left = new Left(grille);
+        Right right = new Right(grille);
 
         window.ajtElem(grille);
         window.ajtElem(TurnEnd);
+
+        window.ajtElem(up);
+        window.ajtElem(down);
+        window.ajtElem(left);
+        window.ajtElem(right);
 
         window.draw();
     }

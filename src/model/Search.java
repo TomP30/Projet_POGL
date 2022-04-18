@@ -1,6 +1,7 @@
 package model;
 
 import controller.ClickableSlot;
+import java.util.Random;
 
 public class Search extends ClickableSlot {
     private Grille grille;
