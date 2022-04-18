@@ -34,11 +34,12 @@ public class IleInterdite {
             Art[i] = c;
         }
 
-        Grille grille = new Grille(heli,Art);
+        Grille grille = new Grille(heli,Art, 6);
 
         //initialization of the graphics content
         Fenetre window = new Fenetre("IleInterdite");
         FinDeTour TurnEnd = new FinDeTour(grille);
+
 
         window.ajtElem(grille);
         window.ajtElem(TurnEnd);

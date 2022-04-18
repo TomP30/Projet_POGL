@@ -14,7 +14,8 @@ public class Grille extends GrilleVue {
     private Case[][] cases;
     private Case heliport;
     private Artifact[] tresors;
-    private Joueur[] joueurs = new Joueur[4];
+    private Joueur[] joueurs = new Joueur[3];
+    private Joueur ActivePlayer;
 
     public boolean isValidCoord(Coord c){
         return c.get_y()>=0 && c.get_y()<6
@@ -24,17 +25,23 @@ public class Grille extends GrilleVue {
                 && c.dist(new Coord(5,0)) >=2
                 && c.dist(new Coord(5,5)) >=2;
     }
-    public Grille(Coord heliPos,Coord[] artifactPos ){
+    public Grille(Coord heliPos,Coord[] artifactPos, int hand) throws Exception{
         super(6,6);
         // Basic constructor for grille, given the position of heliport and the artifacts.
         if (!(isValidCoord(heliPos))){
-            throw new IllegalArgumentException("Coordonnées d'heliport invalides !");
+            throw new Exception("Coordonnées d'heliport invalides !");
         }
         for (Coord c : artifactPos){
             if (!(isValidCoord(c))){
-                throw new IllegalArgumentException("Coordonnées d'artefact invalides !");
+                throw new Exception("Coordonnées d'artefact invalides !");
             }
         }
+
+        Coord[] coord = new Coord[4];
+        coord[0] = new Coord(3,0);
+        coord[1] = new Coord(5,3);
+        coord[2] = new Coord(2,5);
+        coord[3] = new Coord(0,2);
 
         cases = new Case[6][];
         tresors = new Artifact[4];
@@ -42,36 +49,52 @@ public class Grille extends GrilleVue {
             cases[i] = new Case[6];
             for (int j =0;j<6;j++){
                 Coord casCoord = new Coord(i,j);
-                 if (isValidCoord(casCoord)){
+                if (isValidCoord(casCoord)) {
 
-                     if (i == heliPos.get_x() && j == heliPos.get_y()) {
-                         cases[i][j] = new Case(casCoord);
-                         heliport = cases[i][j];
-                         this.ajtElem(heliport);
-                         cases[i][j].setBackground(Color.LIGHT_GRAY);
-                     }else {
-                         cases[i][j] = new Case(casCoord);
-                         for (int k = 0; k<4;k++){
-                                if (i == artifactPos[k].get_x() && j == artifactPos[k].get_y()){
-                                    tresors[k] = new Artifact(artifactPos[k],Type.from(k));
-                                    cases[i][j].add_Artifact(tresors[k]);
-                                }
-                         }
-                         this.ajtElem(cases[i][j]);
-                     }
+                    if (i == heliPos.get_x() && j == heliPos.get_y()) {
+                        cases[i][j] = new Case(casCoord, this);
+                        heliport = cases[i][j];
+                        this.ajtElem(heliport);
+                        cases[i][j].setBackground(Color.LIGHT_GRAY);
+                    } else {
+                        cases[i][j] = new Case(casCoord,"", this);
+                        for (int k = 0; k < 4; k++) {
+                            if (i == artifactPos[k].get_x() && j == artifactPos[k].get_y()) {
+                                tresors[k] = new Artifact(artifactPos[k], Type.from(k));
+                                cases[i][j].add_Artifact(tresors[k]);
+                                cases[i][j].changeText(Type.from(k).toString());
+                            }
+                        }
+                        this.ajtElem(cases[i][j]);
+                    }
                 }else{
-                    cases[i][j] = new Case(casCoord);
+                    cases[i][j] = new Case(casCoord, this);
                     this.ajtElem(cases[i][j]);
-                    cases[i][j].setBackground(Color.DARK_GRAY);
+                    Color c = new Color(0,25,100);
+                    cases[i][j].setBackground(c);
                 }
             }
         }
 
-        for(int i=0; i<4; i++){//les joueurs commencent de l'héliport.
-            this.joueurs[i] = new Joueur(getHeliport().getCoord(),4);
-            heliport.setBackground(Color.RED);
+        for(int i=0; i<3; i++){
+            this.joueurs[i] = new Joueur(coord[i],hand);
+            this.cases[coord[i].get_x()][coord[i].get_y()].occupy();
+            Color c = new Color(150, 25, 0);
+            this.cases[coord[i].get_x()][coord[i].get_y()].setBackground(c);
         }
+        this.ActivePlayer = this.joueurs[0];
     }
+
+    public Joueur getActivePlayer(){ return this.ActivePlayer; }
+    public int getActivePlayerIndex(){
+        for(int i=0; i<3; i++){
+            if(this.joueurs[i]==this.ActivePlayer){
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public ArrayList<Case> neighbours(Case c, int dist) {
         // Gets all the neighbours of c with a maximum distance of dist.
         ArrayList<Case> tab = new ArrayList<Case>();
@@ -170,5 +193,93 @@ public class Grille extends GrilleVue {
         throw new IllegalCallerException("erreur: claimArtifact -> pas d'Artifact récupérables à la position du joueur.");
 
     }
+    public boolean end(){
+        //in order to end the game, there is only one constraint
+        //all 4 player must be on the Heliport with all the Artefacts
+        for(Artifact A : this.tresors){
+            if(A.get_pos()!=null){
+                return false;
+            }
+        }
+        for(Joueur J : this.joueurs){
+            if(J.getCoord() != this.heliport.getCoord()){
+                return false;
+            }
+        }
+        return true;
+    }
 
+    public void nextPlayer(){
+        for(int i=0; i<2; i++){
+            if(this.ActivePlayer == this.joueurs[i]){
+                this.ActivePlayer = this.joueurs[i+1];
+                this.ActivePlayer.showHand();
+                return;
+            }
+        }
+        ArrayList<Case> C = getRandomCases(1);
+        innondation(3);
+        this.ActivePlayer = this.joueurs[0];
+        for(int i=0; i<3; i++){
+            this.joueurs[i].setActions(3);
+        }
+        this.ActivePlayer.showHand();
+    }
+
+    public Artifact[] getTresors(){ return this.tresors; }
+
+    public void ClickableL(Case C){
+        //une case est cliquable si on veut l'assecher
+        //pour se faire le joueur actif doit être dans une des cases adjacentes
+        Joueur J = this.ActivePlayer;
+        Case Cj = this.cases[J.getCoord().get_x()][J.getCoord().get_y()];
+        for(Case cas : this.neighbours(C,1)){
+            if(cas == Cj){
+                C.switchclickL();
+            }
+        }
+    }
+
+    public void ClickabilityL(){
+        //test la Lclickabilité des toutes les cases de la grille
+        //une case est Lcliquable si elle se trouve a coté du joueur actif
+        Joueur J = this.getActivePlayer();
+        for(int j=0; j<6; j++){
+            for(int i=0; i<6; i++){
+                if(j==J.getCoord().get_y() && i==J.getCoord().get_x()){
+                    for(Case C : neighbours(this.cases[i][j],1)) {
+                        C.switchclickL();
+                    }
+                    //switchclick turns clickable to 'TRUE' -> now we must be sure that when the player moves
+                    //the clickability evolves in order to makes it realisticly playable
+                } else {
+                    if(this.cases[i][j].getClickL()){
+                        this.cases[i][j].switchclickL();
+                    }
+                }
+            }
+        }
+    }
+    public void ClickabilityR(){
+        //test la Rcliquabilité de toutes les cases de la grille
+        //une case est Rcliquable si elle se trouve a coté du joueur actif ET contient un joueur
+        Joueur J = this.ActivePlayer;
+        for(int j=0; j<6; j++){
+            for(int i=0; i<6; i++){
+                if(j==J.getCoord().get_y() && i==J.getCoord().get_x()){
+                    for(Case C : neighbours(this.cases[i][j],1)){
+                        if(C.get_occupied()){
+                            C.switchClickR();
+                            System.out.println("Case Rcliquable -> (" + C.getCoord().get_x() + "," + C.getCoord().get_y() + ")");
+                        }
+                    }
+                } else {
+                    if(this.cases[i][j].getClickR()){
+                        System.out.println("Cases annulées -> (" + i + "," + j + ")");
+                        this.cases[i][j].switchClickR();
+                    }
+                }
+            }
+        }
+    }
 }

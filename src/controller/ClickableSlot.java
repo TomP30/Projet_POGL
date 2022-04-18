@@ -23,12 +23,18 @@ public abstract class ClickableSlot extends JPanel implements MouseListener {
     public ClickableSlot(int x, int y){
         setPreferredSize(new Dimension(x,y));
         addMouseListener(this);
-        setBackground(Color.GREEN);
+        Color c = new Color(28, 164, 41, 255);
+        setBackground(c);
     }
 
     //Methods
     public void changeText(String txt){
         this.text.changeText(txt);
+    }
+
+    public void addText(String txt){
+        String text = this.text.toString();
+        this.text.changeText(text + txt);
     }
 
     public abstract void clicGauche();
