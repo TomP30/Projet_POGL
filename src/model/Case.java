@@ -44,6 +44,16 @@ public class Case extends ClickableSlot {
         clickableL = false;
         clickableR = false;
     }
+    public Case(Coord c, String txt){
+        super(txt,80,80);
+        grille = null;
+        tresor = null;
+        innondation = 0;
+        coord = c;
+        occupied = false;
+        clickableL = false;
+        clickableR = false;
+    }
 
 
     public boolean get_occupied(){ return this.occupied; }
@@ -132,9 +142,6 @@ public class Case extends ClickableSlot {
             Coord coord = this.coord;
             for(Joueur J2 : this.grille.getJoueurs()){
                 if(J2.getCoord().get_x() == coord.get_x() && J2.getCoord().get_y() == coord.get_y()){
-                    Fenetre exchange = new Fenetre("exchanging");
-                    Inventory E = new Inventory();
-                    JOptionPane.showMessageDialog(exchange,"Quel clef souhaitez vous donner ?");
                     //ici on veut mtn donner le choix au joueur de donner la clef qu'il veut dans sa main
                     //d'abord il faut donner le choix au joueur actif de la clef a donner
                     System.out.println("Choisissez une carte à donner (indice dans votre main)");

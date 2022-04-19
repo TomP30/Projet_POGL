@@ -151,4 +151,22 @@ public class Joueur {
         }
         System.out.println(hand);
     }
+
+    public String showHandStr(){
+        String hand = "Main du Joueur : |";
+        for(Type K : this.keys){
+            if(K==Type.Stone){
+                hand += " Stone |";
+            } else if(K==Type.Wind){
+                hand += " Wind |";
+            } else if(K==Type.Fire){
+                hand += " Fire |";
+            } else if(K==Type.Wave){
+                hand += " Wave |";
+            } else {
+                hand += " 0 |";
+            }
+        }
+        return hand;
+    }
 }
