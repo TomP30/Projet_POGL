@@ -1,7 +1,14 @@
 package model;
 
-import java.awt.Color;
+import java.awt.*;
+
 import controller.ClickableSlot;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Scanner;
 import java.nio.charset.CoderResult;
 
@@ -13,6 +20,7 @@ public class Case extends ClickableSlot {
     private boolean occupied;
     private boolean clickableL;
     private boolean clickableR;
+    protected Image buffer;
 
     public Case(Coord c, Grille g){
         super(80,80);
