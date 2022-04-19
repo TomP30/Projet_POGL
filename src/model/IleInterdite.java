@@ -7,6 +7,7 @@ import java.util.Random;
 
 public class IleInterdite {
     public static void main(String[] args) throws Exception {
+
         //initialization of the main board
         Random rand = new Random();
         Coord heli = new Coord(rand);

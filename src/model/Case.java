@@ -3,6 +3,7 @@ package model;
 import java.awt.*;
 
 import controller.ClickableSlot;
+import view.Fenetre;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -131,6 +132,9 @@ public class Case extends ClickableSlot {
             Coord coord = this.coord;
             for(Joueur J2 : this.grille.getJoueurs()){
                 if(J2.getCoord().get_x() == coord.get_x() && J2.getCoord().get_y() == coord.get_y()){
+                    Fenetre exchange = new Fenetre("exchanging");
+                    Inventory E = new Inventory();
+                    JOptionPane.showMessageDialog(exchange,"Quel clef souhaitez vous donner ?");
                     //ici on veut mtn donner le choix au joueur de donner la clef qu'il veut dans sa main
                     //d'abord il faut donner le choix au joueur actif de la clef a donner
                     System.out.println("Choisissez une carte à donner (indice dans votre main)");
