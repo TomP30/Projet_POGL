@@ -20,6 +20,13 @@ public abstract class ClickableSlot extends JPanel implements MouseListener {
         this.add(this.text);
     }
 
+    public ClickableSlot(String txt, int x, int y, int h, int l){
+        this(x,y);
+        this.setBounds(x,y,h,l);
+        this.text = new Text(txt);
+        this.add(this.text);
+    }
+
     public ClickableSlot(int x, int y){
         setPreferredSize(new Dimension(x,y));
         addMouseListener(this);

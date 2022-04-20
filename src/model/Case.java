@@ -35,7 +35,7 @@ public class Case extends ClickableSlot {
         clickableR = false;
     }
     public Case(Coord c, String txt, Grille g){
-        super(txt,80,80);
+        super(txt,80,80,c.get_x()*80,c.get_y()*80);
         grille = g;
         tresor = null;
         innondation = 0;
@@ -45,7 +45,7 @@ public class Case extends ClickableSlot {
         clickableR = false;
     }
     public Case(Coord c, String txt){
-        super(txt,80,80);
+        super(txt,80,80,c.get_x()*80,c.get_y()*80);
         grille = null;
         tresor = null;
         innondation = 0;

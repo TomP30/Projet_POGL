@@ -38,6 +38,7 @@ public class IleInterdite {
             Art[i] = c;
         }
 
+
         Grille grille = new Grille(heli,Art, 6);
 
         //initialization of the graphics content
