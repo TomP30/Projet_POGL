@@ -2,7 +2,7 @@ package view;
 
 import javax.swing.JPanel;
 import javax.swing.JComponent;
-import java.awt.GridLayout;
+import java.awt.*;
 
 public class GrilleVue extends JPanel {
     public GrilleVue (int h, int l){

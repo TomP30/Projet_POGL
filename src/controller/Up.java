@@ -16,6 +16,7 @@ public class Up extends ClickableSlot{
 
     @Override
     public void clicGauche(){
+        System.out.println("Move Up");
         Joueur J = this.grille.getActivePlayer();
         Coord coord = new Coord(J.getCoord().get_x()-1,J.getCoord().get_y());
         Coord oldCoord = J.getCoord();

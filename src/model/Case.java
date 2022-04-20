@@ -144,14 +144,20 @@ public class Case extends ClickableSlot {
                 if(J2.getCoord().get_x() == coord.get_x() && J2.getCoord().get_y() == coord.get_y()){
                     //ici on veut mtn donner le choix au joueur de donner la clef qu'il veut dans sa main
                     //d'abord il faut donner le choix au joueur actif de la clef a donner
-                    System.out.println("Choisissez une carte à donner (indice dans votre main)");
-                    J1.showHand();
-                    Scanner keyboard = new Scanner(System.in);
-                    int index = keyboard.nextInt();
-                    Type Kj = J1.getKeys()[index];
-                    J1.giveKey(J2, Kj);
-                    J1.setActions(J1.getActions()-1);
-                    System.out.println("done");
+                    Object[] possibilities = {"Stone","Wind","Fire","Wave","None"};
+                    String s = (String)JOptionPane.showInputDialog(null,"Choose the Key you wanna give :"+J1.showHandStr(),"Customized Dialog",JOptionPane.PLAIN_MESSAGE,null,possibilities,"None");
+                    if(s == "None"){
+                        return;
+                    } else {
+                        for(Type K : J1.getKeys()){
+                            if(K==Type.valueOf(s)){
+                                J1.giveKey(J2, Type.valueOf(s));
+                                J1.setActions(J1.getActions() - 1);
+                                return;
+                            }
+                        }
+                    }
+
                 }
             }
         }

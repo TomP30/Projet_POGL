@@ -249,11 +249,13 @@ public class Grille extends GrilleVue {
                 if(j==J.getCoord().get_y() && i==J.getCoord().get_x()){
                     for(Case C : neighbours(this.cases[i][j],1)) {
                         C.switchclickL();
+                        System.out.println("Case Lcliquable -> (" + C.getCoord().get_x() + "," + C.getCoord().get_y() + ")");
                     }
                     //switchclick turns clickable to 'TRUE' -> now we must be sure that when the player moves
                     //the clickability evolves in order to makes it realisticly playable
                 } else {
                     if(this.cases[i][j].getClickL()){
+                        System.out.println("Cases Lannulées -> (" + i + "," + j + ")");
                         this.cases[i][j].switchclickL();
                     }
                 }
@@ -275,7 +277,7 @@ public class Grille extends GrilleVue {
                     }
                 } else {
                     if(this.cases[i][j].getClickR()){
-                        System.out.println("Cases annulées -> (" + i + "," + j + ")");
+                        System.out.println("Cases Rannulées -> (" + i + "," + j + ")");
                         this.cases[i][j].switchClickR();
                     }
                 }

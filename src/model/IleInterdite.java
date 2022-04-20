@@ -3,6 +3,8 @@ package model;
 import view.*;
 import controller.*;
 
+import javax.swing.plaf.basic.BasicSplitPaneUI;
+import java.awt.*;
 import java.util.Random;
 
 public class IleInterdite {
@@ -40,6 +42,7 @@ public class IleInterdite {
 
         //initialization of the graphics content
         Fenetre window = new Fenetre("IleInterdite");
+
         FinDeTour TurnEnd = new FinDeTour(grille);
         Search search = new Search(grille);
 
@@ -50,14 +53,15 @@ public class IleInterdite {
 
         Search srch = new Search(grille);
 
-        window.ajtElem(grille);
+
         window.ajtElem(TurnEnd);
         window.ajtElem(srch);
-
+        window.ajtElem(grille);
         window.ajtElem(up);
         window.ajtElem(down);
         window.ajtElem(left);
         window.ajtElem(right);
+
 
         window.draw();
     }
