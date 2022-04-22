@@ -40,7 +40,6 @@ public class IleInterdite {
 
 
         Grille grille = new Grille(heli,Art, 6);
-
         //initialization of the graphics content
         Fenetre window = new Fenetre("IleInterdite");
 
@@ -66,5 +65,6 @@ public class IleInterdite {
 
 
         window.draw();
+
     }
 }

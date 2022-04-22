@@ -1,6 +1,7 @@
 package view;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class Img {
     private JFrame frame;
@@ -9,7 +10,7 @@ public class Img {
 
     public Img() {
 
-         Icon = new ImageIcon(this.getClass().getResource("../images/b1.png"));
+         Icon = new ImageIcon(this.getClass().getResource("../images/b2.png"));
          myLabel = new JLabel(Icon);
          myLabel.setSize(600,400);
 
