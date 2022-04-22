@@ -1,9 +1,14 @@
 package model;
 //import du package view
 import view.GrilleVue;
-import java.awt.Color;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
 
 //autres imports
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -223,7 +228,14 @@ public class Grille extends GrilleVue {
         for(int i=0; i<3; i++){
             this.joueurs[i].setActions(3);
         }
-        this.ActivePlayer.showHand();
+        if(GameOver()){
+            JOptionPane.showMessageDialog(null,"- GAME OVER -");
+            return;
+        }
+        ClickabilityL();
+        ClickabilityR();
+        JOptionPane.showMessageDialog(null,"Voici votre main : "+ActivePlayer.showHandStr());
+
     }
 
     public Artifact[] getTresors(){ return this.tresors; }
@@ -284,5 +296,17 @@ public class Grille extends GrilleVue {
                 }
             }
         }
+    }
+    public  boolean GameOver(){
+        boolean end = false;
+        for(Artifact A : this.tresors){
+            if(!(A.is_claimed()) && this.getCase(A.get_pos().get_x(),A.get_pos().get_y()).getInnondation()==2){
+                end = true;
+            }
+        }
+        if(heliport.getInnondation()==2){
+            end = true;
+        }
+        return end;
     }
 }

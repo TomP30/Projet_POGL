@@ -65,6 +65,5 @@ public class IleInterdite {
 
 
         window.draw();
-
     }
 }

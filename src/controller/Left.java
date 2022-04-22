@@ -21,7 +21,7 @@ public class Left extends ClickableSlot{
         Joueur J = this.grille.getActivePlayer();
         Coord coord = new Coord(J.getCoord().get_x(),J.getCoord().get_y()-1);
         Coord oldCoord = J.getCoord();
-        if(coord.isValidCoord() && !this.grille.getCase(coord.get_x(),coord.get_y()).get_occupied() && this.grille.getCase(coord.get_x(),coord.get_y()).getInnondation()!=2) {
+        if(coord.isValidCoord() && this.grille.getCase(coord.get_x(),coord.get_y()).getInnondation()!=2) {
             Color col = new Color(28, 164, 41, 255);
             this.grille.getCase(J.getCoord().get_x(), J.getCoord().get_y()).setBackground(col);
             this.grille.getCase(J.getCoord().get_x(), J.getCoord().get_y()).empty();
@@ -37,6 +37,12 @@ public class Left extends ClickableSlot{
                 this.grille.getCase(oldCoord.get_x(), oldCoord.get_y()).setBackground(c0);
             } else if(C.getCoord() == this.grille.getHeliport().getCoord()){
                 this.grille.getCase(oldCoord.get_x(), oldCoord.get_y()).setBackground(Color.LIGHT_GRAY);
+            }
+            for(Joueur J1 : this.grille.getJoueurs()){
+                if(J1.getCoord().get_x()==oldCoord.get_x() && J1.getCoord().get_y()==oldCoord.get_y()){
+                    Color c1 = new Color(150, 25, 0);
+                    this.grille.getCase(J1.getCoord().get_x(),J1.getCoord().get_y()).setBackground(c1);
+                }
             }
         }
         if(J.nextPlayer()){

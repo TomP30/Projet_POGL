@@ -136,7 +136,7 @@ public class Case extends ClickableSlot {
         //the slot where he clicked is a slot with another player
         //maybe the player will just give a key to the other one not exchange ?
         System.out.println("Case cliquée -> (" + coord.get_x() + "," + coord.get_y() + ")");
-
+        System.out.println(clickableR);
         if(clickableR) {
             Joueur J1 = this.grille.getActivePlayer();
             Coord coord = this.coord;
