@@ -166,12 +166,18 @@ public class Case extends ClickableSlot {
     @Override
     public void clicGauche(){
         System.out.println("LeftClick" + clickableL);
-        if(clickableL){
+        if(clickableL && this.innondation>0){
             this.asseche();
             Joueur J = this.grille.getActivePlayer();
             J.setActions(J.getActions()-1);
             if(J.nextPlayer()){
                 this.grille.nextPlayer();
+            }
+        } else if(occupied && hasArtifact()){
+            //the player is claiming an artefact only if he's on the slot
+            Joueur J = this.grille.getActivePlayer();
+            if(coord.get_x()==J.getCoord().get_x() && coord.get_y()==J.getCoord().get_y()) {
+                grille.claimArtifact(J,4);
             }
         }
     }

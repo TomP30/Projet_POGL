@@ -228,16 +228,17 @@ public class Grille extends GrilleVue {
 
     public Artifact[] getTresors(){ return this.tresors; }
 
-    public void ClickableL(Case C){
+    public boolean ClickableL(Case C){
         //une case est cliquable si on veut l'assecher
         //pour se faire le joueur actif doit être dans une des cases adjacentes
         Joueur J = this.ActivePlayer;
         Case Cj = this.cases[J.getCoord().get_x()][J.getCoord().get_y()];
         for(Case cas : this.neighbours(C,1)){
             if(cas == Cj){
-                C.switchclickL();
+                return true;
             }
         }
+        return false;
     }
 
     public void ClickabilityL(){
@@ -254,7 +255,7 @@ public class Grille extends GrilleVue {
                     //switchclick turns clickable to 'TRUE' -> now we must be sure that when the player moves
                     //the clickability evolves in order to makes it realisticly playable
                 } else {
-                    if(this.cases[i][j].getClickL()){
+                    if(this.cases[i][j].getClickL() && !(ClickableL(this.cases[i][j]))){
                         System.out.println("Cases Lannulées -> (" + i + "," + j + ")");
                         this.cases[i][j].switchclickL();
                     }

@@ -53,10 +53,11 @@ public class IleInterdite {
         Right right = new Right(grille);
 
         Search srch = new Search(grille);
-
+        Discard dscrd = new Discard(grille);
 
         window.ajtElem(TurnEnd);
         window.ajtElem(srch);
+        window.ajtElem(dscrd);
         window.ajtElem(grille);
         window.ajtElem(up);
         window.ajtElem(down);

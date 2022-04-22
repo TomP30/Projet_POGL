@@ -10,6 +10,7 @@ public class Search extends ClickableSlot {
         super("Search",50,25);
         this.grille = g;
     }
+
     @Override
     public void clicGauche(){
         Joueur J = this.grille.getActivePlayer();
