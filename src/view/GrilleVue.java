@@ -6,7 +6,7 @@ import java.awt.*;
 
 public class GrilleVue extends JPanel {
     public GrilleVue (int h, int l){
-        setLayout(new GridLayout(h,l));
+        setLayout(new GridLayout(h,l,5, 5));
     }
 
     public void ajtElem(JComponent elem){

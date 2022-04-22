@@ -153,7 +153,7 @@ public class Joueur {
     }
 
     public String showHandStr(){
-        String hand = "Main du Joueur : |";
+        String hand = "|";
         for(Type K : this.keys){
             if(K==Type.Stone){
                 hand += " Stone |";

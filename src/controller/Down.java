@@ -17,7 +17,7 @@ public class Down extends ClickableSlot{
 
     @Override
     public void clicGauche(){
-        System.out.println("Move Down");
+        this.grille.CheckUp();
         Joueur J = this.grille.getActivePlayer();
         Coord coord = new Coord(J.getCoord().get_x()+1,J.getCoord().get_y());
         Coord oldCoord = J.getCoord();
@@ -49,7 +49,6 @@ public class Down extends ClickableSlot{
         if(J.nextPlayer()){
             this.grille.nextPlayer();
         }
-        this.grille.ClickabilityL();
-        this.grille.ClickabilityR();
+        this.grille.CheckUp();
     }
 }

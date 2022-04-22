@@ -17,7 +17,7 @@ public class Left extends ClickableSlot{
 
     @Override
     public void clicGauche(){
-        System.out.println("Move Left");
+        this.grille.CheckUp();
         Joueur J = this.grille.getActivePlayer();
         Coord coord = new Coord(J.getCoord().get_x(),J.getCoord().get_y()-1);
         Coord oldCoord = J.getCoord();
@@ -48,7 +48,6 @@ public class Left extends ClickableSlot{
         if(J.nextPlayer()){
             this.grille.nextPlayer();
         }
-        this.grille.ClickabilityL();
-        this.grille.ClickabilityR();
+        this.grille.CheckUp();
     }
 }

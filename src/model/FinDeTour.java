@@ -20,6 +20,7 @@ public class FinDeTour extends ClickableSlot {
 
     @Override
     public void clicGauche() {
+        this.grille.CheckUp();
         this.grille.nextPlayer();
     }
 }

@@ -73,6 +73,9 @@ public class Case extends ClickableSlot {
             innondation ++;
             if(innondation == 1){
                 Color c = new Color(0,75,175);
+                if(occupied){
+                    c = new Color(101, 32, 32);
+                }
                 setBackground(c);
             } else if(innondation == 2){
                 Color c = new Color(0,25,100);
@@ -88,6 +91,9 @@ public class Case extends ClickableSlot {
             innondation --;
             if(innondation == 1){
                 Color c = new Color(0,75,175);
+                if(occupied){
+                    c = new Color(101, 32, 32);
+                }
                 setBackground(c);
             } else if(innondation == 0){
                 Color c = new Color(28, 164, 41, 255);

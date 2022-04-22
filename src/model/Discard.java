@@ -16,6 +16,7 @@ public class Discard extends ClickableSlot {
     public void clicGauche(){
         //Whenever a player choose to discard a key it's like when he gives one
             //but the choosen key is removed from hand
+        this.grille.CheckUp();
         Joueur J = grille.getActivePlayer();
 
         Object[] possibilities = {"Stone","Wind","Fire","Wave","None"};

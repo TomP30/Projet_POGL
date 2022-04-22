@@ -88,6 +88,7 @@ public class Grille extends GrilleVue {
             this.cases[coord[i].get_x()][coord[i].get_y()].setBackground(c);
         }
         this.ActivePlayer = this.joueurs[0];
+        CheckUp();
     }
 
     public Joueur getActivePlayer(){ return this.ActivePlayer; }
@@ -198,27 +199,13 @@ public class Grille extends GrilleVue {
         throw new IllegalCallerException("erreur: claimArtifact -> pas d'Artifact récupérables à la position du joueur.");
 
     }
-    public boolean end(){
-        //in order to end the game, there is only one constraint
-        //all 4 player must be on the Heliport with all the Artefacts
-        for(Artifact A : this.tresors){
-            if(A.get_pos()!=null){
-                return false;
-            }
-        }
-        for(Joueur J : this.joueurs){
-            if(J.getCoord() != this.heliport.getCoord()){
-                return false;
-            }
-        }
-        return true;
-    }
 
     public void nextPlayer(){
+        CheckUp();
         for(int i=0; i<2; i++){
             if(this.ActivePlayer == this.joueurs[i]){
                 this.ActivePlayer = this.joueurs[i+1];
-                this.ActivePlayer.showHand();
+                JOptionPane.showMessageDialog(null,"Voici votre main : "+ActivePlayer.showHandStr());
                 return;
             }
         }
@@ -228,12 +215,6 @@ public class Grille extends GrilleVue {
         for(int i=0; i<3; i++){
             this.joueurs[i].setActions(3);
         }
-        if(GameOver()){
-            JOptionPane.showMessageDialog(null,"- GAME OVER -");
-            return;
-        }
-        ClickabilityL();
-        ClickabilityR();
         JOptionPane.showMessageDialog(null,"Voici votre main : "+ActivePlayer.showHandStr());
 
     }
@@ -308,5 +289,33 @@ public class Grille extends GrilleVue {
             end = true;
         }
         return end;
+    }
+
+    public boolean Victory(){
+        boolean victory = true;
+        for(Joueur J : this.joueurs){
+            if(J.getCoord().get_x()!=heliport.getX() && J.getCoord().get_y()!=heliport.getY()){
+                victory = false;
+            }
+        }
+        for(Artifact A : this.tresors){
+            if(!(A.is_claimed())){
+                victory = false;
+            }
+        }
+        return victory;
+    }
+
+    public void CheckUp(){
+        ClickabilityL();
+        ClickabilityR();
+        if(Victory()) {
+            JOptionPane.showMessageDialog(null,"- YOU WIN !!! -");
+            return;
+        } else if(GameOver()){
+            JOptionPane.showMessageDialog(null,"- GAME OVER -");
+            return;
+        }
+
     }
 }

@@ -13,6 +13,7 @@ public class Search extends ClickableSlot {
 
     @Override
     public void clicGauche(){
+        this.grille.CheckUp();
         Joueur J = this.grille.getActivePlayer();
         Random r = new Random();
         int n = r.nextInt(4);
