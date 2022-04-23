@@ -73,8 +73,8 @@ public class ViewPlayer extends JPanel implements MouseListener {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        drawOutline(g, 0, 0, this.width, 140, new Color(124, 78, 40));
-        drawOutline(g, 0, 145, this.width, this.height - 145, new Color(124, 78, 40));
+        drawOutline(g, 0, 0, this.width, 140, new Color(51, 49, 48));
+        drawOutline(g, 0, 145, this.width, this.height - 145, new Color(51, 49, 48));
         if (this.pawns != null) {
             drawPlayer(g);
         }
@@ -128,7 +128,7 @@ public class ViewPlayer extends JPanel implements MouseListener {
         for (int i = 0; i < this.model.getPlayers().size(); i++) {
             if ((model.getActPlayer().getPosition() == model.getPlayers().get(i).getPosition() &&
                     model.getActPlayerId() != i)) {
-                drawPawnOutline(g, i, new Color(255, 0, 0));
+                drawPawnOutline(g, i, new Color(63, 171, 22));
             }
         }
     }
@@ -152,7 +152,7 @@ public class ViewPlayer extends JPanel implements MouseListener {
                 g.drawString("x " + contrPlayer.selectedPlayer.getCards(card), 30 + temples.get(i).getWidth(null),
                         y + temples.get(i).getHeight(null) / 2 + g.getFontMetrics().getAscent() / 2);
                 if (contrPlayer.selectedCard == card) {
-                    g.setColor(new Color(185, 5, 26));
+                    g.setColor(new Color(255, 255, 255));
                     g.fillOval(5, y + temples.get(i).getWidth(null) / 2 - 5, 10, 10);
                     g.setColor(colorT);
                 }

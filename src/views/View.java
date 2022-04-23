@@ -40,7 +40,7 @@ public class View extends JFrame {
         super();
         this.model = m;
         setSize(500, 400);
-        this.background = new Color(55, 55, 55);
+        this.background = new Color(138, 136, 136);
 
         this.elements = new JPanel();
         this.elements.setBackground(background);
