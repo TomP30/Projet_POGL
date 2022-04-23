@@ -5,8 +5,6 @@ public enum Card {
     EAU,
     FEU,
     TERRE,
-    SAC,
-    HELICOPTERE,
     DELUGE;
 
     public int getTempleID(Card card) {

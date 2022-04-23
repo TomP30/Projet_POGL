@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import models.Model;
 import models.Zone;
-import models.roles.Player;
+import models.Player;
 import views.View;
 
 public class ContrFlooding extends Controller {
@@ -15,7 +15,7 @@ public class ContrFlooding extends Controller {
 
     public ContrFlooding(Model model, View view) {
         super(model, view);
-        nbInondation = model.getDelugeLvl().innondationRate();
+        nbInondation = model.getFloodLevel().innondationRate();
         this.escape = null;
     }
 
@@ -74,6 +74,6 @@ public class ContrFlooding extends Controller {
                 return;
             }
         }
-        nbInondation = model.getDelugeLvl().innondationRate();
+        nbInondation = model.getFloodLevel().innondationRate();
     }
 }

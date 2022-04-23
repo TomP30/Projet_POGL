@@ -1,5 +1,5 @@
-import models.Model;
-import views.View;
+import models.*;
+import views.*;
 
 public class Game {
     public static void main(String[] args) {

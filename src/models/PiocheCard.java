@@ -15,12 +15,8 @@ public class PiocheCard {
             this.pioche.add(Card.FEU);
             this.pioche.add(Card.EAU);
             this.pioche.add(Card.TERRE);
-            if (i > 1) {
-                this.pioche.add(Card.DELUGE);
-                this.pioche.add(Card.HELICOPTERE);
-            }
             if (i > 2) {
-                this.pioche.add(Card.SAC);
+                this.pioche.add(Card.DELUGE);
             }
         }
         Collections.shuffle(this.pioche);

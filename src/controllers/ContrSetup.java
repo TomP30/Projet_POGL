@@ -8,7 +8,7 @@ import java.util.Collections;
 
 import models.Model;
 import models.Zone;
-import models.roles.*;
+import models.*;
 import views.View;
 
 /**
@@ -20,57 +20,25 @@ public class ContrSetup extends Controller implements ActionListener {
         super(model, view);
     }
 
-    private Player createPlayer(Role role, String name, Zone zone) {
-        Player player = null;
-        switch (role) {
-            case Explorateur:
-                player = new Explorer(name, zone);
-                break;
-            case Ingenieur:
-                player = new Engineer(name, zone);
-                break;
+    private Player createPlayer(String name, Zone zone, int i) {
+        Player player = new Player(name,zone,i);
 
-            case Messager:
-                player = new Messenger(name, zone);
-                break;
-
-            case Pilote:
-                player = new Pilot(name, model.getHeliZone());
-                break;
-
-            case Navigateur:
-                player = new Navigator(name, zone);
-                break;
-
-            case Plongeur:
-                player = new Diver(name, zone);
-                break;
-            default:
-                break;
-        }
         return player;
     }
 
     private void setPlayer(ArrayList<String> names) {
-        ArrayList<Role> roles = new ArrayList<Role>();
-        roles.add(Role.Explorateur);
-        roles.add(Role.Ingenieur);
-        roles.add(Role.Messager);
-        roles.add(Role.Navigateur);
-        roles.add(Role.Pilote);
-        roles.add(Role.Plongeur);
-        Collections.shuffle(roles);
+        int i=0;
         for (String name: names){
-            Player player = createPlayer(roles.get(0), name, model.getIsland().getRandomCase());
+            Player player = createPlayer(name, model.getIsland().getRandomCase(),i);
             model.addPlayer(player);
-            roles.remove(0);
+            i++;
         }
     }
 
     public void actionPerformed(ActionEvent e) {
         ArrayList<String> names = view.getViewSetup().getNamePlayer();
         setPlayer(names);
-        model.getDelugeLvl().setLvl(this.view.setup.levelSlider.getValue() - 1);
+        model.getFloodLevel().setLvl(this.view.setup.levelSlider.getValue() - 1);
         view.start();
     }
 }

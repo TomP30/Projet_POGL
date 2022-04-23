@@ -7,9 +7,7 @@ import java.util.ArrayList;
 import models.Card;
 import models.Model;
 import models.Zone;
-import models.roles.Player;
-import models.roles.Role;
-import models.roles.Player.State;
+import models.Player;
 import views.View;
 
 /**
@@ -26,21 +24,10 @@ public class ContrGrid extends Controller {
 
     public void click(int x, int y) {
         if (model.getIsland().inMap(new Point(x, y)) && model.getState() != Model.State.LOSE) {
-            if (this.model.getState() == Model.State.SPE_CARD) {
-                if (this.contrPlayer.selectedCard == Card.HELICOPTERE) {
-                    clickHeliCard(x, y);
-                } else if (this.contrPlayer.selectedCard == Card.SAC) {
-                    clickSandBag(x, y);
-                }
-                this.contrPlayer.selectedCard = null;
-            } else if (contrFlooding.getEscape() != null) {
+            if (contrFlooding.getEscape() != null) {
                 clickEscape(x, y);
             } else if (model.getActPlayer().getState() == Player.State.MOVING) {
-                if (model.getActPlayer().getRole() == Role.Navigateur) {
-                    clickNavigator(x, y);
-                } else {
-                    clickMove(x, y);
-                }
+                clickMove(x,y);
             } else if (model.getActPlayer().getState() == Player.State.DRY) {
                 clickDry(x, y);
             }
@@ -52,36 +39,6 @@ public class ContrGrid extends Controller {
         this.contrPlayer = contrPlayer;
     }
 
-    private void clickHeliCard(int x, int y) {
-        Zone move = this.model.getIsland().getZone(x, y);
-        if (move.moove()) {
-            for (Player p : this.contrPlayer.playersHeli) {
-                p.changePosition(move);
-            }
-            this.contrPlayer.selectedPlayer.useCard(Card.HELICOPTERE);
-            this.model.getPiocheCard().getDefausse().add(Card.HELICOPTERE);
-            if (this.contrPlayer.selectedPlayer.getNbCards() <= 5) {
-                this.contrPlayer.selectedPlayer.setState(State.MOVING);
-                this.model.nextPlayer();
-            }
-            this.model.setState(Model.State.RUNNING);
-        }
-    }
-
-    private void clickSandBag(int x, int y) {
-        Zone caseC = this.model.getIsland().getZone(x, y);
-        if(caseC.getWaterLvl() > 0 && caseC.getWaterLvl() < caseC.getMaxWaterLvl()){
-            caseC.dry();
-            this.contrPlayer.selectedPlayer.useCard(Card.SAC);
-            this.model.getPiocheCard().getDefausse().add(Card.SAC);
-            if (this.contrPlayer.selectedPlayer.getNbCards() <= 5) {
-                this.contrPlayer.selectedPlayer.setState(State.MOVING);
-                this.model.nextPlayer();
-            }
-            this.model.setState(Model.State.RUNNING);
-        }
-    }
-
     private void clickMove(int x, int y) {
         int[][] action = model.nbAction(model.getActPlayer());
         Zone moveZ = model.getIsland().getZone(x, y);
@@ -90,11 +47,6 @@ public class ContrGrid extends Controller {
                 && moveZ.moove()) {
             model.getActPlayer().changePosition(moveZ);
             model.getActPlayer().setAction(model.getActPlayer().getNbActions() - action[y][x]);
-            if (model.getActPlayer().getRole() == Role.Pilote) {
-                model.getActPlayer().powerDown();
-            } else if (model.getActPlayer().getRole() == Role.Ingenieur && !model.getActPlayer().getPower()) {
-                model.getActPlayer().dryUp();
-            }
         }
     }
 

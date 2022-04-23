@@ -4,7 +4,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 import models.Model;
-import models.roles.Player;
+import models.Player;
 import models.Card;
 import views.View;
 
@@ -36,8 +36,8 @@ public class ContrEndTurn extends Controller implements ActionListener {
                 for (int i = 0; i < 2; i++) {
                     Card actualCard = model.getPiocheCard().pick();
                     if (actualCard.equals(Card.DELUGE)) {
-                        model.getDelugeLvl().incrementLvl();
-                        if(model.getDelugeLvl().getLvl() == 9) {
+                        model.getFloodLevel().incrementLvl();
+                        if(model.getFloodLevel().getLvl() == 9) {
                             model.setState(Model.State.LOSE);
                             view.gameOver();
                         }

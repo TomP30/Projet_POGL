@@ -2,10 +2,10 @@ package models;
 
 import java.util.ArrayList;
 
-public class Deluge {
+public class Flood {
     private ArrayList<Boolean> delugeLvl;
 
-    public Deluge(int niv) {
+    public Flood(int niv) {
         this.delugeLvl = new ArrayList<Boolean>(10);
         for (int i = 0; i < 10; i++) {
             this.delugeLvl.add(false);

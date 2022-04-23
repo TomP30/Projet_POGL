@@ -1,20 +1,13 @@
-package models.roles;
+package models;
 
-import java.awt.Point;
-
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import models.Model;
-import models.Zone;
-import models.Card;
-
-import java.lang.Math;
 
 /**
  * Players
  */
-public abstract class Player {
+public class Player {
     public static enum State {
         MOVING,
         DRY,
@@ -22,28 +15,33 @@ public abstract class Player {
         ESCAPE,
         THROW
     }
+    public static enum colour {
+        greenPawn,
+        redPawn,
+        bluePawn,
+        yellowPawn,
+    }
 
     protected Zone position;
     protected int nbActions;
     protected State state;
     protected String name;
     protected HashMap<Card, Integer> cards;
-    protected Role role;
     protected boolean power;
+    private String image;
 
     // Constructeur
-    public Player(String name, Zone zone) {
+    public Player(String name, Zone zone, int i) {
         this.name = name;
         this.cards = new HashMap<Card, Integer>();
         this.cards.put(Card.AIR, 0);
         this.cards.put(Card.EAU, 0);
         this.cards.put(Card.FEU, 0);
         this.cards.put(Card.TERRE, 0);
-        this.cards.put(Card.HELICOPTERE, 0);
-        this.cards.put(Card.SAC, 0);
         this.nbActions = 3;
         this.position = zone;
         this.state = State.MOVING;
+        this.image = colour.values()[i].toString()+".png";
     }
 
     // Setter
@@ -79,19 +77,13 @@ public abstract class Player {
         return this.state;
     }
 
-    public Role getRole() {
-        return this.role;
-    }
-
-    public void setRole(Role r) {
-        this.role = r;
-    }
-
     public void addcard(Card c) {
         this.cards.put(c, this.cards.get(c) + 1);
     }
 
     // Getter
+    public String getImage(){ return this.image; }
+
     public boolean getPower() {
         return this.power;
     }

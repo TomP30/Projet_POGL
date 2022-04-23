@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.io.IOException;
 import java.util.logging.*;
 
-import models.roles.Player;
+import models.Player;
 
 import java.awt.Point;
 
@@ -16,14 +16,13 @@ public class Model {
         SETUP,
         RUNNING,
         LOSE,
-        VICTORY,
-        SPE_CARD
+        VICTORY
     }
 
     private String map;
     private State state;
     private Island island;
-    private Deluge delugeLvl;
+    private Flood flood;
     private ArrayList<Zone> temple;
     private ArrayList<Boolean> treasureState;
     private ArrayList<Player> players;
@@ -43,7 +42,7 @@ public class Model {
             this.island = new Island();
         }
 
-        this.delugeLvl = new Deluge(0);
+        this.flood = new Flood(0);
         this.map = map;
         this.state = State.SETUP;
         this.temple = new ArrayList<Zone>();
@@ -64,8 +63,8 @@ public class Model {
     }
 
     // Getter
-    public Deluge getDelugeLvl() {
-        return this.delugeLvl;
+    public Flood getFloodLevel() {
+        return this.flood;
     }
 
     public Boolean getTreasureState(int i) {

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import models.Card;
 import models.Model;
-import models.roles.Player;
+import models.Player;
 import views.View;
 
 /**
@@ -22,11 +22,6 @@ public class ContrPlayer extends Controller {
     }
 
     public void playerClick(Player player) {
-        if (this.model.getState() == Model.State.SPE_CARD) {
-            selectedPlayerHeli(player);
-            return;
-        }
-
         Player lastPlayer = this.selectedPlayer;
         this.selectedPlayer = player;
 
@@ -75,32 +70,16 @@ public class ContrPlayer extends Controller {
     private Boolean victoryCheck() {
         boolean ownH = false;
         for (Player p : model.getPlayers()) {
-            if (p.getCards(Card.HELICOPTERE) > 0) {
-                ownH = true;
-            }
             if (p.getPosition() != model.getHeliZone()) {
                 return false;
             }
         }
-        return !model.getTreasureState().contains(false) && ownH;
+        return !model.getTreasureState().contains(false);
     }
 
     public void cardClick(Card card) {
         this.selectedCard = card;
-        if (model.getState() == Model.State.SPE_CARD) {
-            if (this.selectedPlayer != null && this.selectedPlayer.getCards(card) >= 1) {
-                if (card == Card.HELICOPTERE) {
-                    if (victoryCheck()) {
-                        model.setState(Model.State.VICTORY);
-                        this.view.gameOver();
-                        return;
-                    }
-                    this.selectedCard = Card.HELICOPTERE;
-                } else if (card == Card.SAC) {
-                    this.selectedCard = Card.SAC;
-                }
-            }
-        } else if (model.getActPlayer().getState() == Player.State.THROW) {
+        if (model.getActPlayer().getState() == Player.State.THROW) {
             throwClick(card);
         }
         view.repaint();

@@ -19,8 +19,7 @@ import models.Card;
 import models.Island;
 import models.Model;
 import models.Zone;
-import models.roles.Player;
-import models.roles.Role;
+import models.Player;
 
 /**
  * Grid
@@ -83,7 +82,7 @@ public class ViewGrid extends JPanel implements MouseListener {
         pawns.clear();
         String path = "images/pawns/";
         for (int i = 0; i < model.getPlayers().size(); i++) {
-            Image img = new ImageIcon(path + model.getPlayers().get(i).getRole().getImage()).getImage();
+            Image img = new ImageIcon(path + model.getPlayers().get(i).getImage()).getImage();
             pawns.add(img);
         }
     }
@@ -99,17 +98,8 @@ public class ViewGrid extends JPanel implements MouseListener {
             } else if (model.getActPlayer().getState() == Player.State.DRY && model.getActPlayer().getNbActions() > 0) {
                 drawDry(g);
             } else if (model.getActPlayer().getState() == Player.State.MOVING) {
-                if (model.getActPlayer().getRole() == Role.Navigateur) {
-                    drawNavigatorMove(g);
-                } else {
-                    drawMove(g);
-                }
-            }
-        } else if (model.getState() == Model.State.SPE_CARD) {
-            if (this.contrPlayer.selectedCard == Card.HELICOPTERE && this.contrPlayer.playersHeli.size() > 0) {
-                drawHeli(g);
-            } else if (this.contrPlayer.selectedCard == Card.SAC) {
-                drawSandBag(g);
+                drawMove(g);
+
             }
         }
         drawImages(g);

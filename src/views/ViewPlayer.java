@@ -14,8 +14,7 @@ import javax.swing.JPanel;
 import controllers.ContrPlayer;
 import models.Card;
 import models.Model;
-import models.roles.Player;
-import models.roles.Role;
+import models.Player;
 
 /**
  * ViewPlayer
@@ -32,8 +31,6 @@ public class ViewPlayer extends JPanel implements MouseListener {
 
     public ArrayList<Image> pawns;
     public ArrayList<Image> temples;
-    public Image sandbag;
-    public Image helicopter;
 
     public ViewPlayer(Model model, View view) {
         this.model = model;
@@ -60,14 +57,6 @@ public class ViewPlayer extends JPanel implements MouseListener {
             img.getHeight(null);
             temples.add(img);
         }
-
-        sandbag = new ImageIcon("images/sandbag.png").getImage();
-        sandbag = sandbag.getScaledInstance(sizeCase - 30, sizeCase - 30, Image.SCALE_DEFAULT);
-        sandbag.getHeight(null);
-
-        helicopter = new ImageIcon("images/heliport.png").getImage();
-        helicopter = helicopter.getScaledInstance(sizeCase - 30, sizeCase - 30, Image.SCALE_DEFAULT);
-        helicopter.getHeight(null);
 
         setPreferredSize(new java.awt.Dimension(width, height));
         setBackground(view.background);
@@ -109,10 +98,7 @@ public class ViewPlayer extends JPanel implements MouseListener {
             g.drawImage(this.pawns.get(player),
                     30 + (pawnsSapcing + this.pawns.get(player).getWidth(null) / 2) * player, 15, null);
 
-            if ((model.getPlayers().get(player) == contrPlayer.selectedPlayer
-                    && model.getState() != Model.State.SPE_CARD)
-                    || (model.getState() == Model.State.SPE_CARD
-                            && contrPlayer.playersHeli.contains(model.getPlayers().get(player)))) {
+            if ((model.getPlayers().get(player) == contrPlayer.selectedPlayer)) {
                 int midX = 30 + (pawnsSapcing + this.pawns.get(player).getWidth(null) / 2) * player
                         + this.pawns.get(player).getWidth(null) / 2;
                 int midY = 15 + this.pawns.get(player).getHeight(null) / 2;
@@ -136,15 +122,12 @@ public class ViewPlayer extends JPanel implements MouseListener {
         }
         g.drawString(model.getActPlayer().getName() + "        " + action, 20,
                 130 - g.getFontMetrics().getHeight());
-        g.drawString(model.getActPlayer().getRole().toString(), 20, 130);
     }
 
     private void drawExchange(Graphics g) {
         for (int i = 0; i < this.model.getPlayers().size(); i++) {
             if ((model.getActPlayer().getPosition() == model.getPlayers().get(i).getPosition() &&
-                    model.getActPlayerId() != i)
-                    || (model.getActPlayer().getRole() == Role.Messager
-                            && model.getActPlayer() != model.getPlayers().get(i))) {
+                    model.getActPlayerId() != i)) {
                 drawPawnOutline(g, i, new Color(255, 0, 0));
             }
         }
@@ -160,8 +143,6 @@ public class ViewPlayer extends JPanel implements MouseListener {
             g.drawImage(this.pawns.get(index), 20, minY + 20, null);
             g.drawString("" + player.getName(), 30 + pawns.get(index).getWidth(null),
                     minY + 20 + pawns.get(index).getHeight(null) - g.getFontMetrics().getHeight());
-            g.drawString("" + player.getRole().toString(), 30 + pawns.get(index).getWidth(null),
-                    minY + 20 + pawns.get(index).getHeight(null));
 
             int space = (this.width - minY - 60) / 4;
             for (int i = 0; i < temples.size(); i++) {
@@ -176,38 +157,12 @@ public class ViewPlayer extends JPanel implements MouseListener {
                     g.setColor(colorT);
                 }
             }
-            g.drawImage(sandbag, this.width / 2, minY + 100 + (space + sandbag.getHeight(null)), null);
-            g.drawString("x " + contrPlayer.selectedPlayer.getCards(Card.SAC), this.width / 2 + sandbag.getWidth(null),
-                    minY + 100 + (space + sandbag.getHeight(null)) + sandbag.getHeight(null) / 2
-                            + g.getFontMetrics().getAscent() / 2);
-
-            g.drawImage(helicopter, this.width / 2, minY + 100 + (space + helicopter.getHeight(null)) * 2, null);
-            g.drawString("x " + contrPlayer.selectedPlayer.getCards(Card.HELICOPTERE),
-                    this.width / 2 + helicopter.getWidth(null),
-                    minY + 100 + (space + helicopter.getHeight(null)) * 2 + helicopter.getHeight(null) / 2
-                            + g.getFontMetrics().getAscent() / 2);
-            if (Card.SAC == contrPlayer.selectedCard || Card.HELICOPTERE == contrPlayer.selectedCard) {
-                int i = 0;
-                if (Card.SAC == contrPlayer.selectedCard) {
-                    i = 1;
-                } else if (Card.HELICOPTERE == contrPlayer.selectedCard) {
-                    i = 2;
-                }
-                if (i != 0) {
-                    g.setColor(new Color(185, 5, 26));
-                    g.fillOval(this.width / 2 - 10,
-                            minY + 100 + (space + helicopter.getHeight(null)) * i + helicopter.getHeight(null) / 2 - 5,
-                            10, 10);
-                    g.setColor(colorT);
-                }
-            }
         }
     }
 
     public void mouseClicked(MouseEvent e) {
         if ((e.getY() >= 15 && e.getY() <= 15 + this.pawns.get(0).getHeight(null))
-                && (model.getActPlayer().getState() != Player.State.THROW
-                        || model.getState() == Model.State.SPE_CARD)) {
+                && (model.getActPlayer().getState() != Player.State.THROW)) {
             for (int player = 0; player < model.getPlayers().size(); player++) {
                 int size = this.pawns.get(player).getHeight(null) + 10;
                 if (e.getX() >= 30 + (pawnsSapcing + this.pawns.get(player).getWidth(null) / 2) * player - size / 2
@@ -229,15 +184,6 @@ public class ViewPlayer extends JPanel implements MouseListener {
                     contrPlayer.cardClick(Card.getCardTemple(i));
                     return;
                 }
-            }
-            if (e.getX() >= this.width / 2 && e.getX() <= this.width / 2 + sandbag.getWidth(null)
-                    && e.getY() >= minY + 100 + space + sandbag.getHeight(null)
-                    && e.getY() <= minY + 100 + space + sandbag.getHeight(null) + sandbag.getHeight(null)) {
-                contrPlayer.cardClick(Card.SAC);
-            } else if (e.getX() >= this.width / 2 && e.getX() <= this.width / 2 + helicopter.getWidth(null)
-                    && e.getY() >= minY + 100 + (space + helicopter.getHeight(null)) * 2
-                    && e.getY() <= minY + 100 + (space + helicopter.getHeight(null)) * 2 + helicopter.getHeight(null)) {
-                contrPlayer.cardClick(Card.HELICOPTERE);
             }
         }
     }

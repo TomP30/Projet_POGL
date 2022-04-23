@@ -38,6 +38,6 @@ public class ViewLevel extends JPanel {
         g.drawImage(Level, this.getWidth() / 2 - Level.getWidth(null) / 2, this.getHeight() / 2 - Level.getHeight(null) / 2, null);
         int minY = this.getHeight() / 2 + Level.getHeight(null) / 2 - 73;
         int space = 34;
-        g.drawImage(Stick, this.getWidth() / 2 - Level.getWidth(null) / 2 - 20, minY - space * model.getDelugeLvl().getLvl(), null);
+        g.drawImage(Stick, this.getWidth() / 2 - Level.getWidth(null) / 2 - 20, minY - space * model.getFloodLevel().getLvl(), null);
     }
 }
