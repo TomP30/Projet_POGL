@@ -1,2 +1,11 @@
 # Projet_POGL
-L2 POGL project
+####Abel Henry-Lapassat & Tom Pleskoff
+
+     Règles du jeu :
+
+##
+    Comment Jouer : 
+
+## 
+    Presentation de l'interface : 
+
