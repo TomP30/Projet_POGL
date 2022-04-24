@@ -10,13 +10,13 @@ import views.View;
 /**
  * ContrPlayer
  */
-public class ContrPlayer extends Controller {
+public class PlayerCtrl extends Controler {
     public Player selectedPlayer;
     public ArrayList<Player> playersHeli;
     public Card selectedCard;
-    public ContrEndTurn contrEndTurn;
+    public EndTurnCtrl endTurnCtrl;
 
-    public ContrPlayer(Model model, View view) {
+    public PlayerCtrl(Model model, View view) {
         super(model, view);
         this.playersHeli = new ArrayList<Player>();
     }
@@ -31,7 +31,7 @@ public class ContrPlayer extends Controller {
                 this.model.getActPlayer().useCard(this.selectedCard);
                 this.selectedPlayer.addcard(this.selectedCard);
 
-                this.model.getActPlayer().setState(Player.State.MOVING);
+                this.model.getActPlayer().setState(Player.Action.Move);
                 this.selectedCard = null;
                 this.selectedPlayer = lastPlayer;
                 view.repaint();
@@ -61,8 +61,8 @@ public class ContrPlayer extends Controller {
         this.selectedCard = null;
         if (model.getActPlayer().getCards(card) >= 1) {
             model.getActPlayer().useCard(card);
-            if (model.getActPlayer().getNbCards() <= contrEndTurn.maxCard) {
-                contrEndTurn.nexTurn();
+            if (model.getActPlayer().getNbCards() <= endTurnCtrl.maxCard) {
+                endTurnCtrl.nexTurn();
             }
         }
     }
@@ -79,7 +79,7 @@ public class ContrPlayer extends Controller {
 
     public void cardClick(Card card) {
         this.selectedCard = card;
-        if (model.getActPlayer().getState() == Player.State.THROW) {
+        if (model.getActPlayer().getState() == Player.Action.Discard) {
             throwClick(card);
         }
         view.repaint();

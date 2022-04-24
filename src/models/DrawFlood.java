@@ -3,12 +3,12 @@ package models;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class PiocheInnondation {
+public class DrawFlood {
     private ArrayList<Case> pioche;
     private ArrayList<Case> defausse;
     private int nbCartePioche;
 
-    public PiocheInnondation(ArrayList<Case> p) {
+    public DrawFlood(ArrayList<Case> p) {
         this.pioche = p;
         Collections.shuffle(this.pioche);
         this.defausse = new ArrayList<Case>();
@@ -42,7 +42,7 @@ public class PiocheInnondation {
             resetPioche();
         }
         Case z = this.getPioche().get(0);
-        if (z.getWaterLvl() != z.getMaxWaterLvl()) {
+        if (z.getFlood() != z.getMaxFlood()) {
             this.addCardDefausse(z);
         }
         this.pioche.remove(0);

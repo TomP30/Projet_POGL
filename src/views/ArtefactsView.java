@@ -12,13 +12,13 @@ import models.Model;
 /**
  * ViewTreasure
  */
-public class ViewTreasure extends JPanel {
+public class ArtefactsView extends JPanel {
     public Model model;
     public ArrayList<Image> temples;
 
-    public ViewTreasure(Model model, View view, ViewGrid viewGrid) {
+    public ArtefactsView(Model model, View view, BoardView boardView) {
         this.model = model;
-        this.temples = viewGrid.temples;
+        this.temples = boardView.temples;
         setBackground(view.background);
     }
 

@@ -4,7 +4,6 @@ import java.awt.Point;
 
 import java.util.ArrayList;
 
-import models.Card;
 import models.Model;
 import models.Case;
 import models.Player;
@@ -13,30 +12,30 @@ import views.View;
 /**
  * ContrGrid
  */
-public class ContrGrid extends Controller {
-    private ContrFlooding contrFlooding;
-    private ContrPlayer contrPlayer;
+public class BoardCtrl extends Controler {
+    private FloodingCtrl floodingCtrl;
+    private PlayerCtrl playerCtrl;
 
-    public ContrGrid(Model model, View view, ContrFlooding contrFlooding) {
+    public BoardCtrl(Model model, View view, FloodingCtrl floodingCtrl) {
         super(model, view);
-        this.contrFlooding = contrFlooding;
+        this.floodingCtrl = floodingCtrl;
     }
 
     public void click(int x, int y) {
-        if (model.getIsland().inMap(new Point(x, y)) && model.getState() != Model.State.LOSE) {
-            if (contrFlooding.getEscape() != null) {
+        if (model.getIsland().inMap(new Point(x, y)) && model.getState() != Model.Condition.ENDLOST) {
+            if (floodingCtrl.getEscape() != null) {
                 clickEscape(x, y);
-            } else if (model.getActPlayer().getState() == Player.State.MOVING) {
+            } else if (model.getActPlayer().getState() == Player.Action.Move) {
                 clickMove(x,y);
-            } else if (model.getActPlayer().getState() == Player.State.DRY) {
+            } else if (model.getActPlayer().getState() == Player.Action.Drain) {
                 clickDry(x, y);
             }
         }
         this.view.repaint();
     }
 
-    public void setContrPlayer(ContrPlayer contrPlayer) {
-        this.contrPlayer = contrPlayer;
+    public void setContrPlayer(PlayerCtrl playerCtrl) {
+        this.playerCtrl = playerCtrl;
     }
 
     private void clickMove(int x, int y) {
@@ -44,22 +43,22 @@ public class ContrGrid extends Controller {
         Case Cmove = model.getIsland().getCase(x, y);
 
         if (action[y][x] <= model.getActPlayer().getNbActions()
-                && Cmove.moove()) {
+                && Cmove.movable()) {
             model.getActPlayer().changePosition(Cmove);
             model.getActPlayer().setAction(model.getActPlayer().getNbActions() - action[y][x]);
         }
     }
 
     private void clickNavigator(int x, int y) {
-        if (contrPlayer.selectedPlayer == null || contrPlayer.selectedPlayer == null
-                || contrPlayer.selectedPlayer == model.getActPlayer()) {
+        if (playerCtrl.selectedPlayer == null || playerCtrl.selectedPlayer == null
+                || playerCtrl.selectedPlayer == model.getActPlayer()) {
             clickMove(x, y);
         } else {
-            int[][] action = model.nbActionNormal(contrPlayer.selectedPlayer.getPosition().getX(),
-                    contrPlayer.selectedPlayer.getPosition().getY());
+            int[][] action = model.nbActionNormal(playerCtrl.selectedPlayer.getPosition().getX(),
+                    playerCtrl.selectedPlayer.getPosition().getY());
             if (action[y][x] <= 2 && model.getActPlayer().getNbActions() > 0) {
                 model.getActPlayer().setAction(model.getActPlayer().getNbActions() - 1);
-                contrPlayer.selectedPlayer.changePosition(model.getIsland().getCase(x, y));
+                playerCtrl.selectedPlayer.changePosition(model.getIsland().getCase(x, y));
             }
         }
     }
@@ -75,7 +74,7 @@ public class ContrGrid extends Controller {
                 digZones.add(model.getIsland().getCase(point.x, point.y));
             }
 
-            if (digZ.getWaterLvl() == 1 && digZones.contains(digZ)) {
+            if (digZ.getFlood() == 1 && digZones.contains(digZ)) {
                 digZ.dry();
                 model.getActPlayer().dryUp();
             }
@@ -83,15 +82,15 @@ public class ContrGrid extends Controller {
     }
 
     private void clickEscape(int x, int y) {
-        ArrayList<Point> neigbours = contrFlooding.getEscape().neigboursMove(this.model);
+        ArrayList<Point> neigbours = floodingCtrl.getEscape().neigboursMove(this.model);
         for (Point point : neigbours) {
             Case zone = model.getIsland().getCase(point.x, point.y);
-            if (zone != null && zone.getWaterLvl() != zone.getMaxWaterLvl() && x == zone.getX() && y == zone.getY()) {
-                contrFlooding.getEscape().setState(Player.State.MOVING);
-                contrFlooding.getEscape().changePosition(zone);
-                contrFlooding.setEscape();
-                if (contrFlooding.getEscape() == null) {
-                    contrFlooding.flooding();
+            if (zone != null && zone.getFlood() != zone.getMaxFlood() && x == zone.getX() && y == zone.getY()) {
+                floodingCtrl.getEscape().setState(Player.Action.Move);
+                floodingCtrl.getEscape().changePosition(zone);
+                floodingCtrl.setEscape();
+                if (floodingCtrl.getEscape() == null) {
+                    floodingCtrl.flooding();
                 }
                 return;
             }

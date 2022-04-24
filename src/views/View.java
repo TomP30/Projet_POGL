@@ -17,18 +17,17 @@ import models.Player;
 public class View extends JFrame {
     private Model model;
 
-    public ViewSetup setup;
-    public ViewGrid grid;
-    public ViewPlayer player;
-    public ViewTreasure treasure;
-    public ViewLevel inondationLevel;
+    public SetupView setup;
+    public BoardView grid;
+    public PlayerView player;
+    public ArtefactsView treasure;
 
     private JPanel buttons;
     private JPanel gameOverButtons;
 
-    public ContrEndTurn contrEndTurn;
-    public ContrFlooding contrFlooding;
-    public ContrSearch contrSearch;
+    public EndTurnCtrl endTurnCtrl;
+    public FloodingCtrl floodingCtrl;
+    public Search search;
 
     private JPanel elements;
     public Color background;
@@ -45,18 +44,16 @@ public class View extends JFrame {
         this.elements = new JPanel();
         this.elements.setBackground(background);
 
-        this.contrFlooding = new ContrFlooding(this.model, this);
-        this.contrEndTurn = new ContrEndTurn(this.model, this, this.contrFlooding);
-        this.contrSearch = new ContrSearch(model, this);
+        this.floodingCtrl = new FloodingCtrl(this.model, this);
+        this.endTurnCtrl = new EndTurnCtrl(this.model, this, this.floodingCtrl);
+        this.search = new Search(model, this);
 
-        this.setup = new ViewSetup(this.model, this);
-        this.grid = new ViewGrid(this.model, this, this.contrFlooding);
-        this.player = new ViewPlayer(this.model, this);
-        this.treasure = new ViewTreasure(this.model, this, this.grid);
+        this.setup = new SetupView(this.model, this);
+        this.grid = new BoardView(this.model, this, this.floodingCtrl);
+        this.player = new PlayerView(this.model, this);
+        this.treasure = new ArtefactsView(this.model, this, this.grid);
 
-        this.contrEndTurn.contrPlayer = this.player.contrPlayer;
-
-        this.inondationLevel = new ViewLevel(this.model, this);
+        this.endTurnCtrl.playerCtrl = this.player.playerCtrl;
 
         this.buttons = new JPanel();
         this.buttons.setPreferredSize(new Dimension(this.grid.widthJpanel + this.player.width + 300, 100));
@@ -64,15 +61,15 @@ public class View extends JFrame {
 
         JButton search = new JButton("Search");
         search.setPreferredSize(new Dimension((this.grid.widthJpanel + 200) / 4, 50));
-        search.addActionListener(this.contrSearch);
+        search.addActionListener(this.search);
 
         JButton dig = new JButton("Dry up");
         dig.setPreferredSize(new Dimension((this.grid.widthJpanel + 200) / 4, 50));
         dig.addActionListener(e -> {
-            if (model.getActPlayer().getState() == Player.State.DRY) {
-                model.getActPlayer().setState(Player.State.MOVING);
+            if (model.getActPlayer().getState() == Player.Action.Drain) {
+                model.getActPlayer().setState(Player.Action.Move);
             } else {
-                model.getActPlayer().setState(Player.State.DRY);
+                model.getActPlayer().setState(Player.Action.Drain);
             }
             this.repaint();
         });
@@ -80,11 +77,11 @@ public class View extends JFrame {
         JButton exchange = new JButton("Exchange");
         exchange.setPreferredSize(new Dimension((this.grid.widthJpanel + 200) / 4, 50));
         exchange.addActionListener(e -> {
-            if (model.getActPlayer().getState() == Player.State.EXCHANGE) {
-                model.getActPlayer().setState(Player.State.MOVING);
+            if (model.getActPlayer().getState() == Player.Action.Exchange) {
+                model.getActPlayer().setState(Player.Action.Move);
             } else {
-                model.getActPlayer().setState(Player.State.EXCHANGE);
-                player.contrPlayer.selectedPlayer = model.getActPlayer();
+                model.getActPlayer().setState(Player.Action.Exchange);
+                player.playerCtrl.selectedPlayer = model.getActPlayer();
             }
             this.repaint();
         });
@@ -92,15 +89,15 @@ public class View extends JFrame {
         JButton use = new JButton("Use Card");
         use.setPreferredSize(new Dimension((this.grid.widthJpanel + 200) / 4, 50));
         use.addActionListener(e -> {
-            model.setState(Model.State.RUNNING);
-            this.player.contrPlayer.playersHeli.clear();
-            this.player.contrPlayer.selectedCard = null;
+            model.setState(Model.Condition.PROGRESS);
+            this.player.playerCtrl.playersHeli.clear();
+            this.player.playerCtrl.selectedCard = null;
             this.repaint();
         });
 
         JButton next = new JButton("End of turn");
         next.setPreferredSize(new Dimension(this.player.width, 50));
-        next.addActionListener(this.contrEndTurn);
+        next.addActionListener(this.endTurnCtrl);
         buttons.add(search);
         buttons.add(dig);
         buttons.add(exchange);
@@ -112,7 +109,6 @@ public class View extends JFrame {
 
         treasure.setPreferredSize(new Dimension(this.grid.widthJpanel + this.player.width, 150));
 
-        elements.add(this.inondationLevel);
         elements.add(this.grid);
         elements.add(this.player);
         elements.add(this.buttons);
@@ -127,7 +123,7 @@ public class View extends JFrame {
         exit.addActionListener(e -> {
             this.dispose();
         });
-        JButton restart = new JButton("Restart");
+        JButton restart = new JButton("New Game");
         restart.setPreferredSize(new Dimension((this.grid.widthJpanel + this.player.width) / 2, 50));
         restart.addActionListener(e -> {
             this.model.reset();
@@ -153,7 +149,7 @@ public class View extends JFrame {
     }
 
     public void start() {
-        this.model.setState(Model.State.RUNNING);
+        this.model.setState(Model.Condition.PROGRESS);
         getContentPane().removeAll();
         setBackground(background);
 
@@ -175,7 +171,7 @@ public class View extends JFrame {
         this.repaint();
     }
 
-    public ViewSetup getViewSetup() {
+    public SetupView getViewSetup() {
         return this.setup;
     }
 }

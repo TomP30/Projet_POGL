@@ -11,23 +11,22 @@ import java.io.IOException;
 /**
  * Ile
  */
-public class Island {
+public class Board {
 
     private ArrayList<ArrayList<Case>> grid;
-    private Random rand;
 
     private final int width;
     private final int height;
 
-    public Island(String map) throws IOException {
-        BufferedReader lecteur = new BufferedReader(new FileReader(map));
+    public Board(String map) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(map));
 
-        this.width = Integer.parseInt(lecteur.readLine());
-        this.height = Integer.parseInt(lecteur.readLine());
+        this.width = Integer.parseInt(reader.readLine());
+        this.height = Integer.parseInt(reader.readLine());
         grid = new ArrayList<ArrayList<Case>>();
         for (int j = 0; j < height; j++) {
             ArrayList<Case> line = new ArrayList<Case>();
-            String lineMap = lecteur.readLine();
+            String lineMap = reader.readLine();
             for (int i = 0; i < width; i++) {
                 if (lineMap.charAt(i) == '#') {
                     line.add(new Case(i, j));
@@ -37,13 +36,10 @@ public class Island {
             }
             grid.add(line);
         }
-
-        lecteur.close();
-
-        rand = new Random();
+        reader.close();
     }
 
-    public Island() {
+    public Board() {
         this.width = 6;
         this.height = 6;
         grid = new ArrayList<ArrayList<Case>>();
@@ -59,7 +55,7 @@ public class Island {
             }
             grid.add(line);
         }
-        rand = new Random();
+        Random rand = new Random();
     }
 
     public Case getCase(int x, int y) {
@@ -96,6 +92,7 @@ public class Island {
     }
 
     public Case getRandomCase() {
+        Random rand = new Random();
         int y = rand.nextInt(this.getGridSize().y);
         int x = this.getCoordLine(y).get(rand.nextInt(this.getCoordLine(y).size()));
         return this.getCase(x, y);

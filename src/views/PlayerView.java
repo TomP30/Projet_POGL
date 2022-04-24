@@ -11,7 +11,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
-import controllers.ContrPlayer;
+import controllers.PlayerCtrl;
 import models.Card;
 import models.Model;
 import models.Player;
@@ -19,10 +19,10 @@ import models.Player;
 /**
  * ViewPlayer
  */
-public class ViewPlayer extends JPanel implements MouseListener {
+public class PlayerView extends JPanel implements MouseListener {
     private Model model;
 
-    public ContrPlayer contrPlayer;
+    public PlayerCtrl playerCtrl;
 
     public int width, height;
     public int sizeCase;
@@ -32,18 +32,18 @@ public class ViewPlayer extends JPanel implements MouseListener {
     public ArrayList<Image> pawns;
     public ArrayList<Image> temples;
 
-    public ViewPlayer(Model model, View view) {
+    public PlayerView(Model model, View view) {
         this.model = model;
         this.width = 300;
         this.height = view.grid.heightJpanel;
         this.sizeCase = view.grid.sizeCase;
         this.pawns = view.grid.pawns;
 
-        this.contrPlayer = new ContrPlayer(model, view);
-        view.grid.control.setContrPlayer(contrPlayer);
-        view.grid.contrPlayer = contrPlayer;
-        this.contrPlayer.selectedPlayer = null;
-        contrPlayer.contrEndTurn = view.contrEndTurn;
+        this.playerCtrl = new PlayerCtrl(model, view);
+        view.grid.control.setContrPlayer(playerCtrl);
+        view.grid.playerCtrl = playerCtrl;
+        this.playerCtrl.selectedPlayer = null;
+        playerCtrl.endTurnCtrl = view.endTurnCtrl;
 
         this.pawnsSapcing = (this.width - 60) / 4;
 
@@ -78,7 +78,7 @@ public class ViewPlayer extends JPanel implements MouseListener {
         if (this.pawns != null) {
             drawPlayer(g);
         }
-        if (model.getActPlayer().getState() == Player.State.EXCHANGE && contrPlayer.selectedCard != null) {
+        if (model.getActPlayer().getState() == Player.Action.Exchange && playerCtrl.selectedCard != null) {
             drawExchange(g);
         }
         drawActPlayer(g);
@@ -98,7 +98,7 @@ public class ViewPlayer extends JPanel implements MouseListener {
             g.drawImage(this.pawns.get(player),
                     30 + (pawnsSapcing + this.pawns.get(player).getWidth(null) / 2) * player, 15, null);
 
-            if ((model.getPlayers().get(player) == contrPlayer.selectedPlayer)) {
+            if ((model.getPlayers().get(player) == playerCtrl.selectedPlayer)) {
                 int midX = 30 + (pawnsSapcing + this.pawns.get(player).getWidth(null) / 2) * player
                         + this.pawns.get(player).getWidth(null) / 2;
                 int midY = 15 + this.pawns.get(player).getHeight(null) / 2;
@@ -116,7 +116,7 @@ public class ViewPlayer extends JPanel implements MouseListener {
         g.drawString("" + model.getActPlayer().getNbActions(), this.width - 50, 130);
         g.setFont(currentFont);
         String action = "Use Card";
-        if (model.getState() == Model.State.RUNNING) {
+        if (model.getState() == Model.Condition.PROGRESS) {
             action = model.getActPlayer().getState().toString();
             action = action.substring(0, 1) + action.substring(1).toLowerCase();
         }
@@ -136,7 +136,7 @@ public class ViewPlayer extends JPanel implements MouseListener {
     private void drawSelectedPlayer(Graphics g) {
         Color colorT = new Color(200, 200, 200);
         g.setColor(colorT);
-        Player player = contrPlayer.selectedPlayer;
+        Player player = playerCtrl.selectedPlayer;
         int minY = 145;
         if (player != null && model.getPlayers().indexOf(player) != -1) {
             int index = model.getPlayers().indexOf(player);
@@ -149,9 +149,9 @@ public class ViewPlayer extends JPanel implements MouseListener {
                 int y = minY + 100 + (space + temples.get(i).getHeight(null)) * i;
                 g.drawImage(temples.get(i), 20, y, null);
                 Card card = Card.getCardTemple(i);
-                g.drawString("x " + contrPlayer.selectedPlayer.getCards(card), 30 + temples.get(i).getWidth(null),
+                g.drawString("x " + playerCtrl.selectedPlayer.getCards(card), 30 + temples.get(i).getWidth(null),
                         y + temples.get(i).getHeight(null) / 2 + g.getFontMetrics().getAscent() / 2);
-                if (contrPlayer.selectedCard == card) {
+                if (playerCtrl.selectedCard == card) {
                     g.setColor(new Color(255, 255, 255));
                     g.fillOval(5, y + temples.get(i).getWidth(null) / 2 - 5, 10, 10);
                     g.setColor(colorT);
@@ -162,26 +162,26 @@ public class ViewPlayer extends JPanel implements MouseListener {
 
     public void mouseClicked(MouseEvent e) {
         if ((e.getY() >= 15 && e.getY() <= 15 + this.pawns.get(0).getHeight(null))
-                && (model.getActPlayer().getState() != Player.State.THROW)) {
+                && (model.getActPlayer().getState() != Player.Action.Discard)) {
             for (int player = 0; player < model.getPlayers().size(); player++) {
                 int size = this.pawns.get(player).getHeight(null) + 10;
                 if (e.getX() >= 30 + (pawnsSapcing + this.pawns.get(player).getWidth(null) / 2) * player - size / 2
                         && e.getX() <= 30 + (pawnsSapcing + this.pawns.get(player).getWidth(null) / 2) * (player + 1)
                                 - size / 2) {
-                    contrPlayer.playerClick(model.getPlayers().get(player));
+                    playerCtrl.playerClick(model.getPlayers().get(player));
                     return;
                 }
             }
-            contrPlayer.playerClick(null);
+            playerCtrl.playerClick(null);
         } else if (e.getY() >= 145) {
-            contrPlayer.selectedCard = null;
+            playerCtrl.selectedCard = null;
             int minY = 145;
             int space = (this.width - minY - 60) / 4;
             for (int i = 0; i < 4; i++) {
                 int y = minY + 100 + (space + temples.get(i).getHeight(null)) * i;
                 if (y <= e.getY() && y + temples.get(i).getHeight(null) >= e.getY() && e.getX() >= 20
                         && e.getX() <= 20 + temples.get(i).getWidth(null)) {
-                    contrPlayer.cardClick(Card.getCardTemple(i));
+                    playerCtrl.cardClick(Card.getCardTemple(i));
                     return;
                 }
             }

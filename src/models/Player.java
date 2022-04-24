@@ -8,51 +8,42 @@ import java.util.HashMap;
  * Players
  */
 public class Player {
-    public static enum State {
-        MOVING,
-        DRY,
-        EXCHANGE,
-        ESCAPE,
-        THROW
+    public static enum Action {
+        Move,
+        Drain,
+        Exchange,
+        Escape,
+        Discard
     }
     public static enum colour {
-        greenPawn,
-        redPawn,
-        bluePawn,
-        yellowPawn,
+        green,
+        black,
+        blue,
+        yellow,
     }
 
     protected Case position;
     protected int nbActions;
-    protected State state;
+    protected Action action;
     protected String name;
-    protected HashMap<Card, Integer> cards;
-    protected boolean power;
+    protected HashMap<Card, Integer> hand;
     private String image;
 
     // Constructeur
     public Player(String name, Case zone, int i) {
         this.name = name;
-        this.cards = new HashMap<Card, Integer>();
-        this.cards.put(Card.AIR, 0);
-        this.cards.put(Card.EAU, 0);
-        this.cards.put(Card.FEU, 0);
-        this.cards.put(Card.TERRE, 0);
+        this.hand = new HashMap<Card, Integer>();
+        this.hand.put(Card.Wind, 0);
+        this.hand.put(Card.Wave, 0);
+        this.hand.put(Card.Fire, 0);
+        this.hand.put(Card.Stone, 0);
         this.nbActions = 3;
         this.position = zone;
-        this.state = State.MOVING;
+        this.action = Action.Move;
         this.image = colour.values()[i].toString()+".png";
     }
 
     // Setter
-    public void powerDown() {
-        power = false;
-    }
-
-    public void powerUp() {
-        power = true;
-    }
-
     public void setPosition(Case C) {
         this.position = C;
     }
@@ -69,24 +60,20 @@ public class Player {
         this.nbActions = n;
     }
 
-    public void setState(State s) {
-        this.state = s;
+    public void setState(Action a) {
+        this.action = a;
     }
 
-    public State getState() {
-        return this.state;
+    public Action getState() {
+        return this.action;
     }
 
     public void addcard(Card c) {
-        this.cards.put(c, this.cards.get(c) + 1);
+        this.hand.put(c, this.hand.get(c) + 1);
     }
 
     // Getter
     public String getImage(){ return this.image; }
-
-    public boolean getPower() {
-        return this.power;
-    }
 
     public Case getPosition() {
         return this.position;
@@ -97,7 +84,7 @@ public class Player {
     }
 
     public HashMap<Card, Integer> getAllCards() {
-        return this.cards;
+        return this.hand;
     }
 
     public int getNbActions() {
@@ -105,12 +92,12 @@ public class Player {
     }
 
     public Integer getCards(Card c) {
-        return this.cards.get(c);
+        return this.hand.get(c);
     }
 
     public int getNbCards() {
         int total = 0;
-        for (Integer nbCard : this.cards.values()) {
+        for (Integer nbCard : this.hand.values()) {
             total += nbCard;
         }
         return total;
@@ -118,7 +105,7 @@ public class Player {
 
     // méthode
     public boolean possibleExchange(Player player, Card card) {
-        return getState() == State.EXCHANGE
+        return getState() == Action.Exchange
                 && player.getPosition() == getPosition()
                 && player != this
                 && getCards(card) > 0;
@@ -133,11 +120,11 @@ public class Player {
     }
 
     public void useCard(Card c) {
-        this.cards.put(c, this.cards.get(c) - 1);
+        this.hand.put(c, this.hand.get(c) - 1);
     }
 
     public Boolean isNeight(Case move, Case base) {
-        return move.getWaterLvl() < move.getMaxWaterLvl() && Math.abs(move.getX() - base.getX()) +
+        return move.getFlood() < move.getMaxFlood() && Math.abs(move.getX() - base.getX()) +
                 Math.abs(move.getY() - base.getY()) < 2;
     }
 

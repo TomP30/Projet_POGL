@@ -11,12 +11,12 @@ import views.View;
 /**
  * ContrEndTurn
  */
-public class ContrEndTurn extends Controller implements ActionListener {
-    public ContrFlooding contrEscape;
-    public ContrPlayer contrPlayer;
+public class EndTurnCtrl extends Controler implements ActionListener {
+    public FloodingCtrl contrEscape;
+    public PlayerCtrl playerCtrl;
     public int maxCard;
 
-    public ContrEndTurn(Model model, View view, ContrFlooding contrEscape) {
+    public EndTurnCtrl(Model model, View view, FloodingCtrl contrEscape) {
         super(model, view);
         this.contrEscape = contrEscape;
         this.maxCard = 5;
@@ -24,21 +24,20 @@ public class ContrEndTurn extends Controller implements ActionListener {
 
     public void nexTurn() {
         model.nextPlayer();
-        model.getActPlayer().setState(Player.State.MOVING);
+        model.getActPlayer().setState(Player.Action.Move);
         model.getActPlayer().setAction(3);
         contrEscape.flooding();
     }
 
     public void actionPerformed(ActionEvent e) {
         if (contrEscape.getEscape() == null) {
-            model.getActPlayer().powerUp();
-            if (model.getActPlayer().getState() != Player.State.THROW) {
+            if (model.getActPlayer().getState() != Player.Action.Discard) {
                 for (int i = 0; i < 2; i++) {
                     Card actualCard = model.getPiocheCard().pick();
-                    if (actualCard.equals(Card.DELUGE)) {
+                    if (actualCard.equals(Card.Flood)) {
                         model.getFloodLevel().incrementLvl();
                         if(model.getFloodLevel().getLvl() == 9) {
-                            model.setState(Model.State.LOSE);
+                            model.setState(Model.Condition.ENDLOST);
                             view.gameOver();
                         }
                         model.getPiocheWater().addDefausse();
@@ -49,8 +48,8 @@ public class ContrEndTurn extends Controller implements ActionListener {
                 }
             }
             if (model.getActPlayer().getNbCards() > maxCard) {
-                model.getActPlayer().setState(Player.State.THROW);
-                contrPlayer.selectedPlayer = model.getActPlayer();
+                model.getActPlayer().setState(Player.Action.Discard);
+                playerCtrl.selectedPlayer = model.getActPlayer();
             } else {
                 nexTurn();
             }

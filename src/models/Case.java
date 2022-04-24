@@ -8,12 +8,12 @@ import java.awt.*;
 public class Case {
 
     private Point coord;
-    private int waterLvl;
-    private static int maxWaterLvl = 2;
+    private int flood;
+    private static int floodLvl = 2;
 
     public Case(int x, int y) {
         this.coord = new Point(x,y);
-        this.waterLvl = 0;
+        this.flood = 0;
     }
 
     public Point getCoord() {
@@ -28,29 +28,33 @@ public class Case {
         return this.coord.y;
     }
 
-    public int getWaterLvl() {
-        return this.waterLvl;
+    public int getFlood() {
+        return this.flood;
     }
 
-    public int getMaxWaterLvl(){
-        return maxWaterLvl;
+    public int getMaxFlood(){
+        return floodLvl;
     }
 
-    public boolean moove(){
-        return maxWaterLvl > this.waterLvl;
+    public boolean movable(){
+        return floodLvl > this.flood;
     }
 
     public boolean dryable(){
-        return moove() && this.waterLvl > 0;
+        return movable() && this.flood > 0;
     }
 
+    public boolean drownable() { return flood < floodLvl; }
+
     public void dry() {
-        if (waterLvl > 0)
-            this.waterLvl -= 1;
+        if (dryable()) {
+            this.flood--;
+        }
     }
 
     public void drown() {
-        if (waterLvl < maxWaterLvl)
-            this.waterLvl += 1;
+        if (drownable()) {
+            this.flood++;
+        }
     }
 }

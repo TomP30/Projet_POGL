@@ -4,62 +4,60 @@ import java.util.ArrayList;
 import java.io.IOException;
 import java.util.logging.*;
 
-import models.Player;
-
 import java.awt.Point;
 
 /**
  * Models
  */
 public class Model {
-    public static enum State {
-        SETUP,
-        RUNNING,
-        LOSE,
-        VICTORY
+    public static enum Condition {
+        START,
+        PROGRESS,
+        ENDLOST,
+        ENDWON
     }
 
     private String map;
-    private State state;
-    private Island island;
+    private Condition cond;
+    private Board board;
     private Flood flood;
-    private ArrayList<Case> temple;
-    private ArrayList<Boolean> treasureState;
+    private ArrayList<Case> treasure;
+    private ArrayList<Boolean> treasureClaimed;
     private ArrayList<Player> players;
-    private PiocheInnondation piocheWater;
-    private int actPlayer;
-    private Case heliZone;
-    private PiocheCard piocheCard;
+    private DrawFlood drawFlood;
+    private int ActivePlayer;
+    private Case heliport;
+    private Draw draw;
 
     public Model(String map) {
         try {
-            this.island = new Island(map);
+            this.board = new Board(map);
         } catch (IOException e) {
             Logger logger = Logger.getLogger(
                     Model.class.getName());
             logger.setLevel(Level.WARNING);
             logger.warning(map + " not found default map used");
-            this.island = new Island();
+            this.board = new Board();
         }
 
         this.flood = new Flood(0);
         this.map = map;
-        this.state = State.SETUP;
-        this.temple = new ArrayList<Case>();
+        this.cond = Condition.START;
+        this.treasure = new ArrayList<Case>();
         this.players = new ArrayList<Player>();
-        this.piocheWater = new PiocheInnondation(this.pileOfZone());
-        this.piocheCard = new PiocheCard();
-        this.treasureState = new ArrayList<Boolean>();
+        this.drawFlood = new DrawFlood(this.pileOfZone());
+        this.draw = new Draw();
+        this.treasureClaimed = new ArrayList<Boolean>();
         for (int i = 0; i < 4; i++) {
-            treasureState.add(false);
+            treasureClaimed.add(false);
         }
 
-        this.actPlayer = 0;
+        this.ActivePlayer = 0;
 
         for (int i = 0; i < 4; i++) {
-            this.temple.add(this.getRandomValideCase());
+            this.treasure.add(this.getRandomValideCase());
         }
-        this.heliZone = this.getRandomValideCase();
+        this.heliport = this.getRandomValideCase();
     }
 
     // Getter
@@ -68,23 +66,23 @@ public class Model {
     }
 
     public Boolean getTreasureState(int i) {
-        return this.treasureState.get(i);
+        return this.treasureClaimed.get(i);
     }
 
     public ArrayList<Boolean> getTreasureState() {
-        return this.treasureState;
+        return this.treasureClaimed;
     }
 
-    public State getState() {
-        return this.state;
+    public Condition getState() {
+        return this.cond;
     }
 
-    public Island getIsland() {
-        return this.island;
+    public Board getIsland() {
+        return this.board;
     }
 
     public ArrayList<Case> getTemple() {
-        return this.temple;
+        return this.treasure;
     }
 
     public ArrayList<Player> getPlayers() {
@@ -92,28 +90,28 @@ public class Model {
     }
 
     public Case getHeliZone() {
-        return this.heliZone;
+        return this.heliport;
     }
 
     public int getActPlayerId() {
-        return this.actPlayer;
+        return this.ActivePlayer;
     }
 
     public Player getActPlayer() {
-        return this.players.get(actPlayer);
+        return this.players.get(ActivePlayer);
     }
 
-    public PiocheInnondation getPiocheWater() {
-        return this.piocheWater;
+    public DrawFlood getPiocheWater() {
+        return this.drawFlood;
     }
 
-    public PiocheCard getPiocheCard() {
-        return this.piocheCard;
+    public Draw getPiocheCard() {
+        return this.draw;
     }
 
     // Setter
-    public void setState(State state) {
-        this.state = state;
+    public void setState(Condition condition) {
+        this.cond = condition;
     }
 
     public void addPlayer(Player player) {
@@ -121,15 +119,15 @@ public class Model {
     }
 
     public void nextPlayer() {
-        this.actPlayer = (this.actPlayer + 1) % this.players.size();
+        this.ActivePlayer = (this.ActivePlayer + 1) % this.players.size();
         getActPlayer().resetAction();
     }
 
     public Case getRandomValideCase() {
         Case C;
         do {
-            C = this.island.getRandomCase();
-        } while (this.temple.contains(C));
+            C = this.board.getRandomCase();
+        } while (this.treasure.contains(C));
         return C;
     }
 
@@ -160,12 +158,12 @@ public class Model {
 
 
     public int[][] nbAction(Player player) {
-        Boolean[][] visitedCase = new Boolean[island.getHeight()][island.getWidth()];
-        int[][] action = new int[island.getHeight()][island.getWidth()];
+        Boolean[][] visitedCase = new Boolean[board.getHeight()][board.getWidth()];
+        int[][] action = new int[board.getHeight()][board.getWidth()];
         for (int j = 0; j < action.length; j++) {
             for (int i = 0; i < action[j].length; i++) {
                 action[j][i] = 999;
-                if (island.getCase(i, j) == null) {
+                if (board.getCase(i, j) == null) {
                     visitedCase[j][i] = true;
                 } else {
                     visitedCase[j][i] = false;
@@ -174,7 +172,7 @@ public class Model {
         }
         Player playerForZ = this.getActPlayer();
         for (Player p : this.players) {
-            if (p.getState() == Player.State.ESCAPE) {
+            if (p.getState() == Player.Action.Escape) {
                 playerForZ = p;
             }
         }
@@ -184,11 +182,11 @@ public class Model {
             visitedCase[p.y][p.x] = true;
             for (int j = -1; j <= 1; j++) {
                 for (int i = -1; i <= 1; i++) {
-                    if (island.getCase(p.x + i, p.y + j) != null) {
-                        if (player.isNeight(island.getCase(p.x + i, p.y + j),
-                                island.getCase(p.x, p.y))) {
+                    if (board.getCase(p.x + i, p.y + j) != null) {
+                        if (player.isNeight(board.getCase(p.x + i, p.y + j),
+                                board.getCase(p.x, p.y))) {
                             action[p.y + j][p.x + i] = player.getWeightNeight(action[p.y][p.x],
-                                    action[p.y + j][p.x + i], island.getCase(p.x + i, p.y + j));
+                                    action[p.y + j][p.x + i], board.getCase(p.x + i, p.y + j));
                         }
                     }
                 }
@@ -199,12 +197,12 @@ public class Model {
     }
 
     public int[][] nbActionNormal(int x, int y) {
-        Boolean[][] visitedCase = new Boolean[island.getHeight()][island.getWidth()];
-        int[][] action = new int[island.getHeight()][island.getWidth()];
+        Boolean[][] visitedCase = new Boolean[board.getHeight()][board.getWidth()];
+        int[][] action = new int[board.getHeight()][board.getWidth()];
         for (int j = 0; j < action.length; j++) {
             for (int i = 0; i < action[j].length; i++) {
                 action[j][i] = 999;
-                if (island.getCase(i, j) == null) {
+                if (board.getCase(i, j) == null) {
                     visitedCase[j][i] = true;
                 } else {
                     visitedCase[j][i] = false;
@@ -217,7 +215,7 @@ public class Model {
             visitedCase[p.y][p.x] = true;
             for (int j = -1; j <= 1; j++) {
                 for (int i = -1; i <= 1; i++) {
-                    if (island.getCase(p.x + i, p.y + j) != null) {
+                    if (board.getCase(p.x + i, p.y + j) != null) {
                         if (Math.abs(i) + Math.abs(j) == 1) {
                             if (action[p.y + j][p.x + i] > action[p.y][p.x] + 1) {
                                 action[p.y + j][p.x + i] = action[p.y][p.x] + 1;
@@ -241,30 +239,30 @@ public class Model {
     }
 
     public void reset() {
-        this.state = State.SETUP;
+        this.cond = Condition.START;
         try {
-            this.island = new Island(map);
+            this.board = new Board(map);
         } catch (IOException e) {
             Logger logger = Logger.getLogger(
                     Model.class.getName());
             logger.setLevel(Level.WARNING);
             logger.warning(map + " not found default map used");
-            this.island = new Island();
+            this.board = new Board();
         }
-        this.temple.clear();
+        this.treasure.clear();
         this.players.clear();
-        this.piocheWater = new PiocheInnondation(this.pileOfZone());
-        this.piocheCard = new PiocheCard();
-        this.treasureState = new ArrayList<Boolean>();
+        this.drawFlood = new DrawFlood(this.pileOfZone());
+        this.draw = new Draw();
+        this.treasureClaimed = new ArrayList<Boolean>();
         for (int i = 0; i < 4; i++) {
-            treasureState.add(false);
+            treasureClaimed.add(false);
         }
 
-        this.actPlayer = 0;
+        this.ActivePlayer = 0;
 
         for (int i = 0; i < 4; i++) {
-            this.temple.add(this.getRandomValideCase());
+            this.treasure.add(this.getRandomValideCase());
         }
-        this.heliZone = this.getRandomValideCase();
+        this.heliport = this.getRandomValideCase();
     }
 }

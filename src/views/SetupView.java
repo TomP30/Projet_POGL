@@ -13,14 +13,14 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 
-import controllers.ContrSetup;
+import controllers.Setup;
 import models.Model;
 
 /**
  * Window
  */
-public class ViewSetup extends JPanel {
-	private ContrSetup control;
+public class SetupView extends JPanel {
+	private Setup control;
 
 	private JSlider slider;
 	public JSlider levelSlider;
@@ -33,8 +33,8 @@ public class ViewSetup extends JPanel {
 	/**
 	 * 
 	 */
-	public ViewSetup(Model model, View view) {
-		this.control = new ContrSetup(model, view);
+	public SetupView(Model model, View view) {
+		this.control = new Setup(model, view);
 		setUpMenu();
 	}
 

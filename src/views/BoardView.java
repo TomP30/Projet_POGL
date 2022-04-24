@@ -12,11 +12,10 @@ import java.awt.Point;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
-import controllers.ContrFlooding;
-import controllers.ContrGrid;
-import controllers.ContrPlayer;
-import models.Card;
-import models.Island;
+import controllers.FloodingCtrl;
+import controllers.BoardCtrl;
+import controllers.PlayerCtrl;
+import models.Board;
 import models.Model;
 import models.Case;
 import models.Player;
@@ -24,10 +23,10 @@ import models.Player;
 /**
  * Grid
  */
-public class ViewGrid extends JPanel implements MouseListener {
-    public ContrGrid control;
-    public ContrFlooding contrFlooding;
-    public ContrPlayer contrPlayer;
+public class BoardView extends JPanel implements MouseListener {
+    public BoardCtrl control;
+    public FloodingCtrl floodingCtrl;
+    public PlayerCtrl playerCtrl;
 
     private Model model;
 
@@ -42,7 +41,7 @@ public class ViewGrid extends JPanel implements MouseListener {
     final public int sizeCase = 80;
     final public int sizeBorder = 5;
 
-    public ViewGrid(Model m, View view, ContrFlooding contrFlooding) {
+    public BoardView(Model m, View view, FloodingCtrl floodingCtrl) {
         this.model = m;
         int width = m.getIsland().getGridSize().x;
         int height = m.getIsland().getGridSize().y;
@@ -55,8 +54,8 @@ public class ViewGrid extends JPanel implements MouseListener {
         setBackground(new Color(1, 59, 204));
         addMouseListener(this);
 
-        this.control = new ContrGrid(m, view, contrFlooding);
-        this.contrFlooding = contrFlooding;
+        this.control = new BoardCtrl(m, view, floodingCtrl);
+        this.floodingCtrl = floodingCtrl;
 
         pawns = new ArrayList<Image>();
         String path = "images/elements/";
@@ -92,12 +91,12 @@ public class ViewGrid extends JPanel implements MouseListener {
         super.paintComponent(g);
         drawIsland(g);
 
-        if (model.getState() == Model.State.RUNNING) {
-            if (contrFlooding.getEscape() != null) {
+        if (model.getState() == Model.Condition.PROGRESS) {
+            if (floodingCtrl.getEscape() != null) {
                 drawEscape(g);
-            } else if (model.getActPlayer().getState() == Player.State.DRY && model.getActPlayer().getNbActions() > 0) {
+            } else if (model.getActPlayer().getState() == Player.Action.Drain && model.getActPlayer().getNbActions() > 0) {
                 drawDry(g);
-            } else if (model.getActPlayer().getState() == Player.State.MOVING) {
+            } else if (model.getActPlayer().getState() == Player.Action.Move) {
                 drawMove(g);
 
             }
@@ -105,19 +104,19 @@ public class ViewGrid extends JPanel implements MouseListener {
         drawImages(g);
         drawPlayers(g);
 
-        if (model.getState() == Model.State.LOSE) {
+        if (model.getState() == Model.Condition.ENDLOST) {
             drawGameOver(g);
-        } else if (model.getState() == Model.State.VICTORY) {
+        } else if (model.getState() == Model.Condition.ENDWON) {
             drawVictory(g);
         }
     }
 
     private void drawIsland(Graphics g) {
-        Island island = this.model.getIsland();
-        for (int y = 0; y < island.getGridSize().y; y++) {
-            for (int x = 0; x < island.getGridSize().x; x++) {
-                if (island.inMap(new Point(x, y))) {
-                    g.setColor(new Color(200, 200, 200, getAlpha(island.getCase(x, y))));
+        Board board = this.model.getIsland();
+        for (int y = 0; y < board.getGridSize().y; y++) {
+            for (int x = 0; x < board.getGridSize().x; x++) {
+                if (board.inMap(new Point(x, y))) {
+                    g.setColor(new Color(200, 200, 200, getAlpha(board.getCase(x, y))));
                     int x_case = x * (sizeCase + sizeBorder) + sizeBorder;
                     int y_case = y * (sizeCase + sizeBorder) + sizeBorder;
                     g.fillRect(x_case, y_case, sizeCase, sizeCase);
@@ -128,14 +127,14 @@ public class ViewGrid extends JPanel implements MouseListener {
 
     private void drawMove(Graphics g) {
         int[][] actionMove = model.nbAction(model.getActPlayer());
-        Island island = this.model.getIsland();
+        Board board = this.model.getIsland();
         for (int y = 0; y < actionMove.length; y++) {
             for (int x = 0; x < actionMove[y].length; x++) {
-                Case C = island.getCase(x, y);
+                Case C = board.getCase(x, y);
                 int x_case = x * (sizeCase + sizeBorder) + sizeBorder;
                 int y_case = y * (sizeCase + sizeBorder) + sizeBorder;
                 if (actionMove[y][x] <= model.getActPlayer().getNbActions() && actionMove[y][x] != 0
-                        && C.moove()) {
+                        && C.movable()) {
                     drawOutline(g, x_case, y_case, new Color(241, 176, 13));
                 }
             }
@@ -147,7 +146,7 @@ public class ViewGrid extends JPanel implements MouseListener {
         neigbours.add(new Point(model.getActPlayer().getPosition().getX(), model.getActPlayer().getPosition().getY()));
         for (Point p : neigbours) {
             Case slot = model.getIsland().getCase(p.x, p.y);
-            if (slot != null && slot.getWaterLvl() == 1) {
+            if (slot != null && slot.getFlood() == 1) {
                 int x_case = (int) p.getX() * (sizeCase + sizeBorder) + sizeBorder;
                 int y_case = (int) p.getY() * (sizeCase + sizeBorder) + sizeBorder;
                 drawOutline(g, x_case, y_case, new Color(175, 24, 24));
@@ -163,10 +162,10 @@ public class ViewGrid extends JPanel implements MouseListener {
     }
 
     private void drawEscape(Graphics g) {
-        ArrayList<Point> neigbours = contrFlooding.getEscape().neigboursMove(this.model);
+        ArrayList<Point> neigbours = floodingCtrl.getEscape().neigboursMove(this.model);
         for (Point point : neigbours) {
             Case slot = model.getIsland().getCase(point.x, point.y);
-            if (slot != null && slot.getWaterLvl() != slot.getMaxWaterLvl()) {
+            if (slot != null && slot.getFlood() != slot.getMaxFlood()) {
                 int x_case = point.x * (sizeCase + sizeBorder) + sizeBorder;
                 int y_case = point.y * (sizeCase + sizeBorder) + sizeBorder;
                 drawOutline(g, x_case, y_case, new Color(124, 29, 20));
@@ -240,8 +239,8 @@ public class ViewGrid extends JPanel implements MouseListener {
     }
 
     private int getAlpha(Case C) {
-        int max = C.getMaxWaterLvl();
-        int act = C.getWaterLvl();
+        int max = C.getMaxFlood();
+        int act = C.getFlood();
         int alpha = (int) (255 * (double) (max - act) / max);
         return alpha;
     }

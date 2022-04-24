@@ -1,21 +1,21 @@
 package models;
 
 public enum Card {
-    AIR,
-    EAU,
-    FEU,
-    TERRE,
-    DELUGE;
+    Wind,
+    Wave,
+    Fire,
+    Stone,
+    Flood;
 
     public int getTempleID(Card card) {
         switch (card) {
-            case AIR:
+            case Wind:
                 return 0;
-            case TERRE:
+            case Stone:
                 return 1;
-            case FEU:
+            case Fire:
                 return 2;
-            case EAU:
+            case Wave:
                 return 3;
             default:
                 return -1;
@@ -25,13 +25,13 @@ public enum Card {
     public static Card getCardTemple(int id) {
         switch (id) {
             case 0:
-                return AIR;
+                return Wind;
             case 1:
-                return TERRE;
+                return Stone;
             case 2:
-                return FEU;
+                return Fire;
             case 3:
-                return EAU;
+                return Wave;
             default:
                 return null;
         }

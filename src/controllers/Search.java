@@ -10,9 +10,9 @@ import views.View;
 /**
  * ContrSearch
  */
-public class ContrSearch extends Controller implements ActionListener {
+public class Search extends Controler implements ActionListener {
 
-    public ContrSearch(Model model, View view) {
+    public Search(Model model, View view) {
         super(model, view);
     }
 

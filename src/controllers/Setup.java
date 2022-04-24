@@ -4,7 +4,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import models.Model;
 import models.Case;
@@ -14,9 +13,9 @@ import views.View;
 /**
  * ContrSetup
  */
-public class ContrSetup extends Controller implements ActionListener {
+public class Setup extends Controler implements ActionListener {
 
-    public ContrSetup(Model model, View view) {
+    public Setup(Model model, View view) {
         super(model, view);
     }
 

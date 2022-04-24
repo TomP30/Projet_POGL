@@ -8,11 +8,11 @@ import views.View;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class ContrFlooding extends Controller {
+public class FloodingCtrl extends Controler {
     public int nbInondation;
     private Player escape;
 
-    public ContrFlooding(Model model, View view) {
+    public FloodingCtrl(Model model, View view) {
         super(model, view);
         nbInondation = model.getFloodLevel().innondationRate();
         this.escape = null;
@@ -25,7 +25,7 @@ public class ContrFlooding extends Controller {
     public void setEscape() {
         Player escape = null;
         for (Player player : model.getPlayers()) {
-            if (player.getState() == Player.State.ESCAPE) {
+            if (player.getState() == Player.Action.Escape) {
                 escape = player;
             }
         }
@@ -48,20 +48,20 @@ public class ContrFlooding extends Controller {
             Case drownC = model.getPiocheWater().pick();
             drownC.drown();
             Boolean escape = false;
-            if (drownC.getWaterLvl() == drownC.getMaxWaterLvl()) {
+            if (drownC.getFlood() == drownC.getMaxFlood()) {
                 if (gameOverCase(drownC)) {
-                    model.setState(Model.State.LOSE);
+                    model.setState(Model.Condition.ENDLOST);
                     view.gameOver();
                     break;
                 }
                 for (Player p : model.getPlayers()) {
                     if (drownC == p.getPosition()) {
-                        p.setState(Player.State.ESCAPE);
+                        p.setState(Player.Action.Escape);
                         if (escape(drownC, p)) {
                             escape = true;
-                            p.setState(Player.State.ESCAPE);
+                            p.setState(Player.Action.Escape);
                         } else {
-                            model.setState(Model.State.LOSE);
+                            model.setState(Model.Condition.ENDLOST);
                             view.gameOver();
                             break;
                         }

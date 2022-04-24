@@ -3,20 +3,20 @@ package models;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class PiocheCard {
+public class Draw {
     private ArrayList<Card> pioche;
     private ArrayList<Card> defausse;
 
-    public PiocheCard() {
+    public Draw() {
         this.pioche = new ArrayList<Card>();
         this.defausse = new ArrayList<Card>();
         for (int i = 0; i < 5; i++) {
-            this.pioche.add(Card.AIR);
-            this.pioche.add(Card.FEU);
-            this.pioche.add(Card.EAU);
-            this.pioche.add(Card.TERRE);
+            this.pioche.add(Card.Wind);
+            this.pioche.add(Card.Fire);
+            this.pioche.add(Card.Wave);
+            this.pioche.add(Card.Stone);
             if (i > 2) {
-                this.pioche.add(Card.DELUGE);
+                this.pioche.add(Card.Flood);
             }
         }
         Collections.shuffle(this.pioche);
