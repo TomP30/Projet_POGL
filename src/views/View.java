@@ -24,13 +24,13 @@ public class View extends JFrame {
     public ArtefactsView treasure;
 
     private JPanel buttons;
-    private JPanel gameOverButtons;
+    private JPanel EndButtons;
 
-    public EndTurnCtrl endTurnCtrl;
-    public FloodingCtrl floodingCtrl;
+    public EndTurnCtrl endTurn;
+    public FloodingCtrl flooding;
     public Search search;
 
-    private JPanel elements;
+    private JPanel panel;
     public Color background;
 
     public int height;
@@ -39,33 +39,33 @@ public class View extends JFrame {
     public View(Model m) {
         super();
         this.model = m;
-        setSize(500, 400);
-        this.background = new Color(138, 136, 136);
+        setSize(400, 300);
+        this.background = new Color(0, 0, 0);
 
-        this.elements = new JPanel();
-        this.elements.setBackground(background);
+        this.panel = new JPanel();
+        this.panel.setBackground(background);
 
-        this.floodingCtrl = new FloodingCtrl(this.model, this);
-        this.endTurnCtrl = new EndTurnCtrl(this.model, this, this.floodingCtrl);
+        this.flooding = new FloodingCtrl(this.model, this);
+        this.endTurn = new EndTurnCtrl(this.model, this, this.flooding);
         this.search = new Search(model, this);
 
-        this.board = new BoardView(this.model, this, this.floodingCtrl);
+        this.board = new BoardView(this.model, this, this.flooding);
         this.player = new PlayerView(this.model, this);
         this.treasure = new ArtefactsView(this.model, this, this.board);
 
-        this.endTurnCtrl.playerCtrl = this.player.playerCtrl;
+        this.endTurn.player = this.player.playerCtrl;
 
         this.buttons = new JPanel();
-        this.buttons.setPreferredSize(new Dimension(this.board.widthJpanel + this.player.width + 300, 100));
+        this.buttons.setPreferredSize(new Dimension(this.board.widthPanel + this.player.width + 300, 100));
         this.buttons.setBackground(background);
 
-        JButton search = new JButton("Search");
-        search.setPreferredSize(new Dimension((this.board.widthJpanel + 200) / 4, 50));
+        JButton search = new JButton("Claim");
+        search.setPreferredSize(new Dimension((this.board.widthPanel + 200) / 4, 50));
         search.addActionListener(this.search);
 
-        JButton dig = new JButton("Dry up");
-        dig.setPreferredSize(new Dimension((this.board.widthJpanel + 200) / 4, 50));
-        dig.addActionListener(e -> {
+        JButton drain = new JButton("Drain");
+        drain.setPreferredSize(new Dimension((this.board.widthPanel + 200) / 4, 50));
+        drain.addActionListener(e -> {
             if (model.getActPlayer().getState() == Player.Action.Drain) {
                 model.getActPlayer().setState(Player.Action.Move);
             } else {
@@ -75,65 +75,55 @@ public class View extends JFrame {
         });
 
         JButton exchange = new JButton("Exchange");
-        exchange.setPreferredSize(new Dimension((this.board.widthJpanel + 200) / 4, 50));
+        exchange.setPreferredSize(new Dimension((this.board.widthPanel + 200) / 4, 50));
         exchange.addActionListener(e -> {
             if (model.getActPlayer().getState() == Player.Action.Exchange) {
                 model.getActPlayer().setState(Player.Action.Move);
             } else {
                 model.getActPlayer().setState(Player.Action.Exchange);
-                player.playerCtrl.selectedPlayer = model.getActPlayer();
+                player.playerCtrl.selectP = model.getActPlayer();
             }
-            this.repaint();
-        });
-
-        JButton use = new JButton("Use Card");
-        use.setPreferredSize(new Dimension((this.board.widthJpanel + 200) / 4, 50));
-        use.addActionListener(e -> {
-            model.setState(Model.Condition.PROGRESS);
-            this.player.playerCtrl.playersHeli.clear();
-            this.player.playerCtrl.selectedCard = null;
             this.repaint();
         });
 
         JButton next = new JButton("End of turn");
         next.setPreferredSize(new Dimension(this.player.width, 50));
-        next.addActionListener(this.endTurnCtrl);
+        next.addActionListener(this.endTurn);
         buttons.add(search);
-        buttons.add(dig);
+        buttons.add(drain);
         buttons.add(exchange);
-        buttons.add(use);
         buttons.add(next);
 
-        this.width = this.board.widthJpanel + this.player.width + 300;
-        this.height = this.board.heightJpanel + 300;
+        this.width = this.board.widthPanel + this.player.width + 300;
+        this.height = this.board.heightPanel + 300;
 
-        treasure.setPreferredSize(new Dimension(this.board.widthJpanel + this.player.width, 150));
+        treasure.setPreferredSize(new Dimension(this.board.widthPanel + this.player.width, 150));
 
-        elements.add(this.board);
-        elements.add(this.player);
-        elements.add(this.buttons);
-        elements.add(this.treasure);
+        panel.add(this.player);
+        panel.add(this.board);
+        panel.add(this.buttons);
+        panel.add(this.treasure);
 
-        this.gameOverButtons = new JPanel();
-        this.gameOverButtons.setPreferredSize(new Dimension(this.board.widthJpanel + this.player.width + 30, 100));
-        this.gameOverButtons.setBackground(background);
+        this.EndButtons = new JPanel();
+        this.EndButtons.setPreferredSize(new Dimension(this.board.widthPanel + this.player.width + 30, 100));
+        this.EndButtons.setBackground(background);
 
         JButton exit = new JButton("Exit");
-        exit.setPreferredSize(new Dimension((this.board.widthJpanel + this.player.width) / 2, 50));
+        exit.setPreferredSize(new Dimension((this.board.widthPanel + this.player.width) / 2, 50));
         exit.addActionListener(e -> {
             this.dispose();
         });
         JButton restart = new JButton("New Game");
-        restart.setPreferredSize(new Dimension((this.board.widthJpanel + this.player.width) / 2, 50));
+        restart.setPreferredSize(new Dimension((this.board.widthPanel + this.player.width) / 2, 50));
         restart.addActionListener(e -> {
             this.model.reset();
-            this.elements.remove(this.gameOverButtons);
-            this.elements.add(this.buttons);
-            this.elements.add(this.treasure);
+            this.panel.remove(this.EndButtons);
+            this.panel.add(this.buttons);
+            this.panel.add(this.treasure);
             setup();
         });
-        gameOverButtons.add(restart);
-        gameOverButtons.add(exit);
+        EndButtons.add(restart);
+        EndButtons.add(exit);
 
         setResizable(false);
         setLocationRelativeTo(null);
@@ -160,18 +150,18 @@ public class View extends JFrame {
         this.board.initPawn();
         setSize(this.width, this.height);
 
-        add(this.elements);
+        add(this.panel);
 
         this.repaint();
     }
 
     public void gameOver() {
-        elements.remove(this.buttons);
-        elements.remove(this.treasure);
-        elements.add(this.gameOverButtons);
-        elements.add(this.treasure);
+        panel.remove(this.buttons);
+        panel.remove(this.treasure);
+        panel.add(this.EndButtons);
+        panel.add(this.treasure);
 
-        elements.updateUI();
+        panel.updateUI();
         this.repaint();
     }
 

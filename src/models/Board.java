@@ -13,7 +13,7 @@ import java.io.IOException;
  */
 public class Board {
 
-    private ArrayList<ArrayList<Case>> grid;
+    private ArrayList<ArrayList<Case>> board;
 
     private final int width;
     private final int height;
@@ -23,7 +23,7 @@ public class Board {
 
         this.width = Integer.parseInt(reader.readLine());
         this.height = Integer.parseInt(reader.readLine());
-        grid = new ArrayList<ArrayList<Case>>();
+        board = new ArrayList<ArrayList<Case>>();
         for (int j = 0; j < height; j++) {
             ArrayList<Case> line = new ArrayList<Case>();
             String lineMap = reader.readLine();
@@ -34,7 +34,7 @@ public class Board {
                     line.add(null);
                 }
             }
-            grid.add(line);
+            board.add(line);
         }
         reader.close();
     }
@@ -42,7 +42,7 @@ public class Board {
     public Board() {
         this.width = 6;
         this.height = 6;
-        grid = new ArrayList<ArrayList<Case>>();
+        board = new ArrayList<ArrayList<Case>>();
         for (int j = 0; j < height; j++) {
             ArrayList<Case> line = new ArrayList<Case>();
             for (int i = 0; i < width; i++) {
@@ -53,7 +53,7 @@ public class Board {
                     line.add(null);
                 }
             }
-            grid.add(line);
+            board.add(line);
         }
         Random rand = new Random();
     }
@@ -62,7 +62,7 @@ public class Board {
         if (x < 0 || x >= this.width || y < 0 || y >= this.height) {
             return null;
         }
-        return grid.get(y).get(x);
+        return board.get(y).get(x);
     }
 
     public Point getGridSize() {
@@ -70,7 +70,7 @@ public class Board {
     }
 
     public ArrayList<ArrayList<Case>> getGrid() {
-        return this.grid;
+        return this.board;
     }
 
     public int getHeight() {
@@ -83,8 +83,8 @@ public class Board {
 
     public ArrayList<Integer> getCoordLine(int y) {
         ArrayList<Integer> s = new ArrayList<Integer>();
-        for (int index = 0; index < grid.get(y).size(); index++) {
-            if (grid.get(y).get(index) != null) {
+        for (int index = 0; index < board.get(y).size(); index++) {
+            if (board.get(y).get(index) != null) {
                 s.add(index);
             }
         }
@@ -110,6 +110,6 @@ public class Board {
     public boolean inMap(Point pos) {
         return pos.y >= 0 && pos.y < getGridSize().y && pos.x >= 0 &&
                 pos.x < getGridSize().x &&
-                this.grid.get(pos.y).get(pos.x) != null;
+                this.board.get(pos.y).get(pos.x) != null;
     }
 }

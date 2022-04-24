@@ -25,52 +25,52 @@ import models.Player;
  */
 public class BoardView extends JPanel implements MouseListener {
     public BoardCtrl control;
-    public FloodingCtrl floodingCtrl;
-    public PlayerCtrl playerCtrl;
+    public FloodingCtrl flooding;
+    public PlayerCtrl player;
 
     private Model model;
 
-    public ArrayList<Image> pawns;
-    public ArrayList<Image> temples;
+    public ArrayList<Image> players;
+    public ArrayList<Image> treasure;
     public Image heliport;
     public Image gameOver;
     public Image victory;
 
-    final public int widthJpanel;
-    final public int heightJpanel;
-    final public int sizeCase = 80;
-    final public int sizeBorder = 5;
+    final public int widthPanel;
+    final public int heightPanel;
+    final public int CaseSize = 80;
+    final public int BorderSize = 10;
 
     public BoardView(Model m, View view, FloodingCtrl floodingCtrl) {
         this.model = m;
         int width = m.getIsland().getGridSize().x;
         int height = m.getIsland().getGridSize().y;
-        this.widthJpanel = width * sizeCase + (width + 1) * sizeBorder;
-        this.heightJpanel = height * sizeCase + (height + 1) * sizeBorder;
+        this.widthPanel = width * CaseSize + (width + 1) * BorderSize;
+        this.heightPanel = height * CaseSize + (height + 1) * BorderSize;
 
         setPreferredSize(new java.awt.Dimension(
-                widthJpanel, heightJpanel));
+                widthPanel, heightPanel));
 
         setBackground(new Color(1, 59, 204));
         addMouseListener(this);
 
         this.control = new BoardCtrl(m, view, floodingCtrl);
-        this.floodingCtrl = floodingCtrl;
+        this.flooding = floodingCtrl;
 
-        pawns = new ArrayList<Image>();
+        players = new ArrayList<Image>();
         String path = "images/keys/";
         String pawnsPath[] = new String[] { path + "wind.png", path + "stone.png", path + "fire.png",
                 path + "wave.png" };
-        temples = new ArrayList<Image>();
+        treasure = new ArrayList<Image>();
         for (int i = 0; i < 4; i++) {
             Image img = new ImageIcon(pawnsPath[i]).getImage();
-            img = img.getScaledInstance(sizeCase - 10, sizeCase - 10, Image.SCALE_DEFAULT);
+            img = img.getScaledInstance(CaseSize - 10, CaseSize - 10, Image.SCALE_DEFAULT);
             img.getHeight(null);
-            temples.add(img);
+            treasure.add(img);
         }
 
         this.heliport = new ImageIcon("images/heliport.png").getImage();
-        this.heliport = heliport.getScaledInstance(sizeCase + 5, sizeCase + 5, Image.SCALE_DEFAULT);
+        this.heliport = heliport.getScaledInstance(CaseSize + 5, CaseSize + 5, Image.SCALE_DEFAULT);
         this.heliport.getHeight(null);
 
         this.gameOver = new ImageIcon("images/gameOver.png").getImage();
@@ -78,11 +78,11 @@ public class BoardView extends JPanel implements MouseListener {
     }
 
     public void initPawn() {
-        pawns.clear();
+        players.clear();
         String path = "images/pawns/";
         for (int i = 0; i < model.getPlayers().size(); i++) {
             Image img = new ImageIcon(path + model.getPlayers().get(i).getImage()).getImage();
-            pawns.add(img);
+            players.add(img);
         }
     }
 
@@ -92,7 +92,7 @@ public class BoardView extends JPanel implements MouseListener {
         drawIsland(g);
 
         if (model.getState() == Model.Condition.PROGRESS) {
-            if (floodingCtrl.getEscape() != null) {
+            if (flooding.getEscape() != null) {
                 drawEscape(g);
             } else if (model.getActPlayer().getState() == Player.Action.Drain && model.getActPlayer().getNbActions() > 0) {
                 drawDry(g);
@@ -117,9 +117,9 @@ public class BoardView extends JPanel implements MouseListener {
             for (int x = 0; x < board.getGridSize().x; x++) {
                 if (board.inMap(new Point(x, y))) {
                     g.setColor(new Color(200, 200, 200, getAlpha(board.getCase(x, y))));
-                    int x_case = x * (sizeCase + sizeBorder) + sizeBorder;
-                    int y_case = y * (sizeCase + sizeBorder) + sizeBorder;
-                    g.fillRect(x_case, y_case, sizeCase, sizeCase);
+                    int x_case = x * (CaseSize + BorderSize) + BorderSize;
+                    int y_case = y * (CaseSize + BorderSize) + BorderSize;
+                    g.fillRect(x_case, y_case, CaseSize, CaseSize);
                 }
             }
         }
@@ -131,8 +131,8 @@ public class BoardView extends JPanel implements MouseListener {
         for (int y = 0; y < actionMove.length; y++) {
             for (int x = 0; x < actionMove[y].length; x++) {
                 Case C = board.getCase(x, y);
-                int x_case = x * (sizeCase + sizeBorder) + sizeBorder;
-                int y_case = y * (sizeCase + sizeBorder) + sizeBorder;
+                int x_case = x * (CaseSize + BorderSize) + BorderSize;
+                int y_case = y * (CaseSize + BorderSize) + BorderSize;
                 if (actionMove[y][x] <= model.getActPlayer().getNbActions() && actionMove[y][x] != 0
                         && C.movable()) {
                     drawOutline(g, x_case, y_case, new Color(241, 176, 13));
@@ -147,8 +147,8 @@ public class BoardView extends JPanel implements MouseListener {
         for (Point p : neigbours) {
             Case slot = model.getIsland().getCase(p.x, p.y);
             if (slot != null && slot.getFlood() == 1) {
-                int x_case = (int) p.getX() * (sizeCase + sizeBorder) + sizeBorder;
-                int y_case = (int) p.getY() * (sizeCase + sizeBorder) + sizeBorder;
+                int x_case = (int) p.getX() * (CaseSize + BorderSize) + BorderSize;
+                int y_case = (int) p.getY() * (CaseSize + BorderSize) + BorderSize;
                 drawOutline(g, x_case, y_case, new Color(175, 24, 24));
             }
         }
@@ -157,17 +157,17 @@ public class BoardView extends JPanel implements MouseListener {
     private void drawOutline(Graphics g, int x, int y, Color color) {
         g.setColor(color);
         for (int i = 0; i < 3; i++) {
-            g.drawRect(x + i, y + i, this.sizeCase - i * 2, this.sizeCase - i * 2);
+            g.drawRect(x + i, y + i, this.CaseSize - i * 2, this.CaseSize - i * 2);
         }
     }
 
     private void drawEscape(Graphics g) {
-        ArrayList<Point> neigbours = floodingCtrl.getEscape().neigboursMove(this.model);
+        ArrayList<Point> neigbours = flooding.getEscape().neigboursMove(this.model);
         for (Point point : neigbours) {
             Case slot = model.getIsland().getCase(point.x, point.y);
             if (slot != null && slot.getFlood() != slot.getMaxFlood()) {
-                int x_case = point.x * (sizeCase + sizeBorder) + sizeBorder;
-                int y_case = point.y * (sizeCase + sizeBorder) + sizeBorder;
+                int x_case = point.x * (CaseSize + BorderSize) + BorderSize;
+                int y_case = point.y * (CaseSize + BorderSize) + BorderSize;
                 drawOutline(g, x_case, y_case, new Color(124, 29, 20));
             }
         }
@@ -177,15 +177,15 @@ public class BoardView extends JPanel implements MouseListener {
         int i = 0;
         for (Case temple : model.getTemple()) {
             if (temple != null) {
-                int x = temple.getCoord().x * (sizeCase + sizeBorder) + sizeBorder;
-                int y = temple.getCoord().y * (sizeCase + sizeBorder) + sizeBorder;
-                g.drawImage(temples.get(i), x + 5, y + 5, null);
+                int x = temple.getCoord().x * (CaseSize + BorderSize) + BorderSize;
+                int y = temple.getCoord().y * (CaseSize + BorderSize) + BorderSize;
+                g.drawImage(treasure.get(i), x + 5, y + 5, null);
             }
             i++;
         }
         Case heliport = model.getHeliZone();
-        int x = heliport.getCoord().x * (sizeCase + sizeBorder) + sizeBorder;
-        int y = heliport.getCoord().y * (sizeCase + sizeBorder) + sizeBorder;
+        int x = heliport.getCoord().x * (CaseSize + BorderSize) + BorderSize;
+        int y = heliport.getCoord().y * (CaseSize + BorderSize) + BorderSize;
         g.drawImage(this.heliport, x, y, null);
     }
 
@@ -199,43 +199,43 @@ public class BoardView extends JPanel implements MouseListener {
     }
 
     private void draw_pawn(Graphics g, int x, int y, int i, int player) {
-        x = x * (sizeCase + sizeBorder) + sizeBorder;
-        y = y * (sizeCase + sizeBorder) + sizeBorder;
+        x = x * (CaseSize + BorderSize) + BorderSize;
+        y = y * (CaseSize + BorderSize) + BorderSize;
         switch (i) {
             case 0:
-                x += sizeBorder;
-                y += sizeBorder;
+                x += BorderSize;
+                y += BorderSize;
                 break;
             case 1:
-                x += sizeCase - sizeBorder - pawns.get(player).getWidth(null);
-                y += sizeBorder;
+                x += CaseSize - BorderSize - players.get(player).getWidth(null);
+                y += BorderSize;
                 break;
 
             case 2:
-                x += sizeBorder;
-                y += sizeCase - sizeBorder - pawns.get(player).getHeight(null);
+                x += BorderSize;
+                y += CaseSize - BorderSize - players.get(player).getHeight(null);
                 break;
 
             case 3:
-                x += sizeCase - sizeBorder - pawns.get(player).getWidth(null);
-                y += sizeCase - sizeBorder - pawns.get(player).getHeight(null);
+                x += CaseSize - BorderSize - players.get(player).getWidth(null);
+                y += CaseSize - BorderSize - players.get(player).getHeight(null);
                 break;
 
             default:
                 break;
         }
 
-        g.drawImage(pawns.get(player), x, y, null);
+        g.drawImage(players.get(player), x, y, null);
     }
 
     private void drawGameOver(Graphics g) {
-        g.drawImage(this.gameOver, this.widthJpanel / 2 - this.gameOver.getWidth(null) / 2,
-                this.heightJpanel / 2 - this.gameOver.getHeight(null) / 2, null);
+        g.drawImage(this.gameOver, this.widthPanel / 2 - this.gameOver.getWidth(null) / 2,
+                this.heightPanel / 2 - this.gameOver.getHeight(null) / 2, null);
     }
 
     private void drawVictory(Graphics g) {
-        g.drawImage(this.victory, this.widthJpanel / 2 - this.victory.getWidth(null) / 2,
-                this.heightJpanel / 2 - this.victory.getHeight(null) / 2, null);
+        g.drawImage(this.victory, this.widthPanel / 2 - this.victory.getWidth(null) / 2,
+                this.heightPanel / 2 - this.victory.getHeight(null) / 2, null);
     }
 
     private int getAlpha(Case C) {
@@ -248,8 +248,8 @@ public class BoardView extends JPanel implements MouseListener {
     public void mouseClicked(MouseEvent e) {
         int x = e.getX();
         int y = e.getY();
-        int x_case = x / (sizeCase + sizeBorder);
-        int y_case = y / (sizeCase + sizeBorder);
+        int x_case = x / (CaseSize + BorderSize);
+        int y_case = y / (CaseSize + BorderSize);
         this.control.click(x_case, y_case);
     }
 

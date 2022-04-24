@@ -3,18 +3,18 @@ package models;
 import java.util.ArrayList;
 
 public class Flood {
-    private ArrayList<Boolean> delugeLvl;
+    private ArrayList<Boolean> level;
 
     public Flood(int niv) {
-        this.delugeLvl = new ArrayList<Boolean>(10);
+        this.level = new ArrayList<Boolean>(10);
         for (int i = 0; i < 10; i++) {
-            this.delugeLvl.add(false);
+            this.level.add(false);
         }
-        this.delugeLvl.set(niv, true);
+        this.level.set(niv, true);
     }
 
     public int getLvl() {
-        return delugeLvl.indexOf(true);
+        return level.indexOf(true);
     }
 
     public void incrementLvl() {
@@ -22,8 +22,8 @@ public class Flood {
     }
 
     public void setLvl(int i) {
-        this.delugeLvl.set(this.getLvl(), false);
-        this.delugeLvl.set(i, true);
+        this.level.set(this.getLvl(), false);
+        this.level.set(i, true);
     }
 
     public int innondationRate() {
@@ -34,9 +34,5 @@ public class Flood {
         else if (this.getLvl() < 7)
             return 4;
         return 5;
-    }
-
-    public boolean loose() {
-        return this.getLvl() == 10;
     }
 }

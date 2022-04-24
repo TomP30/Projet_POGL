@@ -24,38 +24,39 @@ public class PlayerView extends JPanel implements MouseListener {
 
     public PlayerCtrl playerCtrl;
 
-    public int width, height;
-    public int sizeCase;
+    public int width;
+    public int height;
+    public int CaseSize;
 
-    public int pawnsSapcing;
+    public int spacing;
 
-    public ArrayList<Image> pawns;
-    public ArrayList<Image> temples;
+    public ArrayList<Image> players;
+    public ArrayList<Image> treasure;
 
     public PlayerView(Model model, View view) {
         this.model = model;
         this.width = 300;
-        this.height = view.board.heightJpanel;
-        this.sizeCase = view.board.sizeCase;
-        this.pawns = view.board.pawns;
+        this.height = view.board.heightPanel;
+        this.CaseSize = view.board.CaseSize;
+        this.players = view.board.players;
 
         this.playerCtrl = new PlayerCtrl(model, view);
         view.board.control.setContrPlayer(playerCtrl);
-        view.board.playerCtrl = playerCtrl;
-        this.playerCtrl.selectedPlayer = null;
-        playerCtrl.endTurnCtrl = view.endTurnCtrl;
+        view.board.player = playerCtrl;
+        this.playerCtrl.selectP = null;
+        playerCtrl.endTurn = view.endTurn;
 
-        this.pawnsSapcing = (this.width - 60) / 4;
+        this.spacing = (this.width - 60) / 4;
 
         String path = "images/keys/";
         String pawnsPath[] = new String[] { path + "wind.png", path + "stone.png", path + "fire.png",
                 path + "wave.png" };
-        temples = new ArrayList<Image>();
+        treasure = new ArrayList<Image>();
         for (int i = 0; i < 4; i++) {
             Image img = new ImageIcon(pawnsPath[i]).getImage();
-            img = img.getScaledInstance(sizeCase / 2, sizeCase / 2, Image.SCALE_DEFAULT);
+            img = img.getScaledInstance(CaseSize / 2, CaseSize / 2, Image.SCALE_DEFAULT);
             img.getHeight(null);
-            temples.add(img);
+            treasure.add(img);
         }
 
         setPreferredSize(new java.awt.Dimension(width, height));
@@ -73,12 +74,10 @@ public class PlayerView extends JPanel implements MouseListener {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        drawOutline(g, 0, 0, this.width, 140, new Color(51, 49, 48));
-        drawOutline(g, 0, 145, this.width, this.height - 145, new Color(51, 49, 48));
-        if (this.pawns != null) {
+        if (this.players != null) {
             drawPlayer(g);
         }
-        if (model.getActPlayer().getState() == Player.Action.Exchange && playerCtrl.selectedCard != null) {
+        if (model.getActPlayer().getState() == Player.Action.Exchange && playerCtrl.selectC != null) {
             drawExchange(g);
         }
         drawActPlayer(g);
@@ -86,22 +85,22 @@ public class PlayerView extends JPanel implements MouseListener {
     }
 
     private void drawPawnOutline(Graphics g, int player, Color color) {
-        int midX = 30 + (pawnsSapcing + this.pawns.get(player).getWidth(null) / 2) * player
-                + this.pawns.get(player).getWidth(null) / 2;
-        int midY = 15 + this.pawns.get(player).getHeight(null) / 2;
-        int size = this.pawns.get(player).getHeight(null) + 10;
+        int midX = 30 + (spacing + this.players.get(player).getWidth(null) / 2) * player
+                + this.players.get(player).getWidth(null) / 2;
+        int midY = 15 + this.players.get(player).getHeight(null) / 2;
+        int size = this.players.get(player).getHeight(null) + 10;
         drawOutline(g, midX - size / 2, midY - size / 2, size, size, color);
     }
 
     private void drawPlayer(Graphics g) {
-        for (int player = 0; player < this.pawns.size(); player++) {
-            g.drawImage(this.pawns.get(player),
-                    30 + (pawnsSapcing + this.pawns.get(player).getWidth(null) / 2) * player, 15, null);
+        for (int player = 0; player < this.players.size(); player++) {
+            g.drawImage(this.players.get(player),
+                    30 + (spacing + this.players.get(player).getWidth(null) / 2) * player, 15, null);
 
-            if ((model.getPlayers().get(player) == playerCtrl.selectedPlayer)) {
-                int midX = 30 + (pawnsSapcing + this.pawns.get(player).getWidth(null) / 2) * player
-                        + this.pawns.get(player).getWidth(null) / 2;
-                int midY = 15 + this.pawns.get(player).getHeight(null) / 2;
+            if ((model.getPlayers().get(player) == playerCtrl.selectP)) {
+                int midX = 30 + (spacing + this.players.get(player).getWidth(null) / 2) * player
+                        + this.players.get(player).getWidth(null) / 2;
+                int midY = 15 + this.players.get(player).getHeight(null) / 2;
                 g.setColor(new Color(255, 255, 255));
                 g.fillOval(midX - 5, midY * 2, 10, 10);
             }
@@ -110,7 +109,7 @@ public class PlayerView extends JPanel implements MouseListener {
     }
 
     private void drawActPlayer(Graphics g) {
-        g.setColor(new Color(200, 200, 200));
+        g.setColor(new Color(255, 255, 255));
         Font currentFont = g.getFont();
         g.setFont(new Font("Arial", Font.PLAIN, 50));
         g.drawString("" + model.getActPlayer().getNbActions(), this.width - 50, 130);
@@ -128,7 +127,7 @@ public class PlayerView extends JPanel implements MouseListener {
         for (int i = 0; i < this.model.getPlayers().size(); i++) {
             if ((model.getActPlayer().getPosition() == model.getPlayers().get(i).getPosition() &&
                     model.getActPlayerId() != i)) {
-                drawPawnOutline(g, i, new Color(63, 171, 22));
+                drawPawnOutline(g, i, new Color(181, 225, 165));
             }
         }
     }
@@ -136,24 +135,24 @@ public class PlayerView extends JPanel implements MouseListener {
     private void drawSelectedPlayer(Graphics g) {
         Color colorT = new Color(200, 200, 200);
         g.setColor(colorT);
-        Player player = playerCtrl.selectedPlayer;
+        Player player = playerCtrl.selectP;
         int minY = 145;
         if (player != null && model.getPlayers().indexOf(player) != -1) {
             int index = model.getPlayers().indexOf(player);
-            g.drawImage(this.pawns.get(index), 20, minY + 20, null);
-            g.drawString("" + player.getName(), 30 + pawns.get(index).getWidth(null),
-                    minY + 20 + pawns.get(index).getHeight(null) - g.getFontMetrics().getHeight());
+            g.drawImage(this.players.get(index), 20, minY + 20, null);
+            g.drawString("" + player.getName(), 30 + players.get(index).getWidth(null),
+                    minY + 20 + players.get(index).getHeight(null) - g.getFontMetrics().getHeight());
 
             int space = (this.width - minY - 60) / 4;
-            for (int i = 0; i < temples.size(); i++) {
-                int y = minY + 100 + (space + temples.get(i).getHeight(null)) * i;
-                g.drawImage(temples.get(i), 20, y, null);
+            for (int i = 0; i < treasure.size(); i++) {
+                int y = minY + 100 + (space + treasure.get(i).getHeight(null)) * i;
+                g.drawImage(treasure.get(i), 20, y, null);
                 Card card = Card.getCardTemple(i);
-                g.drawString("x " + playerCtrl.selectedPlayer.getCards(card), 30 + temples.get(i).getWidth(null),
-                        y + temples.get(i).getHeight(null) / 2 + g.getFontMetrics().getAscent() / 2);
-                if (playerCtrl.selectedCard == card) {
+                g.drawString("x " + playerCtrl.selectP.getCards(card), 30 + treasure.get(i).getWidth(null),
+                        y + treasure.get(i).getHeight(null) / 2 + g.getFontMetrics().getAscent() / 2);
+                if (playerCtrl.selectC == card) {
                     g.setColor(new Color(255, 255, 255));
-                    g.fillOval(5, y + temples.get(i).getWidth(null) / 2 - 5, 10, 10);
+                    g.fillOval(5, y + treasure.get(i).getWidth(null) / 2 - 5, 10, 10);
                     g.setColor(colorT);
                 }
             }
@@ -161,12 +160,12 @@ public class PlayerView extends JPanel implements MouseListener {
     }
 
     public void mouseClicked(MouseEvent e) {
-        if ((e.getY() >= 15 && e.getY() <= 15 + this.pawns.get(0).getHeight(null))
+        if ((e.getY() >= 15 && e.getY() <= 15 + this.players.get(0).getHeight(null))
                 && (model.getActPlayer().getState() != Player.Action.Discard)) {
             for (int player = 0; player < model.getPlayers().size(); player++) {
-                int size = this.pawns.get(player).getHeight(null) + 10;
-                if (e.getX() >= 30 + (pawnsSapcing + this.pawns.get(player).getWidth(null) / 2) * player - size / 2
-                        && e.getX() <= 30 + (pawnsSapcing + this.pawns.get(player).getWidth(null) / 2) * (player + 1)
+                int size = this.players.get(player).getHeight(null) + 10;
+                if (e.getX() >= 30 + (spacing + this.players.get(player).getWidth(null) / 2) * player - size / 2
+                        && e.getX() <= 30 + (spacing + this.players.get(player).getWidth(null) / 2) * (player + 1)
                                 - size / 2) {
                     playerCtrl.playerClick(model.getPlayers().get(player));
                     return;
@@ -174,13 +173,13 @@ public class PlayerView extends JPanel implements MouseListener {
             }
             playerCtrl.playerClick(null);
         } else if (e.getY() >= 145) {
-            playerCtrl.selectedCard = null;
+            playerCtrl.selectC = null;
             int minY = 145;
             int space = (this.width - minY - 60) / 4;
             for (int i = 0; i < 4; i++) {
-                int y = minY + 100 + (space + temples.get(i).getHeight(null)) * i;
-                if (y <= e.getY() && y + temples.get(i).getHeight(null) >= e.getY() && e.getX() >= 20
-                        && e.getX() <= 20 + temples.get(i).getWidth(null)) {
+                int y = minY + 100 + (space + treasure.get(i).getHeight(null)) * i;
+                if (y <= e.getY() && y + treasure.get(i).getHeight(null) >= e.getY() && e.getX() >= 20
+                        && e.getX() <= 20 + treasure.get(i).getWidth(null)) {
                     playerCtrl.cardClick(Card.getCardTemple(i));
                     return;
                 }

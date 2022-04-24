@@ -17,7 +17,7 @@ public class Player {
     }
     public static enum colour {
         green,
-        black,
+        red,
         blue,
         yellow,
     }

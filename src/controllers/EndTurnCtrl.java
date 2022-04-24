@@ -12,25 +12,25 @@ import views.View;
  * ContrEndTurn
  */
 public class EndTurnCtrl extends Controler implements ActionListener {
-    public FloodingCtrl contrEscape;
-    public PlayerCtrl playerCtrl;
-    public int maxCard;
+    public FloodingCtrl escape;
+    public PlayerCtrl player;
+    public int hand;
 
     public EndTurnCtrl(Model model, View view, FloodingCtrl contrEscape) {
         super(model, view);
-        this.contrEscape = contrEscape;
-        this.maxCard = 5;
+        this.escape = contrEscape;
+        this.hand = 5;
     }
 
     public void nexTurn() {
         model.nextPlayer();
         model.getActPlayer().setState(Player.Action.Move);
         model.getActPlayer().setAction(3);
-        contrEscape.flooding();
+        escape.flooding();
     }
 
     public void actionPerformed(ActionEvent e) {
-        if (contrEscape.getEscape() == null) {
+        if (escape.getEscape() == null) {
             if (model.getActPlayer().getState() != Player.Action.Discard) {
                 for (int i = 0; i < 2; i++) {
                     Card actualCard = model.getPiocheCard().pick();
@@ -47,9 +47,9 @@ public class EndTurnCtrl extends Controler implements ActionListener {
                     }
                 }
             }
-            if (model.getActPlayer().getNbCards() > maxCard) {
+            if (model.getActPlayer().getNbCards() > hand) {
                 model.getActPlayer().setState(Player.Action.Discard);
-                playerCtrl.selectedPlayer = model.getActPlayer();
+                player.selectP = model.getActPlayer();
             } else {
                 nexTurn();
             }

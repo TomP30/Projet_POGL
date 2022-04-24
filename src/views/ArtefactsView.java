@@ -14,11 +14,11 @@ import models.Model;
  */
 public class ArtefactsView extends JPanel {
     public Model model;
-    public ArrayList<Image> temples;
+    public ArrayList<Image> treasure;
 
     public ArtefactsView(Model model, View view, BoardView boardView) {
         this.model = model;
-        this.temples = boardView.temples;
+        this.treasure = boardView.treasure;
         setBackground(view.background);
     }
 
@@ -28,7 +28,7 @@ public class ArtefactsView extends JPanel {
         int pawnsSapcing = (this.getWidth() - 60) / this.model.getTemple().size();
         for (int i = 0; i < this.model.getTemple().size(); i++) {
             if (model.getTreasureState(i)) {
-                g.drawImage(this.temples.get(i), 30 + (pawnsSapcing + this.temples.get(i).getWidth(null) / 2) * i, 15,
+                g.drawImage(this.treasure.get(i), 30 + (pawnsSapcing + this.treasure.get(i).getWidth(null) / 2) * i, 15,
                         null);
             }
         }

@@ -11,58 +11,58 @@ import views.View;
  * ContrPlayer
  */
 public class PlayerCtrl extends Controler {
-    public Player selectedPlayer;
-    public ArrayList<Player> playersHeli;
-    public Card selectedCard;
-    public EndTurnCtrl endTurnCtrl;
+    public Player selectP;
+    public ArrayList<Player> reachedHeli;
+    public Card selectC;
+    public EndTurnCtrl endTurn;
 
     public PlayerCtrl(Model model, View view) {
         super(model, view);
-        this.playersHeli = new ArrayList<Player>();
+        this.reachedHeli = new ArrayList<Player>();
     }
 
     public void playerClick(Player player) {
-        Player lastPlayer = this.selectedPlayer;
-        this.selectedPlayer = player;
+        Player lastPlayer = this.selectP;
+        this.selectP = player;
 
-        if (this.selectedPlayer != null && this.selectedCard != null
-                && this.model.getActPlayer().possibleExchange(this.selectedPlayer, this.selectedCard)) {
-            if (this.model.getActPlayer().getCards(this.selectedCard) >= 1) {
-                this.model.getActPlayer().useCard(this.selectedCard);
-                this.selectedPlayer.addcard(this.selectedCard);
+        if (this.selectP != null && this.selectC != null
+                && this.model.getActPlayer().possibleExchange(this.selectP, this.selectC)) {
+            if (this.model.getActPlayer().getCards(this.selectC) >= 1) {
+                this.model.getActPlayer().useCard(this.selectC);
+                this.selectP.addcard(this.selectC);
 
                 this.model.getActPlayer().setState(Player.Action.Move);
-                this.selectedCard = null;
-                this.selectedPlayer = lastPlayer;
+                this.selectC = null;
+                this.selectP = lastPlayer;
                 view.repaint();
                 return;
             }
         }
-        this.selectedCard = null;
+        this.selectC = null;
         view.repaint();
     }
 
     private void selectedPlayerHeli(Player player) {
-        if (this.playersHeli.contains(player)) {
-            this.playersHeli.remove(player);
+        if (this.reachedHeli.contains(player)) {
+            this.reachedHeli.remove(player);
         } else {
-            for (Player p : this.playersHeli) {
+            for (Player p : this.reachedHeli) {
                 if (p.getPosition() != player.getPosition()) {
                     view.repaint();
                     return;
                 }
             }
-            this.playersHeli.add(player);
+            this.reachedHeli.add(player);
         }
         view.repaint();
     }
 
     private void throwClick(Card card) {
-        this.selectedCard = null;
+        this.selectC = null;
         if (model.getActPlayer().getCards(card) >= 1) {
             model.getActPlayer().useCard(card);
-            if (model.getActPlayer().getNbCards() <= endTurnCtrl.maxCard) {
-                endTurnCtrl.nexTurn();
+            if (model.getActPlayer().getNbCards() <= endTurn.hand) {
+                endTurn.nexTurn();
             }
         }
     }
@@ -78,7 +78,7 @@ public class PlayerCtrl extends Controler {
     }
 
     public void cardClick(Card card) {
-        this.selectedCard = card;
+        this.selectC = card;
         if (model.getActPlayer().getState() == Player.Action.Discard) {
             throwClick(card);
         }

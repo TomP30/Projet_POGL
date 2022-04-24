@@ -13,17 +13,17 @@ import views.View;
  * ContrGrid
  */
 public class BoardCtrl extends Controler {
-    private FloodingCtrl floodingCtrl;
-    private PlayerCtrl playerCtrl;
+    private FloodingCtrl flooding;
+    private PlayerCtrl player;
 
     public BoardCtrl(Model model, View view, FloodingCtrl floodingCtrl) {
         super(model, view);
-        this.floodingCtrl = floodingCtrl;
+        this.flooding = floodingCtrl;
     }
 
     public void click(int x, int y) {
         if (model.getIsland().inMap(new Point(x, y)) && model.getState() != Model.Condition.ENDLOST) {
-            if (floodingCtrl.getEscape() != null) {
+            if (flooding.getEscape() != null) {
                 clickEscape(x, y);
             } else if (model.getActPlayer().getState() == Player.Action.Move) {
                 clickMove(x,y);
@@ -35,7 +35,7 @@ public class BoardCtrl extends Controler {
     }
 
     public void setContrPlayer(PlayerCtrl playerCtrl) {
-        this.playerCtrl = playerCtrl;
+        this.player = playerCtrl;
     }
 
     private void clickMove(int x, int y) {
@@ -50,15 +50,15 @@ public class BoardCtrl extends Controler {
     }
 
     private void clickNavigator(int x, int y) {
-        if (playerCtrl.selectedPlayer == null || playerCtrl.selectedPlayer == null
-                || playerCtrl.selectedPlayer == model.getActPlayer()) {
+        if (player.selectP == null || player.selectP == null
+                || player.selectP == model.getActPlayer()) {
             clickMove(x, y);
         } else {
-            int[][] action = model.nbActionNormal(playerCtrl.selectedPlayer.getPosition().getX(),
-                    playerCtrl.selectedPlayer.getPosition().getY());
+            int[][] action = model.nbActionNormal(player.selectP.getPosition().getX(),
+                    player.selectP.getPosition().getY());
             if (action[y][x] <= 2 && model.getActPlayer().getNbActions() > 0) {
                 model.getActPlayer().setAction(model.getActPlayer().getNbActions() - 1);
-                playerCtrl.selectedPlayer.changePosition(model.getIsland().getCase(x, y));
+                player.selectP.changePosition(model.getIsland().getCase(x, y));
             }
         }
     }
@@ -82,15 +82,15 @@ public class BoardCtrl extends Controler {
     }
 
     private void clickEscape(int x, int y) {
-        ArrayList<Point> neigbours = floodingCtrl.getEscape().neigboursMove(this.model);
+        ArrayList<Point> neigbours = flooding.getEscape().neigboursMove(this.model);
         for (Point point : neigbours) {
             Case zone = model.getIsland().getCase(point.x, point.y);
             if (zone != null && zone.getFlood() != zone.getMaxFlood() && x == zone.getX() && y == zone.getY()) {
-                floodingCtrl.getEscape().setState(Player.Action.Move);
-                floodingCtrl.getEscape().changePosition(zone);
-                floodingCtrl.setEscape();
-                if (floodingCtrl.getEscape() == null) {
-                    floodingCtrl.flooding();
+                flooding.getEscape().setState(Player.Action.Move);
+                flooding.getEscape().changePosition(zone);
+                flooding.setEscape();
+                if (flooding.getEscape() == null) {
+                    flooding.flooding();
                 }
                 return;
             }

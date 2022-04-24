@@ -9,12 +9,12 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class FloodingCtrl extends Controler {
-    public int nbInondation;
+    public int flood;
     private Player escape;
 
     public FloodingCtrl(Model model, View view) {
         super(model, view);
-        nbInondation = model.getFloodLevel().innondationRate();
+        flood = model.getFloodLevel().innondationRate();
         this.escape = null;
     }
 
@@ -44,7 +44,7 @@ public class FloodingCtrl extends Controler {
     }
 
     public void flooding() {
-        for (; nbInondation > 0; nbInondation--) {
+        for (; flood > 0; flood--) {
             Case drownC = model.getPiocheWater().pick();
             drownC.drown();
             Boolean escape = false;
@@ -73,6 +73,6 @@ public class FloodingCtrl extends Controler {
                 return;
             }
         }
-        nbInondation = model.getFloodLevel().innondationRate();
+        flood = model.getFloodLevel().innondationRate();
     }
 }
