@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import models.Model;
-import models.Zone;
+import models.Case;
 import models.*;
 import views.View;
 
@@ -20,7 +20,7 @@ public class ContrSetup extends Controller implements ActionListener {
         super(model, view);
     }
 
-    private Player createPlayer(String name, Zone zone, int i) {
+    private Player createPlayer(String name, Case zone, int i) {
         Player player = new Player(name,zone,i);
 
         return player;

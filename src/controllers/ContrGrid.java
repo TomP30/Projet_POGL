@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import models.Card;
 import models.Model;
-import models.Zone;
+import models.Case;
 import models.Player;
 import views.View;
 
@@ -41,11 +41,11 @@ public class ContrGrid extends Controller {
 
     private void clickMove(int x, int y) {
         int[][] action = model.nbAction(model.getActPlayer());
-        Zone moveZ = model.getIsland().getZone(x, y);
+        Case Cmove = model.getIsland().getCase(x, y);
 
         if (action[y][x] <= model.getActPlayer().getNbActions()
-                && moveZ.moove()) {
-            model.getActPlayer().changePosition(moveZ);
+                && Cmove.moove()) {
+            model.getActPlayer().changePosition(Cmove);
             model.getActPlayer().setAction(model.getActPlayer().getNbActions() - action[y][x]);
         }
     }
@@ -59,20 +59,20 @@ public class ContrGrid extends Controller {
                     contrPlayer.selectedPlayer.getPosition().getY());
             if (action[y][x] <= 2 && model.getActPlayer().getNbActions() > 0) {
                 model.getActPlayer().setAction(model.getActPlayer().getNbActions() - 1);
-                contrPlayer.selectedPlayer.changePosition(model.getIsland().getZone(x, y));
+                contrPlayer.selectedPlayer.changePosition(model.getIsland().getCase(x, y));
             }
         }
     }
 
     private void clickDry(int x, int y) {
         if (model.getActPlayer().getNbActions() > 0) {
-            Zone digZ = model.getIsland().getZone(x, y);
-            ArrayList<Zone> digZones = new ArrayList<Zone>();
+            Case digZ = model.getIsland().getCase(x, y);
+            ArrayList<Case> digZones = new ArrayList<Case>();
             ArrayList<Point> action = model.getActPlayer().neigboursDry(this.model);
             action.add(new Point(model.getActPlayer().getPosition().getX(),
                     model.getActPlayer().getPosition().getY()));
             for (Point point : action) {
-                digZones.add(model.getIsland().getZone(point.x, point.y));
+                digZones.add(model.getIsland().getCase(point.x, point.y));
             }
 
             if (digZ.getWaterLvl() == 1 && digZones.contains(digZ)) {
@@ -85,7 +85,7 @@ public class ContrGrid extends Controller {
     private void clickEscape(int x, int y) {
         ArrayList<Point> neigbours = contrFlooding.getEscape().neigboursMove(this.model);
         for (Point point : neigbours) {
-            Zone zone = model.getIsland().getZone(point.x, point.y);
+            Case zone = model.getIsland().getCase(point.x, point.y);
             if (zone != null && zone.getWaterLvl() != zone.getMaxWaterLvl() && x == zone.getX() && y == zone.getY()) {
                 contrFlooding.getEscape().setState(Player.State.MOVING);
                 contrFlooding.getEscape().changePosition(zone);

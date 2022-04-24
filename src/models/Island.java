@@ -13,7 +13,7 @@ import java.io.IOException;
  */
 public class Island {
 
-    private ArrayList<ArrayList<Zone>> grid;
+    private ArrayList<ArrayList<Case>> grid;
     private Random rand;
 
     private final int width;
@@ -24,13 +24,13 @@ public class Island {
 
         this.width = Integer.parseInt(lecteur.readLine());
         this.height = Integer.parseInt(lecteur.readLine());
-        grid = new ArrayList<ArrayList<Zone>>();
+        grid = new ArrayList<ArrayList<Case>>();
         for (int j = 0; j < height; j++) {
-            ArrayList<Zone> line = new ArrayList<Zone>();
+            ArrayList<Case> line = new ArrayList<Case>();
             String lineMap = lecteur.readLine();
             for (int i = 0; i < width; i++) {
                 if (lineMap.charAt(i) == '#') {
-                    line.add(new Zone(i, j));
+                    line.add(new Case(i, j));
                 } else {
                     line.add(null);
                 }
@@ -46,13 +46,13 @@ public class Island {
     public Island() {
         this.width = 6;
         this.height = 6;
-        grid = new ArrayList<ArrayList<Zone>>();
+        grid = new ArrayList<ArrayList<Case>>();
         for (int j = 0; j < height; j++) {
-            ArrayList<Zone> line = new ArrayList<Zone>();
+            ArrayList<Case> line = new ArrayList<Case>();
             for (int i = 0; i < width; i++) {
                 if (Math.abs(i - (width - 1) / 2.) +
                         Math.abs(j - (height - 1) / 2.) <= height / 2.) {
-                    line.add(new Zone(i, j));
+                    line.add(new Case(i, j));
                 } else {
                     line.add(null);
                 }
@@ -62,7 +62,7 @@ public class Island {
         rand = new Random();
     }
 
-    public Zone getZone(int x, int y) {
+    public Case getCase(int x, int y) {
         if (x < 0 || x >= this.width || y < 0 || y >= this.height) {
             return null;
         }
@@ -73,7 +73,7 @@ public class Island {
         return new Point(this.width, this.height);
     }
 
-    public ArrayList<ArrayList<Zone>> getGrid() {
+    public ArrayList<ArrayList<Case>> getGrid() {
         return this.grid;
     }
 
@@ -95,18 +95,18 @@ public class Island {
         return s;
     }
 
-    public Zone getRandomCase() {
+    public Case getRandomCase() {
         int y = rand.nextInt(this.getGridSize().y);
         int x = this.getCoordLine(y).get(rand.nextInt(this.getCoordLine(y).size()));
-        return this.getZone(x, y);
+        return this.getCase(x, y);
     }
 
-    public ArrayList<Zone> neighbours(Zone p) {
-        ArrayList<Zone> neighbours = new ArrayList<Zone>();
-        neighbours.add(this.getZone(p.getCoord().x, p.getCoord().y + 1));
-        neighbours.add(this.getZone(p.getCoord().x, p.getCoord().y - 1));
-        neighbours.add(this.getZone(p.getCoord().x + 1, p.getCoord().y));
-        neighbours.add(this.getZone(p.getCoord().x - 1, p.getCoord().y));
+    public ArrayList<Case> neighbours(Case C) {
+        ArrayList<Case> neighbours = new ArrayList<Case>();
+        neighbours.add(this.getCase(C.getCoord().x, C.getCoord().y + 1));
+        neighbours.add(this.getCase(C.getCoord().x, C.getCoord().y - 1));
+        neighbours.add(this.getCase(C.getCoord().x + 1, C.getCoord().y));
+        neighbours.add(this.getCase(C.getCoord().x - 1, C.getCoord().y));
         return neighbours;
     }
 

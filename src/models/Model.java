@@ -23,12 +23,12 @@ public class Model {
     private State state;
     private Island island;
     private Flood flood;
-    private ArrayList<Zone> temple;
+    private ArrayList<Case> temple;
     private ArrayList<Boolean> treasureState;
     private ArrayList<Player> players;
     private PiocheInnondation piocheWater;
     private int actPlayer;
-    private Zone heliZone;
+    private Case heliZone;
     private PiocheCard piocheCard;
 
     public Model(String map) {
@@ -45,7 +45,7 @@ public class Model {
         this.flood = new Flood(0);
         this.map = map;
         this.state = State.SETUP;
-        this.temple = new ArrayList<Zone>();
+        this.temple = new ArrayList<Case>();
         this.players = new ArrayList<Player>();
         this.piocheWater = new PiocheInnondation(this.pileOfZone());
         this.piocheCard = new PiocheCard();
@@ -83,7 +83,7 @@ public class Model {
         return this.island;
     }
 
-    public ArrayList<Zone> getTemple() {
+    public ArrayList<Case> getTemple() {
         return this.temple;
     }
 
@@ -91,7 +91,7 @@ public class Model {
         return this.players;
     }
 
-    public Zone getHeliZone() {
+    public Case getHeliZone() {
         return this.heliZone;
     }
 
@@ -125,12 +125,12 @@ public class Model {
         getActPlayer().resetAction();
     }
 
-    public Zone getRandomValideCase() {
-        Zone pos;
+    public Case getRandomValideCase() {
+        Case C;
         do {
-            pos = this.island.getRandomCase();
-        } while (this.temple.contains(pos));
-        return pos;
+            C = this.island.getRandomCase();
+        } while (this.temple.contains(C));
+        return C;
     }
 
     private Boolean allTraveled(Boolean[][] visitedCase) {
@@ -165,7 +165,7 @@ public class Model {
         for (int j = 0; j < action.length; j++) {
             for (int i = 0; i < action[j].length; i++) {
                 action[j][i] = 999;
-                if (island.getZone(i, j) == null) {
+                if (island.getCase(i, j) == null) {
                     visitedCase[j][i] = true;
                 } else {
                     visitedCase[j][i] = false;
@@ -184,11 +184,11 @@ public class Model {
             visitedCase[p.y][p.x] = true;
             for (int j = -1; j <= 1; j++) {
                 for (int i = -1; i <= 1; i++) {
-                    if (island.getZone(p.x + i, p.y + j) != null) {
-                        if (player.isNeight(island.getZone(p.x + i, p.y + j),
-                                island.getZone(p.x, p.y))) {
+                    if (island.getCase(p.x + i, p.y + j) != null) {
+                        if (player.isNeight(island.getCase(p.x + i, p.y + j),
+                                island.getCase(p.x, p.y))) {
                             action[p.y + j][p.x + i] = player.getWeightNeight(action[p.y][p.x],
-                                    action[p.y + j][p.x + i], island.getZone(p.x + i, p.y + j));
+                                    action[p.y + j][p.x + i], island.getCase(p.x + i, p.y + j));
                         }
                     }
                 }
@@ -204,7 +204,7 @@ public class Model {
         for (int j = 0; j < action.length; j++) {
             for (int i = 0; i < action[j].length; i++) {
                 action[j][i] = 999;
-                if (island.getZone(i, j) == null) {
+                if (island.getCase(i, j) == null) {
                     visitedCase[j][i] = true;
                 } else {
                     visitedCase[j][i] = false;
@@ -217,7 +217,7 @@ public class Model {
             visitedCase[p.y][p.x] = true;
             for (int j = -1; j <= 1; j++) {
                 for (int i = -1; i <= 1; i++) {
-                    if (island.getZone(p.x + i, p.y + j) != null) {
+                    if (island.getCase(p.x + i, p.y + j) != null) {
                         if (Math.abs(i) + Math.abs(j) == 1) {
                             if (action[p.y + j][p.x + i] > action[p.y][p.x] + 1) {
                                 action[p.y + j][p.x + i] = action[p.y][p.x] + 1;
@@ -230,11 +230,11 @@ public class Model {
         return action;
     }
 
-    public ArrayList<Zone> pileOfZone() {
-        ArrayList<Zone> cards = new ArrayList<Zone>();
+    public ArrayList<Case> pileOfZone() {
+        ArrayList<Case> cards = new ArrayList<Case>();
         for (int y = 0; y < this.getIsland().getHeight(); y++) {
             for (int x : this.getIsland().getCoordLine(y)) {
-                cards.add(this.getIsland().getZone(x, y));
+                cards.add(this.getIsland().getCase(x, y));
             }
         }
         return cards;

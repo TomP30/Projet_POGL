@@ -18,7 +18,7 @@ import controllers.ContrPlayer;
 import models.Card;
 import models.Island;
 import models.Model;
-import models.Zone;
+import models.Case;
 import models.Player;
 
 /**
@@ -117,7 +117,7 @@ public class ViewGrid extends JPanel implements MouseListener {
         for (int y = 0; y < island.getGridSize().y; y++) {
             for (int x = 0; x < island.getGridSize().x; x++) {
                 if (island.inMap(new Point(x, y))) {
-                    g.setColor(new Color(200, 200, 200, getAlpha(island.getZone(x, y))));
+                    g.setColor(new Color(200, 200, 200, getAlpha(island.getCase(x, y))));
                     int x_case = x * (sizeCase + sizeBorder) + sizeBorder;
                     int y_case = y * (sizeCase + sizeBorder) + sizeBorder;
                     g.fillRect(x_case, y_case, sizeCase, sizeCase);
@@ -131,11 +131,11 @@ public class ViewGrid extends JPanel implements MouseListener {
         Island island = this.model.getIsland();
         for (int y = 0; y < actionMove.length; y++) {
             for (int x = 0; x < actionMove[y].length; x++) {
-                Zone z = island.getZone(x, y);
+                Case C = island.getCase(x, y);
                 int x_case = x * (sizeCase + sizeBorder) + sizeBorder;
                 int y_case = y * (sizeCase + sizeBorder) + sizeBorder;
                 if (actionMove[y][x] <= model.getActPlayer().getNbActions() && actionMove[y][x] != 0
-                        && z.moove()) {
+                        && C.moove()) {
                     drawOutline(g, x_case, y_case, new Color(241, 176, 13));
                 }
             }
@@ -146,8 +146,8 @@ public class ViewGrid extends JPanel implements MouseListener {
         ArrayList<Point> neigbours = model.getActPlayer().neigboursDry(this.model);
         neigbours.add(new Point(model.getActPlayer().getPosition().getX(), model.getActPlayer().getPosition().getY()));
         for (Point p : neigbours) {
-            Zone zone = model.getIsland().getZone(p.x, p.y);
-            if (zone != null && zone.getWaterLvl() == 1) {
+            Case slot = model.getIsland().getCase(p.x, p.y);
+            if (slot != null && slot.getWaterLvl() == 1) {
                 int x_case = (int) p.getX() * (sizeCase + sizeBorder) + sizeBorder;
                 int y_case = (int) p.getY() * (sizeCase + sizeBorder) + sizeBorder;
                 drawOutline(g, x_case, y_case, new Color(175, 24, 24));
@@ -165,8 +165,8 @@ public class ViewGrid extends JPanel implements MouseListener {
     private void drawEscape(Graphics g) {
         ArrayList<Point> neigbours = contrFlooding.getEscape().neigboursMove(this.model);
         for (Point point : neigbours) {
-            Zone zone = model.getIsland().getZone(point.x, point.y);
-            if (zone != null && zone.getWaterLvl() != zone.getMaxWaterLvl()) {
+            Case slot = model.getIsland().getCase(point.x, point.y);
+            if (slot != null && slot.getWaterLvl() != slot.getMaxWaterLvl()) {
                 int x_case = point.x * (sizeCase + sizeBorder) + sizeBorder;
                 int y_case = point.y * (sizeCase + sizeBorder) + sizeBorder;
                 drawOutline(g, x_case, y_case, new Color(124, 29, 20));
@@ -176,7 +176,7 @@ public class ViewGrid extends JPanel implements MouseListener {
 
     private void drawImages(Graphics g) {
         int i = 0;
-        for (Zone temple : model.getTemple()) {
+        for (Case temple : model.getTemple()) {
             if (temple != null) {
                 int x = temple.getCoord().x * (sizeCase + sizeBorder) + sizeBorder;
                 int y = temple.getCoord().y * (sizeCase + sizeBorder) + sizeBorder;
@@ -184,7 +184,7 @@ public class ViewGrid extends JPanel implements MouseListener {
             }
             i++;
         }
-        Zone heliport = model.getHeliZone();
+        Case heliport = model.getHeliZone();
         int x = heliport.getCoord().x * (sizeCase + sizeBorder) + sizeBorder;
         int y = heliport.getCoord().y * (sizeCase + sizeBorder) + sizeBorder;
         g.drawImage(this.heliport, x, y, null);
@@ -239,9 +239,9 @@ public class ViewGrid extends JPanel implements MouseListener {
                 this.heightJpanel / 2 - this.victory.getHeight(null) / 2, null);
     }
 
-    private int getAlpha(Zone zone) {
-        int max = zone.getMaxWaterLvl();
-        int act = zone.getWaterLvl();
+    private int getAlpha(Case C) {
+        int max = C.getMaxWaterLvl();
+        int act = C.getWaterLvl();
         int alpha = (int) (255 * (double) (max - act) / max);
         return alpha;
     }

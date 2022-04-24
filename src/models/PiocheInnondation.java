@@ -4,23 +4,23 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class PiocheInnondation {
-    private ArrayList<Zone> pioche;
-    private ArrayList<Zone> defausse;
+    private ArrayList<Case> pioche;
+    private ArrayList<Case> defausse;
     private int nbCartePioche;
 
-    public PiocheInnondation(ArrayList<Zone> p) {
+    public PiocheInnondation(ArrayList<Case> p) {
         this.pioche = p;
         Collections.shuffle(this.pioche);
-        this.defausse = new ArrayList<Zone>();
+        this.defausse = new ArrayList<Case>();
         this.nbCartePioche = this.pioche.size();
     }
 
     // Getter
-    public ArrayList<Zone> getPioche() {
+    public ArrayList<Case> getPioche() {
         return this.pioche;
     }
 
-    public ArrayList<Zone> getDefausse() {
+    public ArrayList<Case> getDefausse() {
         return this.defausse;
     }
 
@@ -28,20 +28,20 @@ public class PiocheInnondation {
         return this.nbCartePioche;
     }
 
-    public void addCardDefausse(Zone p) {
+    public void addCardDefausse(Case p) {
         this.defausse.add(p);
     }
 
-    public void setPioche(ArrayList<Zone> cards) {
+    public void setPioche(ArrayList<Case> cards) {
         this.pioche = cards;
     }
 
     // Méthode
-    public Zone pick() {
+    public Case pick() {
         if (this.pioche.size() == 0) {
             resetPioche();
         }
-        Zone z = this.getPioche().get(0);
+        Case z = this.getPioche().get(0);
         if (z.getWaterLvl() != z.getMaxWaterLvl()) {
             this.addCardDefausse(z);
         }
@@ -59,7 +59,7 @@ public class PiocheInnondation {
     }
 
     public void resetPioche() {
-        this.setPioche(new ArrayList<Zone>(defausse));
+        this.setPioche(new ArrayList<Case>(defausse));
         Collections.shuffle(this.pioche);
         this.nbCartePioche = this.getNbCarte();
         this.defausse.removeAll(this.defausse);

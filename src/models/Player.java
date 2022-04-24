@@ -22,7 +22,7 @@ public class Player {
         yellowPawn,
     }
 
-    protected Zone position;
+    protected Case position;
     protected int nbActions;
     protected State state;
     protected String name;
@@ -31,7 +31,7 @@ public class Player {
     private String image;
 
     // Constructeur
-    public Player(String name, Zone zone, int i) {
+    public Player(String name, Case zone, int i) {
         this.name = name;
         this.cards = new HashMap<Card, Integer>();
         this.cards.put(Card.AIR, 0);
@@ -53,8 +53,8 @@ public class Player {
         power = true;
     }
 
-    public void setPosition(Zone z) {
-        this.position = z;
+    public void setPosition(Case C) {
+        this.position = C;
     }
 
     public void setName(String name) {
@@ -88,7 +88,7 @@ public class Player {
         return this.power;
     }
 
-    public Zone getPosition() {
+    public Case getPosition() {
         return this.position;
     }
 
@@ -124,8 +124,8 @@ public class Player {
                 && getCards(card) > 0;
     }
 
-    public void changePosition(Zone z) {
-        this.position = z;
+    public void changePosition(Case C) {
+        this.position = C;
     }
 
     public void dryUp() {
@@ -136,12 +136,12 @@ public class Player {
         this.cards.put(c, this.cards.get(c) - 1);
     }
 
-    public Boolean isNeight(Zone move, Zone base) {
+    public Boolean isNeight(Case move, Case base) {
         return move.getWaterLvl() < move.getMaxWaterLvl() && Math.abs(move.getX() - base.getX()) +
                 Math.abs(move.getY() - base.getY()) < 2;
     }
 
-    public int getWeightNeight(int weightNeight, int lastWeight, Zone z) {
+    public int getWeightNeight(int weightNeight, int lastWeight, Case C) {
         if (weightNeight + 1 < lastWeight) {
             return weightNeight + 1;
         } else {

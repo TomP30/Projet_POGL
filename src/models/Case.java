@@ -1,31 +1,31 @@
 package models;
 
-import java.awt.Point;
+import java.awt.*;
 
 /**
  * Zone
  */
-public class Zone {
+public class Case {
 
-    private Point c;
+    private Point coord;
     private int waterLvl;
     private static int maxWaterLvl = 2;
 
-    public Zone(int x, int y) {
-        this.c = new Point(x, y);
+    public Case(int x, int y) {
+        this.coord = new Point(x,y);
         this.waterLvl = 0;
     }
 
     public Point getCoord() {
-        return this.c;
+        return this.coord;
     }
 
     public int getX() {
-        return this.c.x;
+        return this.coord.x;
     }
 
     public int getY() {
-        return this.c.y;
+        return this.coord.y;
     }
 
     public int getWaterLvl() {

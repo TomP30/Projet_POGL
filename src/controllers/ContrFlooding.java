@@ -1,13 +1,12 @@
 package controllers;
 
-import java.awt.Point;
-
-import java.util.ArrayList;
-
 import models.Model;
-import models.Zone;
+import models.Case;
 import models.Player;
 import views.View;
+
+import java.awt.*;
+import java.util.ArrayList;
 
 public class ContrFlooding extends Controller {
     public int nbInondation;
@@ -33,32 +32,32 @@ public class ContrFlooding extends Controller {
         this.escape = escape;
     }
 
-    private Boolean escape(Zone zone, Player player) {
+    private Boolean escape(Case zone, Player player) {
         ArrayList<Point> action = player.neigboursMove(this.model);
 
         return !action.isEmpty();
     }
 
-    private Boolean gameOverCase(Zone zone) {
-        return model.getTemple().contains(zone) ||
-                model.getHeliZone() == zone;
+    private Boolean gameOverCase(Case C) {
+        return model.getTemple().contains(C) ||
+                model.getHeliZone() == C;
     }
 
     public void flooding() {
         for (; nbInondation > 0; nbInondation--) {
-            Zone drownZ = model.getPiocheWater().pick();
-            drownZ.drown();
+            Case drownC = model.getPiocheWater().pick();
+            drownC.drown();
             Boolean escape = false;
-            if (drownZ.getWaterLvl() == drownZ.getMaxWaterLvl()) {
-                if (gameOverCase(drownZ)) {
+            if (drownC.getWaterLvl() == drownC.getMaxWaterLvl()) {
+                if (gameOverCase(drownC)) {
                     model.setState(Model.State.LOSE);
                     view.gameOver();
                     break;
                 }
                 for (Player p : model.getPlayers()) {
-                    if (drownZ == p.getPosition()) {
+                    if (drownC == p.getPosition()) {
                         p.setState(Player.State.ESCAPE);
-                        if (escape(drownZ, p)) {
+                        if (escape(drownC, p)) {
                             escape = true;
                             p.setState(Player.State.ESCAPE);
                         } else {
