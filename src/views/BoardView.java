@@ -58,9 +58,9 @@ public class BoardView extends JPanel implements MouseListener {
         this.floodingCtrl = floodingCtrl;
 
         pawns = new ArrayList<Image>();
-        String path = "images/elements/";
-        String pawnsPath[] = new String[] { path + "air.png", path + "earth.png", path + "fire.png",
-                path + "water.png" };
+        String path = "images/keys/";
+        String pawnsPath[] = new String[] { path + "wind.png", path + "stone.png", path + "fire.png",
+                path + "wave.png" };
         temples = new ArrayList<Image>();
         for (int i = 0; i < 4; i++) {
             Image img = new ImageIcon(pawnsPath[i]).getImage();

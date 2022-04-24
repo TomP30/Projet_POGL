@@ -2,12 +2,14 @@ package views;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import controllers.*;
+import models.Case;
 import models.Model;
 import models.Player;
 
@@ -17,7 +19,6 @@ import models.Player;
 public class View extends JFrame {
     private Model model;
 
-    public SetupView setup;
     public BoardView board;
     public PlayerView player;
     public ArtefactsView treasure;
@@ -48,7 +49,6 @@ public class View extends JFrame {
         this.endTurnCtrl = new EndTurnCtrl(this.model, this, this.floodingCtrl);
         this.search = new Search(model, this);
 
-        this.setup = new SetupView(this.model, this);
         this.board = new BoardView(this.model, this, this.floodingCtrl);
         this.player = new PlayerView(this.model, this);
         this.treasure = new ArtefactsView(this.model, this, this.board);
@@ -142,10 +142,14 @@ public class View extends JFrame {
     }
 
     public void setup() {
-        setSize(500, 400);
-        getContentPane().removeAll();
-        add(this.setup);
+        ArrayList<String> names = new ArrayList<String>();
+        for (int i = 0; i < 4; i++) {
+            names.add("J "+ (i+1));
+        }
+        setPlayer(names);
+        model.getFloodLevel().setLvl(0);
         repaint();
+        start();
     }
 
     public void start() {
@@ -171,7 +175,17 @@ public class View extends JFrame {
         this.repaint();
     }
 
-    public SetupView getViewSetup() {
-        return this.setup;
+    private void setPlayer(ArrayList<String> names) {
+        int i=0;
+        for (String name: names){
+            Player player = createPlayer(name, model.getIsland().getRandomCase(),i);
+            model.addPlayer(player);
+            i++;
+        }
+    }
+
+    private Player createPlayer(String name, Case zone, int i) {
+        Player player = new Player(name,zone,i);
+        return player;
     }
 }
