@@ -20,20 +20,16 @@ public class DrawFlood {
         return this.deck;
     }
 
-    public ArrayList<Case> getCimetery() {
-        return this.cimetery;
-    }
-
     public int getDeckAmount() {
         return this.deckAmount;
     }
 
-    public void cimeteryAdd(Case p) {
-        this.cimetery.add(p);
+    public void cimeteryAdd(Case C) {
+        this.cimetery.add(C);
     }
 
-    public void setDeck(ArrayList<Case> cards) {
-        this.deck = cards;
+    public void setDeck(ArrayList<Case> Cs) {
+        this.deck = Cs;
     }
 
     // Méthode
@@ -41,13 +37,13 @@ public class DrawFlood {
         if (this.deck.size() == 0) {
             resetDeck();
         }
-        Case z = this.getDeck().get(0);
-        if (z.getFlood() != z.getMaxFlood()) {
-            this.cimeteryAdd(z);
+        Case C = this.getDeck().get(0);
+        if (C.getFlood() != C.getMaxFlood()) {
+            this.cimeteryAdd(C);
         }
         this.deck.remove(0);
         this.deckAmount--;
-        return z;
+        return C;
     }
 
     public void addCimetery() {

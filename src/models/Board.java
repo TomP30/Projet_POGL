@@ -46,8 +46,7 @@ public class Board {
         for (int j = 0; j < height; j++) {
             ArrayList<Case> line = new ArrayList<Case>();
             for (int i = 0; i < width; i++) {
-                if (Math.abs(i - (width - 1) / 2.) +
-                        Math.abs(j - (height - 1) / 2.) <= height / 2.) {
+                if (Math.abs(i - (width - 1) / 2.) + Math.abs(j - (height - 1) / 2.) <= height / 2.) {
                     line.add(new Case(i, j));
                 } else {
                     line.add(null);
@@ -55,7 +54,6 @@ public class Board {
             }
             board.add(line);
         }
-        Random rand = new Random();
     }
 
     public Case getCase(int x, int y) {
@@ -94,9 +92,7 @@ public class Board {
         return this.getCase(x, y);
     }
 
-    public boolean isValid(Point pos) {
-        return pos.y >= 0 && pos.y < getSize().y && pos.x >= 0 &&
-                pos.x < getSize().x &&
-                this.board.get(pos.y).get(pos.x) != null;
+    public boolean isValid(Point p) {
+        return p.y >= 0 && p.y < getSize().y && p.x >= 0 && p.x < getSize().x && this.board.get(p.y).get(p.x) != null;
     }
 }

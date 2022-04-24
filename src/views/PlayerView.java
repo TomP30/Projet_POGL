@@ -21,36 +21,29 @@ import models.Player;
  */
 public class PlayerView extends JPanel implements MouseListener {
     private Model model;
-
     public PlayerCtrl playerCtrl;
-
     public int width;
     public int height;
     public int CaseSize;
-
     public int spacing;
-
     public ArrayList<Image> players;
     public ArrayList<Image> treasure;
 
-    public PlayerView(Model model, View view) {
-        this.model = model;
-        this.width = 300;
-        this.height = view.board.heightPanel;
-        this.CaseSize = view.board.CaseSize;
-        this.players = view.board.players;
-
-        this.playerCtrl = new PlayerCtrl(model, view);
-        view.board.control.setPlayerCtrl(playerCtrl);
-        view.board.player = playerCtrl;
+    public PlayerView(Model M, View V) {
+        this.model = M;
+        this.width = 250;
+        this.height = V.board.heightPanel;
+        this.CaseSize = V.board.CaseSize;
+        this.players = V.board.players;
+        this.playerCtrl = new PlayerCtrl(model, V);
+        V.board.control.setPlayerCtrl(playerCtrl);
+        V.board.player = playerCtrl;
         this.playerCtrl.selectP = null;
-        playerCtrl.endTurn = view.endTurn;
-
+        playerCtrl.endTurn = V.endTurn;
         this.spacing = (this.width - 60) / 4;
 
         String path = "images/keys/";
-        String pawnsPath[] = new String[] { path + "wind.png", path + "stone.png", path + "fire.png",
-                path + "wave.png" };
+        String pawnsPath[] = new String[] { path + "wind.png", path + "stone.png", path + "fire.png", path + "wave.png" };
         treasure = new ArrayList<Image>();
         for (int i = 0; i < 4; i++) {
             Image img = new ImageIcon(pawnsPath[i]).getImage();
@@ -58,16 +51,15 @@ public class PlayerView extends JPanel implements MouseListener {
             img.getHeight(null);
             treasure.add(img);
         }
-
         setPreferredSize(new java.awt.Dimension(width, height));
-        setBackground(view.background);
+        setBackground(V.background);
         addMouseListener(this);
     }
 
-    private void drawBorder(Graphics g, int x, int y, int sizeW, int sizeH, Color color) {
-        g.setColor(color);
+    private void drawBorder(Graphics g, int x, int y, int w, int h, Color col) {
+        g.setColor(col);
         for (int i = 0; i < 3; i++) {
-            g.drawRect(x + i, y + i, sizeW - i * 2, sizeH - i * 2);
+            g.drawRect(x + i, y + i, w - i * 2, h - i * 2);
         }
     }
 
@@ -84,22 +76,19 @@ public class PlayerView extends JPanel implements MouseListener {
         drawChoice(g);
     }
 
-    private void drawPlayerBorder(Graphics g, int player, Color color) {
-        int midX = 30 + (spacing + this.players.get(player).getWidth(null) / 2) * player
-                + this.players.get(player).getWidth(null) / 2;
-        int midY = 15 + this.players.get(player).getHeight(null) / 2;
-        int size = this.players.get(player).getHeight(null) + 10;
-        drawBorder(g, midX - size / 2, midY - size / 2, size, size, color);
+    private void drawPlayerBorder(Graphics g, int p, Color col) {
+        int midX = 30 + (spacing + this.players.get(p).getWidth(null) / 2) * p + this.players.get(p).getWidth(null) / 2;
+        int midY = 15 + this.players.get(p).getHeight(null) / 2;
+        int size = this.players.get(p).getHeight(null) + 10;
+        drawBorder(g, midX - size / 2, midY - size / 2, size, size, col);
     }
 
     private void drawPlayer(Graphics g) {
         for (int player = 0; player < this.players.size(); player++) {
-            g.drawImage(this.players.get(player),
-                    30 + (spacing + this.players.get(player).getWidth(null) / 2) * player, 15, null);
+            g.drawImage(this.players.get(player), 30 + (spacing + this.players.get(player).getWidth(null) / 2) * player, 15, null);
 
             if ((model.getPlayers().get(player) == playerCtrl.selectP)) {
-                int midX = 30 + (spacing + this.players.get(player).getWidth(null) / 2) * player
-                        + this.players.get(player).getWidth(null) / 2;
+                int midX = 30 + (spacing + this.players.get(player).getWidth(null) / 2) * player + this.players.get(player).getWidth(null) / 2;
                 int midY = 15 + this.players.get(player).getHeight(null) / 2;
                 g.setColor(new Color(255, 255, 255));
                 g.fillOval(midX - 5, midY * 2, 10, 10);
@@ -111,16 +100,16 @@ public class PlayerView extends JPanel implements MouseListener {
     private void drawActive(Graphics g) {
         g.setColor(new Color(255, 255, 255));
         Font currentFont = g.getFont();
-        g.setFont(new Font("Arial", Font.PLAIN, 50));
+        g.setFont(new Font("Arial", Font.BOLD, 65));
         g.drawString("" + model.getActivePlayer().getAmount(), this.width - 50, 130);
-        g.setFont(currentFont);
-        String action = "Use Card";
+        g.setFont(new Font("Times Roman",Font.PLAIN,25));
+        String act = "Use Card";
         if (model.getCond() == Model.Condition.PROGRESS) {
-            action = model.getActivePlayer().getAction().toString();
-            action = action.substring(0, 1) + action.substring(1).toLowerCase();
+            act = model.getActivePlayer().getAction().toString();
+            act = act.substring(0, 1) + act.substring(1).toLowerCase();
         }
-        g.drawString(model.getActivePlayer().getName() + "        " + action, 20,
-                130 - g.getFontMetrics().getHeight());
+        g.drawString(model.getActivePlayer().getName() + "        " + act, 20, 130 - g.getFontMetrics().getHeight());
+        g.setFont(currentFont);
     }
 
     private void drawExchange(Graphics g) {
@@ -164,9 +153,7 @@ public class PlayerView extends JPanel implements MouseListener {
                 && (model.getActivePlayer().getAction() != Player.Action.Discard)) {
             for (int player = 0; player < model.getPlayers().size(); player++) {
                 int size = this.players.get(player).getHeight(null) + 10;
-                if (e.getX() >= 30 + (spacing + this.players.get(player).getWidth(null) / 2) * player - size / 2
-                        && e.getX() <= 30 + (spacing + this.players.get(player).getWidth(null) / 2) * (player + 1)
-                                - size / 2) {
+                if (e.getX() >= 30 + (spacing + this.players.get(player).getWidth(null) / 2) * player - size / 2 && e.getX() <= 30 + (spacing + this.players.get(player).getWidth(null) / 2) * (player + 1) - size / 2) {
                     playerCtrl.click(model.getPlayers().get(player));
                     return;
                 }
@@ -178,8 +165,7 @@ public class PlayerView extends JPanel implements MouseListener {
             int space = (this.width - minY - 60) / 4;
             for (int i = 0; i < 4; i++) {
                 int y = minY + 100 + (space + treasure.get(i).getHeight(null)) * i;
-                if (y <= e.getY() && y + treasure.get(i).getHeight(null) >= e.getY() && e.getX() >= 20
-                        && e.getX() <= 20 + treasure.get(i).getWidth(null)) {
+                if (y <= e.getY() && y + treasure.get(i).getHeight(null) >= e.getY() && e.getX() >= 20 && e.getX() <= 20 + treasure.get(i).getWidth(null)) {
                     playerCtrl.cardClick(Card.getTreasureCard(i));
                     return;
                 }

@@ -5,12 +5,12 @@ import java.util.ArrayList;
 public class Flood {
     private ArrayList<Boolean> level;
 
-    public Flood(int niv) {
-        this.level = new ArrayList<Boolean>(10);
-        for (int i = 0; i < 10; i++) {
+    public Flood(int lvl) {
+        this.level = new ArrayList<Boolean>(7);
+        for (int i = 0; i < 7; i++) {
             this.level.add(false);
         }
-        this.level.set(niv, true);
+        this.level.set(lvl, true);
     }
 
     public int getLvl() {
@@ -21,9 +21,9 @@ public class Flood {
         setLvl(getLvl() + 1);
     }
 
-    public void setLvl(int i) {
+    public void setLvl(int n) {
         this.level.set(this.getLvl(), false);
-        this.level.set(i, true);
+        this.level.set(n, true);
     }
 
     public int floodRate() {
@@ -31,8 +31,6 @@ public class Flood {
             return 2;
         else if (this.getLvl() < 5)
             return 3;
-        else if (this.getLvl() < 7)
-            return 4;
-        return 5;
+        return 4;
     }
 }

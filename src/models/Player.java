@@ -29,7 +29,7 @@ public class Player {
     protected HashMap<Card, Integer> hand;
     private String image;
 
-    // Constructeur
+    //Constructors
     public Player(String name, Case zone, int i) {
         this.name = name;
         this.hand = new HashMap<Card, Integer>();
@@ -43,15 +43,7 @@ public class Player {
         this.image = colour.values()[i].toString()+".png";
     }
 
-    // Setter
-    public void setPosition(Case C) {
-        this.position = C;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
+    //Setters
     public void resetAction() {
         this.nbActions = 3;
     }
@@ -72,7 +64,7 @@ public class Player {
         this.hand.put(c, this.hand.get(c) + 1);
     }
 
-    // Getter
+    //Getters
     public String getImage(){ return this.image; }
 
     public Case getPosition() {
@@ -96,19 +88,16 @@ public class Player {
     }
 
     public int getCardsAmount() {
-        int total = 0;
+        int tot = 0;
         for (Integer nbCard : this.hand.values()) {
-            total += nbCard;
+            tot += nbCard;
         }
-        return total;
+        return tot;
     }
 
-    // méthode
+    //methods
     public boolean Exchangeable(Player player, Card card) {
-        return getAction() == Action.Exchange
-                && player.getPosition() == getPosition()
-                && player != this
-                && getCards(card) > 0;
+        return getAction() == Action.Exchange && player.getPosition() == getPosition() && player != this && getCards(card) > 0;
     }
 
     public void newPos(Case C) {
@@ -123,20 +112,19 @@ public class Player {
         this.hand.put(c, this.hand.get(c) - 1);
     }
 
-    public Boolean isNeigh(Case move, Case base) {
-        return move.getFlood() < move.getMaxFlood() && Math.abs(move.getX() - base.getX()) +
-                Math.abs(move.getY() - base.getY()) < 2;
+    public Boolean isNeigh(Case to, Case from) {
+        return to.getFlood() < to.getMaxFlood() && Math.abs(to.getX() - from.getX()) + Math.abs(to.getY() - from.getY()) < 2;
     }
 
-    public int getWeightNeigh(int weightNeight, int lastWeight, Case C) {
-        if (weightNeight + 1 < lastWeight) {
-            return weightNeight + 1;
+    public int getWeight(int actual, int last, Case C) {
+        if (actual + 1 < last) {
+            return actual + 1;
         } else {
-            return lastWeight;
+            return last;
         }
     }
 
-    public ArrayList<Point> moves(Model model) {
+    public ArrayList<Point> moves(Model M) {
         ArrayList<Point> neigbours = new ArrayList<Point>();
         neigbours.add(new Point(getPosition().getX() - 1, getPosition().getY()));
         neigbours.add(new Point(getPosition().getX() + 1, getPosition().getY()));
@@ -145,8 +133,8 @@ public class Player {
         return neigbours;
     }
 
-    public ArrayList<Point> drains(Model model) {
-        return moves(model);
+    public ArrayList<Point> drains(Model M) {
+        return moves(M);
     }
 }
 

@@ -16,9 +16,9 @@ public class EndTurnCtrl extends Controler implements ActionListener {
     public PlayerCtrl player;
     public int hand;
 
-    public EndTurnCtrl(Model model, View view, FloodingCtrl contrEscape) {
+    public EndTurnCtrl(Model model, View view, FloodingCtrl escape) {
         super(model, view);
-        this.escape = contrEscape;
+        this.escape = escape;
         this.hand = 5;
     }
 
@@ -33,17 +33,17 @@ public class EndTurnCtrl extends Controler implements ActionListener {
         if (escape.getEscape() == null) {
             if (model.getActivePlayer().getAction() != Player.Action.Discard) {
                 for (int i = 0; i < 2; i++) {
-                    Card actualCard = model.getDraw().pick();
-                    if (actualCard.equals(Card.Flood)) {
+                    Card actual = model.getDraw().pick();
+                    if (actual.equals(Card.Flood)) {
                         model.getFloodLvl().lvlIncr();
                         if(model.getFloodLvl().getLvl() == 9) {
                             model.setCond(Model.Condition.ENDLOST);
                             view.Lose();
                         }
                         model.getDrawFlood().addCimetery();
-                        model.getDraw().discard(actualCard);
+                        model.getDraw().discard(actual);
                     } else {
-                        model.getActivePlayer().addcard(actualCard);
+                        model.getActivePlayer().addcard(actual);
                     }
                 }
             }

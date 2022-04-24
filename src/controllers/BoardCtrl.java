@@ -16,9 +16,9 @@ public class BoardCtrl extends Controler {
     private FloodingCtrl flooding;
     private PlayerCtrl player;
 
-    public BoardCtrl(Model model, View view, FloodingCtrl floodingCtrl) {
+    public BoardCtrl(Model model, View view, FloodingCtrl flooding) {
         super(model, view);
-        this.flooding = floodingCtrl;
+        this.flooding = flooding;
     }
 
     public void click(int x, int y) {
@@ -34,46 +34,45 @@ public class BoardCtrl extends Controler {
         this.view.repaint();
     }
 
-    public void setPlayerCtrl(PlayerCtrl playerCtrl) {
-        this.player = playerCtrl;
+    public void setPlayerCtrl(PlayerCtrl player) {
+        this.player = player;
     }
 
     private void Move(int x, int y) {
-        int[][] action = model.actionAmount(model.getActivePlayer());
-        Case Cmove = model.getBoard().getCase(x, y);
+        int[][] act = model.actionAmount(model.getActivePlayer());
+        Case C = model.getBoard().getCase(x, y);
 
-        if (action[y][x] <= model.getActivePlayer().getAmount()
-                && Cmove.movable()) {
-            model.getActivePlayer().newPos(Cmove);
-            model.getActivePlayer().setAmount(model.getActivePlayer().getAmount() - action[y][x]);
+        if (act[y][x] <= model.getActivePlayer().getAmount() && C.movable()) {
+            model.getActivePlayer().newPos(C);
+            model.getActivePlayer().setAmount(model.getActivePlayer().getAmount() - act[y][x]);
         }
     }
 
     private void Dry(int x, int y) {
         if (model.getActivePlayer().getAmount() > 0) {
-            Case digZ = model.getBoard().getCase(x, y);
-            ArrayList<Case> digZones = new ArrayList<Case>();
-            ArrayList<Point> action = model.getActivePlayer().drains(this.model);
-            action.add(new Point(model.getActivePlayer().getPosition().getX(),
+            Case C = model.getBoard().getCase(x, y);
+            ArrayList<Case> Cs = new ArrayList<Case>();
+            ArrayList<Point> act = model.getActivePlayer().drains(this.model);
+            act.add(new Point(model.getActivePlayer().getPosition().getX(),
                     model.getActivePlayer().getPosition().getY()));
-            for (Point point : action) {
-                digZones.add(model.getBoard().getCase(point.x, point.y));
+                for (Point point : act) {
+                Cs.add(model.getBoard().getCase(point.x, point.y));
             }
 
-            if (digZ.getFlood() == 1 && digZones.contains(digZ)) {
-                digZ.dry();
+            if (C.getFlood() == 1 && Cs.contains(C)) {
+                C.dry();
                 model.getActivePlayer().drained();
             }
         }
     }
 
     private void Escape(int x, int y) {
-        ArrayList<Point> neigbours = flooding.getEscape().moves(this.model);
-        for (Point point : neigbours) {
-            Case zone = model.getBoard().getCase(point.x, point.y);
-            if (zone != null && zone.getFlood() != zone.getMaxFlood() && x == zone.getX() && y == zone.getY()) {
+        ArrayList<Point> neigh = flooding.getEscape().moves(this.model);
+        for (Point pts : neigh) {
+            Case C = model.getBoard().getCase(pts.x, pts.y);
+            if (C != null && C.getFlood() != C.getMaxFlood() && x == C.getX() && y == C.getY()) {
                 flooding.getEscape().setAction(Player.Action.Move);
-                flooding.getEscape().newPos(zone);
+                flooding.getEscape().newPos(C);
                 flooding.setEscape();
                 if (flooding.getEscape() == null) {
                     flooding.flooding();

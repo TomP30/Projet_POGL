@@ -32,10 +32,10 @@ public class FloodingCtrl extends Controler {
         this.escape = escape;
     }
 
-    private Boolean escape(Case zone, Player player) {
-        ArrayList<Point> action = player.moves(this.model);
+    private Boolean escape(Player p) {
+        ArrayList<Point> act = p.moves(this.model);
 
-        return !action.isEmpty();
+        return !act.isEmpty();
     }
 
     private Boolean gameOverCase(Case C) {
@@ -45,19 +45,19 @@ public class FloodingCtrl extends Controler {
 
     public void flooding() {
         for (; flood > 0; flood--) {
-            Case drownC = model.getDrawFlood().pick();
-            drownC.drown();
+            Case drown = model.getDrawFlood().pick();
+            drown.drown();
             Boolean escape = false;
-            if (drownC.getFlood() == drownC.getMaxFlood()) {
-                if (gameOverCase(drownC)) {
+            if (drown.getFlood() == drown.getMaxFlood()) {
+                if (gameOverCase(drown)) {
                     model.setCond(Model.Condition.ENDLOST);
                     view.Lose();
                     break;
                 }
                 for (Player p : model.getPlayers()) {
-                    if (drownC == p.getPosition()) {
+                    if (drown == p.getPosition()) {
                         p.setAction(Player.Action.Escape);
-                        if (escape(drownC, p)) {
+                        if (escape(p)) {
                             escape = true;
                             p.setAction(Player.Action.Escape);
                         } else {

@@ -26,8 +26,8 @@ public class Draw {
         return this.deck;
     }
 
-    public void setDeck(ArrayList<Card> cards) {
-        this.deck = cards;
+    public void setDeck(ArrayList<Card> Cs) {
+        this.deck = Cs;
     }
 
     public void discard(Card c){
