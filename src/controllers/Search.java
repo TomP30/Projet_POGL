@@ -16,8 +16,8 @@ public class Search extends Controler implements ActionListener {
         super(model, view);
     }
 
-    public Boolean canTakeTresure() {
-        int index = model.getTemple().indexOf(model.getActPlayer().getPosition());
+    public Boolean claimable() {
+        int index = model.getTreasure().indexOf(model.getActivePlayer().getPosition());
         if (index != -1) {
             return true;
         }
@@ -26,15 +26,15 @@ public class Search extends Controler implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        if (model.getActPlayer().getNbActions() > 0 && canTakeTresure()) {
-            model.getActPlayer().setAction(
-                    model.getActPlayer().getNbActions() - 1);
-            int index = model.getTemple().indexOf(model.getActPlayer().getPosition());
-            if(model.getActPlayer().getCards(Card.getCardTemple(index)) >= 4){
-                model.getTemple().set(index, null);
+        if (model.getActivePlayer().getAmount() > 0 && claimable()) {
+            model.getActivePlayer().setAmount(
+                    model.getActivePlayer().getAmount() - 1);
+            int index = model.getTreasure().indexOf(model.getActivePlayer().getPosition());
+            if(model.getActivePlayer().getCards(Card.getTreasureCard(index)) >= 4){
+                model.getTreasure().set(index, null);
                 model.getTreasureState().set(index, true);
                 view.repaint();
-                model.getActPlayer().getAllCards().replace(Card.getCardTemple(index), model.getActPlayer().getCards(Card.getCardTemple(index)) - 4);
+                model.getActivePlayer().getHand().replace(Card.getTreasureCard(index), model.getActivePlayer().getCards(Card.getTreasureCard(index)) - 4);
             }
         }
     }

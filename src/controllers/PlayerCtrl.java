@@ -21,17 +21,17 @@ public class PlayerCtrl extends Controler {
         this.reachedHeli = new ArrayList<Player>();
     }
 
-    public void playerClick(Player player) {
+    public void click(Player player) {
         Player lastPlayer = this.selectP;
         this.selectP = player;
 
         if (this.selectP != null && this.selectC != null
-                && this.model.getActPlayer().possibleExchange(this.selectP, this.selectC)) {
-            if (this.model.getActPlayer().getCards(this.selectC) >= 1) {
-                this.model.getActPlayer().useCard(this.selectC);
+                && this.model.getActivePlayer().Exchangeable(this.selectP, this.selectC)) {
+            if (this.model.getActivePlayer().getCards(this.selectC) >= 1) {
+                this.model.getActivePlayer().useCard(this.selectC);
                 this.selectP.addcard(this.selectC);
 
-                this.model.getActPlayer().setState(Player.Action.Move);
+                this.model.getActivePlayer().setAction(Player.Action.Move);
                 this.selectC = null;
                 this.selectP = lastPlayer;
                 view.repaint();
@@ -42,27 +42,12 @@ public class PlayerCtrl extends Controler {
         view.repaint();
     }
 
-    private void selectedPlayerHeli(Player player) {
-        if (this.reachedHeli.contains(player)) {
-            this.reachedHeli.remove(player);
-        } else {
-            for (Player p : this.reachedHeli) {
-                if (p.getPosition() != player.getPosition()) {
-                    view.repaint();
-                    return;
-                }
-            }
-            this.reachedHeli.add(player);
-        }
-        view.repaint();
-    }
-
-    private void throwClick(Card card) {
+    private void discard(Card card) {
         this.selectC = null;
-        if (model.getActPlayer().getCards(card) >= 1) {
-            model.getActPlayer().useCard(card);
-            if (model.getActPlayer().getNbCards() <= endTurn.hand) {
-                endTurn.nexTurn();
+        if (model.getActivePlayer().getCards(card) >= 1) {
+            model.getActivePlayer().useCard(card);
+            if (model.getActivePlayer().getCardsAmount() <= endTurn.hand) {
+                endTurn.nextTurn();
             }
         }
     }
@@ -70,7 +55,7 @@ public class PlayerCtrl extends Controler {
     private Boolean victoryCheck() {
         boolean ownH = false;
         for (Player p : model.getPlayers()) {
-            if (p.getPosition() != model.getHeliZone()) {
+            if (p.getPosition() != model.getHeliport()) {
                 return false;
             }
         }
@@ -79,8 +64,8 @@ public class PlayerCtrl extends Controler {
 
     public void cardClick(Card card) {
         this.selectC = card;
-        if (model.getActPlayer().getState() == Player.Action.Discard) {
-            throwClick(card);
+        if (model.getActivePlayer().getAction() == Player.Action.Discard) {
+            discard(card);
         }
         view.repaint();
     }

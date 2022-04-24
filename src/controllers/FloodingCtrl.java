@@ -14,7 +14,7 @@ public class FloodingCtrl extends Controler {
 
     public FloodingCtrl(Model model, View view) {
         super(model, view);
-        flood = model.getFloodLevel().innondationRate();
+        flood = model.getFloodLvl().floodRate();
         this.escape = null;
     }
 
@@ -25,7 +25,7 @@ public class FloodingCtrl extends Controler {
     public void setEscape() {
         Player escape = null;
         for (Player player : model.getPlayers()) {
-            if (player.getState() == Player.Action.Escape) {
+            if (player.getAction() == Player.Action.Escape) {
                 escape = player;
             }
         }
@@ -33,36 +33,36 @@ public class FloodingCtrl extends Controler {
     }
 
     private Boolean escape(Case zone, Player player) {
-        ArrayList<Point> action = player.neigboursMove(this.model);
+        ArrayList<Point> action = player.moves(this.model);
 
         return !action.isEmpty();
     }
 
     private Boolean gameOverCase(Case C) {
-        return model.getTemple().contains(C) ||
-                model.getHeliZone() == C;
+        return model.getTreasure().contains(C) ||
+                model.getHeliport() == C;
     }
 
     public void flooding() {
         for (; flood > 0; flood--) {
-            Case drownC = model.getPiocheWater().pick();
+            Case drownC = model.getDrawFlood().pick();
             drownC.drown();
             Boolean escape = false;
             if (drownC.getFlood() == drownC.getMaxFlood()) {
                 if (gameOverCase(drownC)) {
-                    model.setState(Model.Condition.ENDLOST);
-                    view.gameOver();
+                    model.setCond(Model.Condition.ENDLOST);
+                    view.Lose();
                     break;
                 }
                 for (Player p : model.getPlayers()) {
                     if (drownC == p.getPosition()) {
-                        p.setState(Player.Action.Escape);
+                        p.setAction(Player.Action.Escape);
                         if (escape(drownC, p)) {
                             escape = true;
-                            p.setState(Player.Action.Escape);
+                            p.setAction(Player.Action.Escape);
                         } else {
-                            model.setState(Model.Condition.ENDLOST);
-                            view.gameOver();
+                            model.setCond(Model.Condition.ENDLOST);
+                            view.Lose();
                             break;
                         }
                     }
@@ -73,6 +73,6 @@ public class FloodingCtrl extends Controler {
                 return;
             }
         }
-        flood = model.getFloodLevel().innondationRate();
+        flood = model.getFloodLvl().floodRate();
     }
 }

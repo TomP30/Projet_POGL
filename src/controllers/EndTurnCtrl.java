@@ -22,36 +22,36 @@ public class EndTurnCtrl extends Controler implements ActionListener {
         this.hand = 5;
     }
 
-    public void nexTurn() {
+    public void nextTurn() {
         model.nextPlayer();
-        model.getActPlayer().setState(Player.Action.Move);
-        model.getActPlayer().setAction(3);
+        model.getActivePlayer().setAction(Player.Action.Move);
+        model.getActivePlayer().setAmount(3);
         escape.flooding();
     }
 
     public void actionPerformed(ActionEvent e) {
         if (escape.getEscape() == null) {
-            if (model.getActPlayer().getState() != Player.Action.Discard) {
+            if (model.getActivePlayer().getAction() != Player.Action.Discard) {
                 for (int i = 0; i < 2; i++) {
-                    Card actualCard = model.getPiocheCard().pick();
+                    Card actualCard = model.getDraw().pick();
                     if (actualCard.equals(Card.Flood)) {
-                        model.getFloodLevel().incrementLvl();
-                        if(model.getFloodLevel().getLvl() == 9) {
-                            model.setState(Model.Condition.ENDLOST);
-                            view.gameOver();
+                        model.getFloodLvl().lvlIncr();
+                        if(model.getFloodLvl().getLvl() == 9) {
+                            model.setCond(Model.Condition.ENDLOST);
+                            view.Lose();
                         }
-                        model.getPiocheWater().addDefausse();
-                        model.getPiocheCard().sendToDefausse(actualCard);
+                        model.getDrawFlood().addCimetery();
+                        model.getDraw().discard(actualCard);
                     } else {
-                        model.getActPlayer().addcard(actualCard);
+                        model.getActivePlayer().addcard(actualCard);
                     }
                 }
             }
-            if (model.getActPlayer().getNbCards() > hand) {
-                model.getActPlayer().setState(Player.Action.Discard);
-                player.selectP = model.getActPlayer();
+            if (model.getActivePlayer().getCardsAmount() > hand) {
+                model.getActivePlayer().setAction(Player.Action.Discard);
+                player.selectP = model.getActivePlayer();
             } else {
-                nexTurn();
+                nextTurn();
             }
             view.repaint();
         }

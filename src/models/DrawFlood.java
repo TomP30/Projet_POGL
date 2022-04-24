@@ -16,41 +16,41 @@ public class DrawFlood {
     }
 
     // Getter
-    public ArrayList<Case> getPioche() {
+    public ArrayList<Case> getDeck() {
         return this.deck;
     }
 
-    public ArrayList<Case> getDefausse() {
+    public ArrayList<Case> getCimetery() {
         return this.cimetery;
     }
 
-    public int getNbCarte() {
+    public int getDeckAmount() {
         return this.deckAmount;
     }
 
-    public void addCardDefausse(Case p) {
+    public void cimeteryAdd(Case p) {
         this.cimetery.add(p);
     }
 
-    public void setPioche(ArrayList<Case> cards) {
+    public void setDeck(ArrayList<Case> cards) {
         this.deck = cards;
     }
 
     // Méthode
     public Case pick() {
         if (this.deck.size() == 0) {
-            resetPioche();
+            resetDeck();
         }
-        Case z = this.getPioche().get(0);
+        Case z = this.getDeck().get(0);
         if (z.getFlood() != z.getMaxFlood()) {
-            this.addCardDefausse(z);
+            this.cimeteryAdd(z);
         }
         this.deck.remove(0);
         this.deckAmount--;
         return z;
     }
 
-    public void addDefausse() {
+    public void addCimetery() {
         Collections.shuffle(this.cimetery);
         for (int i = 0; i < this.cimetery.size(); i++) {
             this.deck.add(0, this.cimetery.get(i));
@@ -58,10 +58,10 @@ public class DrawFlood {
         this.cimetery.clear();
     }
 
-    public void resetPioche() {
-        this.setPioche(new ArrayList<Case>(cimetery));
+    public void resetDeck() {
+        this.setDeck(new ArrayList<Case>(cimetery));
         Collections.shuffle(this.deck);
-        this.deckAmount = this.getNbCarte();
+        this.deckAmount = this.getDeckAmount();
         this.cimetery.removeAll(this.cimetery);
     }
 }

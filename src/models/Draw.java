@@ -22,35 +22,31 @@ public class Draw {
         Collections.shuffle(this.deck);
     }
 
-    public ArrayList<Card> getPioche() {
+    public ArrayList<Card> getDeck() {
         return this.deck;
     }
 
-    public ArrayList<Card> getDefausse() {
-        return this.cimetery;
-    }
-
-    public void setPioche(ArrayList<Card> cards) {
+    public void setDeck(ArrayList<Card> cards) {
         this.deck = cards;
     }
 
-    public void sendToDefausse(Card c){
+    public void discard(Card c){
         this.cimetery.add(c);
         this.deck.remove(c);
     }
 
     public Card pick() {
         if (this.deck.size() == 0) {
-            resetPioche();
+            resetDeck();
         }
-        Card c = this.getPioche().get(0);
+        Card c = this.getDeck().get(0);
         this.cimetery.add(c);
         this.deck.remove(this.deck.get(0));
         return c;
     }
 
-    public void resetPioche() {
-        this.setPioche(new ArrayList<Card>(cimetery));
+    public void resetDeck() {
+        this.setDeck(new ArrayList<Card>(cimetery));
         Collections.shuffle(this.deck);
         this.cimetery.removeAll(this.cimetery);
     }

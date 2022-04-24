@@ -25,8 +25,8 @@ public class ArtefactsView extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        int pawnsSapcing = (this.getWidth() - 60) / this.model.getTemple().size();
-        for (int i = 0; i < this.model.getTemple().size(); i++) {
+        int pawnsSapcing = (this.getWidth() - 60) / this.model.getTreasure().size();
+        for (int i = 0; i < this.model.getTreasure().size(); i++) {
             if (model.getTreasureState(i)) {
                 g.drawImage(this.treasure.get(i), 30 + (pawnsSapcing + this.treasure.get(i).getWidth(null) / 2) * i, 15,
                         null);

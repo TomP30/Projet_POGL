@@ -65,12 +65,8 @@ public class Board {
         return board.get(y).get(x);
     }
 
-    public Point getGridSize() {
+    public Point getSize() {
         return new Point(this.width, this.height);
-    }
-
-    public ArrayList<ArrayList<Case>> getGrid() {
-        return this.board;
     }
 
     public int getHeight() {
@@ -81,7 +77,7 @@ public class Board {
         return this.width;
     }
 
-    public ArrayList<Integer> getCoordLine(int y) {
+    public ArrayList<Integer> getLine(int y) {
         ArrayList<Integer> s = new ArrayList<Integer>();
         for (int index = 0; index < board.get(y).size(); index++) {
             if (board.get(y).get(index) != null) {
@@ -93,23 +89,14 @@ public class Board {
 
     public Case getRandomCase() {
         Random rand = new Random();
-        int y = rand.nextInt(this.getGridSize().y);
-        int x = this.getCoordLine(y).get(rand.nextInt(this.getCoordLine(y).size()));
+        int y = rand.nextInt(this.getSize().y);
+        int x = this.getLine(y).get(rand.nextInt(this.getLine(y).size()));
         return this.getCase(x, y);
     }
 
-    public ArrayList<Case> neighbours(Case C) {
-        ArrayList<Case> neighbours = new ArrayList<Case>();
-        neighbours.add(this.getCase(C.getCoord().x, C.getCoord().y + 1));
-        neighbours.add(this.getCase(C.getCoord().x, C.getCoord().y - 1));
-        neighbours.add(this.getCase(C.getCoord().x + 1, C.getCoord().y));
-        neighbours.add(this.getCase(C.getCoord().x - 1, C.getCoord().y));
-        return neighbours;
-    }
-
-    public boolean inMap(Point pos) {
-        return pos.y >= 0 && pos.y < getGridSize().y && pos.x >= 0 &&
-                pos.x < getGridSize().x &&
+    public boolean isValid(Point pos) {
+        return pos.y >= 0 && pos.y < getSize().y && pos.x >= 0 &&
+                pos.x < getSize().x &&
                 this.board.get(pos.y).get(pos.x) != null;
     }
 }

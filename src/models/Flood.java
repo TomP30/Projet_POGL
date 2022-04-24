@@ -17,7 +17,7 @@ public class Flood {
         return level.indexOf(true);
     }
 
-    public void incrementLvl() {
+    public void lvlIncr() {
         setLvl(getLvl() + 1);
     }
 
@@ -26,7 +26,7 @@ public class Flood {
         this.level.set(i, true);
     }
 
-    public int innondationRate() {
+    public int floodRate() {
         if (this.getLvl() < 2)
             return 2;
         else if (this.getLvl() < 5)

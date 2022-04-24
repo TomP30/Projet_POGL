@@ -45,7 +45,7 @@ public class Model {
         this.cond = Condition.START;
         this.treasure = new ArrayList<Case>();
         this.players = new ArrayList<Player>();
-        this.drawFlood = new DrawFlood(this.pileOfZone());
+        this.drawFlood = new DrawFlood(this.CardPile());
         this.draw = new Draw();
         this.treasureClaimed = new ArrayList<Boolean>();
         for (int i = 0; i < 4; i++) {
@@ -61,7 +61,7 @@ public class Model {
     }
 
     // Getter
-    public Flood getFloodLevel() {
+    public Flood getFloodLvl() {
         return this.flood;
     }
 
@@ -73,15 +73,15 @@ public class Model {
         return this.treasureClaimed;
     }
 
-    public Condition getState() {
+    public Condition getCond() {
         return this.cond;
     }
 
-    public Board getIsland() {
+    public Board getBoard() {
         return this.board;
     }
 
-    public ArrayList<Case> getTemple() {
+    public ArrayList<Case> getTreasure() {
         return this.treasure;
     }
 
@@ -89,28 +89,28 @@ public class Model {
         return this.players;
     }
 
-    public Case getHeliZone() {
+    public Case getHeliport() {
         return this.heliport;
     }
 
-    public int getActPlayerId() {
+    public int getActivePlayerId() {
         return this.ActivePlayer;
     }
 
-    public Player getActPlayer() {
+    public Player getActivePlayer() {
         return this.players.get(ActivePlayer);
     }
 
-    public DrawFlood getPiocheWater() {
+    public DrawFlood getDrawFlood() {
         return this.drawFlood;
     }
 
-    public Draw getPiocheCard() {
+    public Draw getDraw() {
         return this.draw;
     }
 
     // Setter
-    public void setState(Condition condition) {
+    public void setCond(Condition condition) {
         this.cond = condition;
     }
 
@@ -120,7 +120,7 @@ public class Model {
 
     public void nextPlayer() {
         this.ActivePlayer = (this.ActivePlayer + 1) % this.players.size();
-        getActPlayer().resetAction();
+        getActivePlayer().resetAction();
     }
 
     public Case getRandomValideCase() {
@@ -131,10 +131,10 @@ public class Model {
         return C;
     }
 
-    private Boolean allTraveled(Boolean[][] visitedCase) {
-        for (int i = 0; i < visitedCase.length; i++) {
-            for (int j = 0; j < visitedCase[i].length; j++) {
-                if (!visitedCase[i][j]) {
+    private Boolean moved(Boolean[][] visited) {
+        for (int i = 0; i < visited.length; i++) {
+            for (int j = 0; j < visited[i].length; j++) {
+                if (!visited[i][j]) {
                     return false;
                 }
             }
@@ -142,13 +142,13 @@ public class Model {
         return true;
     }
 
-    private Point getMinCase(Boolean[][] visitedCase, int[][] action) {
+    private Point getMinCase(Boolean[][] visited, int[][] act) {
         Point p = new Point(0, 0);
         int min = 999;
-        for (int j = 0; j < action.length; j++) {
-            for (int i = 0; i < action[j].length; i++) {
-                if (!visitedCase[j][i] && action[j][i] <= min) {
-                    min = action[j][i];
+        for (int j = 0; j < act.length; j++) {
+            for (int i = 0; i < act[j].length; i++) {
+                if (!visited[j][i] && act[j][i] <= min) {
+                    min = act[j][i];
                     p = new Point(i, j);
                 }
             }
@@ -157,35 +157,35 @@ public class Model {
     }
 
 
-    public int[][] nbAction(Player player) {
-        Boolean[][] visitedCase = new Boolean[board.getHeight()][board.getWidth()];
+    public int[][] actionAmount(Player player) {
+        Boolean[][] visited = new Boolean[board.getHeight()][board.getWidth()];
         int[][] action = new int[board.getHeight()][board.getWidth()];
         for (int j = 0; j < action.length; j++) {
             for (int i = 0; i < action[j].length; i++) {
                 action[j][i] = 999;
                 if (board.getCase(i, j) == null) {
-                    visitedCase[j][i] = true;
+                    visited[j][i] = true;
                 } else {
-                    visitedCase[j][i] = false;
+                    visited[j][i] = false;
                 }
             }
         }
-        Player playerForZ = this.getActPlayer();
+        Player playerForZ = this.getActivePlayer();
         for (Player p : this.players) {
-            if (p.getState() == Player.Action.Escape) {
+            if (p.getAction() == Player.Action.Escape) {
                 playerForZ = p;
             }
         }
         action[playerForZ.getPosition().getY()][playerForZ.getPosition().getX()] = 0;
-        while (!allTraveled(visitedCase)) {
-            Point p = getMinCase(visitedCase, action);
-            visitedCase[p.y][p.x] = true;
+        while (!moved(visited)) {
+            Point p = getMinCase(visited, action);
+            visited[p.y][p.x] = true;
             for (int j = -1; j <= 1; j++) {
                 for (int i = -1; i <= 1; i++) {
                     if (board.getCase(p.x + i, p.y + j) != null) {
-                        if (player.isNeight(board.getCase(p.x + i, p.y + j),
+                        if (player.isNeigh(board.getCase(p.x + i, p.y + j),
                                 board.getCase(p.x, p.y))) {
-                            action[p.y + j][p.x + i] = player.getWeightNeight(action[p.y][p.x],
+                            action[p.y + j][p.x + i] = player.getWeightNeigh(action[p.y][p.x],
                                     action[p.y + j][p.x + i], board.getCase(p.x + i, p.y + j));
                         }
                     }
@@ -196,43 +196,11 @@ public class Model {
         return action;
     }
 
-    public int[][] nbActionNormal(int x, int y) {
-        Boolean[][] visitedCase = new Boolean[board.getHeight()][board.getWidth()];
-        int[][] action = new int[board.getHeight()][board.getWidth()];
-        for (int j = 0; j < action.length; j++) {
-            for (int i = 0; i < action[j].length; i++) {
-                action[j][i] = 999;
-                if (board.getCase(i, j) == null) {
-                    visitedCase[j][i] = true;
-                } else {
-                    visitedCase[j][i] = false;
-                }
-            }
-        }
-        action[y][x] = 0;
-        while (!allTraveled(visitedCase)) {
-            Point p = getMinCase(visitedCase, action);
-            visitedCase[p.y][p.x] = true;
-            for (int j = -1; j <= 1; j++) {
-                for (int i = -1; i <= 1; i++) {
-                    if (board.getCase(p.x + i, p.y + j) != null) {
-                        if (Math.abs(i) + Math.abs(j) == 1) {
-                            if (action[p.y + j][p.x + i] > action[p.y][p.x] + 1) {
-                                action[p.y + j][p.x + i] = action[p.y][p.x] + 1;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return action;
-    }
-
-    public ArrayList<Case> pileOfZone() {
+    public ArrayList<Case> CardPile() {
         ArrayList<Case> cards = new ArrayList<Case>();
-        for (int y = 0; y < this.getIsland().getHeight(); y++) {
-            for (int x : this.getIsland().getCoordLine(y)) {
-                cards.add(this.getIsland().getCase(x, y));
+        for (int y = 0; y < this.getBoard().getHeight(); y++) {
+            for (int x : this.getBoard().getLine(y)) {
+                cards.add(this.getBoard().getCase(x, y));
             }
         }
         return cards;
@@ -251,7 +219,7 @@ public class Model {
         }
         this.treasure.clear();
         this.players.clear();
-        this.drawFlood = new DrawFlood(this.pileOfZone());
+        this.drawFlood = new DrawFlood(this.CardPile());
         this.draw = new Draw();
         this.treasureClaimed = new ArrayList<Boolean>();
         for (int i = 0; i < 4; i++) {

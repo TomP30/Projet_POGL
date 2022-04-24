@@ -66,10 +66,10 @@ public class View extends JFrame {
         JButton drain = new JButton("Drain");
         drain.setPreferredSize(new Dimension((this.board.widthPanel + 200) / 4, 50));
         drain.addActionListener(e -> {
-            if (model.getActPlayer().getState() == Player.Action.Drain) {
-                model.getActPlayer().setState(Player.Action.Move);
+            if (model.getActivePlayer().getAction() == Player.Action.Drain) {
+                model.getActivePlayer().setAction(Player.Action.Move);
             } else {
-                model.getActPlayer().setState(Player.Action.Drain);
+                model.getActivePlayer().setAction(Player.Action.Drain);
             }
             this.repaint();
         });
@@ -77,11 +77,11 @@ public class View extends JFrame {
         JButton exchange = new JButton("Exchange");
         exchange.setPreferredSize(new Dimension((this.board.widthPanel + 200) / 4, 50));
         exchange.addActionListener(e -> {
-            if (model.getActPlayer().getState() == Player.Action.Exchange) {
-                model.getActPlayer().setState(Player.Action.Move);
+            if (model.getActivePlayer().getAction() == Player.Action.Exchange) {
+                model.getActivePlayer().setAction(Player.Action.Move);
             } else {
-                model.getActPlayer().setState(Player.Action.Exchange);
-                player.playerCtrl.selectP = model.getActPlayer();
+                model.getActivePlayer().setAction(Player.Action.Exchange);
+                player.playerCtrl.selectP = model.getActivePlayer();
             }
             this.repaint();
         });
@@ -94,8 +94,8 @@ public class View extends JFrame {
         buttons.add(exchange);
         buttons.add(next);
 
-        this.width = this.board.widthPanel + this.player.width + 300;
-        this.height = this.board.heightPanel + 300;
+        this.width = this.board.widthPanel + this.player.width + 100;
+        this.height = this.board.heightPanel + 100;
 
         treasure.setPreferredSize(new Dimension(this.board.widthPanel + this.player.width, 150));
 
@@ -137,17 +137,17 @@ public class View extends JFrame {
             names.add("J "+ (i+1));
         }
         setPlayer(names);
-        model.getFloodLevel().setLvl(0);
+        model.getFloodLvl().setLvl(0);
         repaint();
         start();
     }
 
     public void start() {
-        this.model.setState(Model.Condition.PROGRESS);
+        this.model.setCond(Model.Condition.PROGRESS);
         getContentPane().removeAll();
         setBackground(background);
 
-        this.board.initPawn();
+        this.board.initPlayers();
         setSize(this.width, this.height);
 
         add(this.panel);
@@ -155,7 +155,7 @@ public class View extends JFrame {
         this.repaint();
     }
 
-    public void gameOver() {
+    public void Lose() {
         panel.remove(this.buttons);
         panel.remove(this.treasure);
         panel.add(this.EndButtons);
@@ -168,7 +168,7 @@ public class View extends JFrame {
     private void setPlayer(ArrayList<String> names) {
         int i=0;
         for (String name: names){
-            Player player = createPlayer(name, model.getIsland().getRandomCase(),i);
+            Player player = createPlayer(name, model.getBoard().getRandomCase(),i);
             model.addPlayer(player);
             i++;
         }
