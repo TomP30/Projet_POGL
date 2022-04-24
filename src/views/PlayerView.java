@@ -35,21 +35,21 @@ public class PlayerView extends JPanel implements MouseListener {
     public PlayerView(Model model, View view) {
         this.model = model;
         this.width = 300;
-        this.height = view.grid.heightJpanel;
-        this.sizeCase = view.grid.sizeCase;
-        this.pawns = view.grid.pawns;
+        this.height = view.board.heightJpanel;
+        this.sizeCase = view.board.sizeCase;
+        this.pawns = view.board.pawns;
 
         this.playerCtrl = new PlayerCtrl(model, view);
-        view.grid.control.setContrPlayer(playerCtrl);
-        view.grid.playerCtrl = playerCtrl;
+        view.board.control.setContrPlayer(playerCtrl);
+        view.board.playerCtrl = playerCtrl;
         this.playerCtrl.selectedPlayer = null;
         playerCtrl.endTurnCtrl = view.endTurnCtrl;
 
         this.pawnsSapcing = (this.width - 60) / 4;
 
-        String path = "images/elements/";
-        String pawnsPath[] = new String[] { path + "air.png", path + "earth.png", path + "fire.png",
-                path + "water.png" };
+        String path = "images/keys/";
+        String pawnsPath[] = new String[] { path + "wind.png", path + "stone.png", path + "fire.png",
+                path + "wave.png" };
         temples = new ArrayList<Image>();
         for (int i = 0; i < 4; i++) {
             Image img = new ImageIcon(pawnsPath[i]).getImage();
@@ -102,7 +102,7 @@ public class PlayerView extends JPanel implements MouseListener {
                 int midX = 30 + (pawnsSapcing + this.pawns.get(player).getWidth(null) / 2) * player
                         + this.pawns.get(player).getWidth(null) / 2;
                 int midY = 15 + this.pawns.get(player).getHeight(null) / 2;
-                g.setColor(new Color(185, 5, 26));
+                g.setColor(new Color(255, 255, 255));
                 g.fillOval(midX - 5, midY * 2, 10, 10);
             }
         }
@@ -112,7 +112,7 @@ public class PlayerView extends JPanel implements MouseListener {
     private void drawActPlayer(Graphics g) {
         g.setColor(new Color(200, 200, 200));
         Font currentFont = g.getFont();
-        g.setFont(new Font("TimesRoman", Font.PLAIN, 50));
+        g.setFont(new Font("Arial", Font.PLAIN, 50));
         g.drawString("" + model.getActPlayer().getNbActions(), this.width - 50, 130);
         g.setFont(currentFont);
         String action = "Use Card";
